@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cream">#FFF9F0</color>
+    <color name="cream_deep">#FFF1DF</color>
+    <color name="card">#FFFFFF</color>
+    <color name="ink">#5A4A3F</color>
+    <color name="ink_soft">#A08D7C</color>
+    <color name="coral">#FFB4A2</color>
+    <color name="coral_deep">#EE8B76</color>
+    <color name="mint">#A8E6CF</color>
+    <color name="mint_deep">#4FBE93</color>
+    <color name="sky">#AEDFF7</color>
+    <color name="sky_deep">#63B6DC</color>
+    <color name="lemon">#FFE8A3</color>
+    <color name="lemon_deep">#DCA92F</color>
+    <color name="lavender">#D5C7F7</color>
+    <color name="rose">#FFD3E0</color>
+    <color name="good">#2FA97A</color>
+    <color name="bad">#DD6A5F</color>
+    <color name="icon_bg">#FFEFCE</color>
+    <color name="white">#FFFFFF</color>
+    <color name="shadow">#1A5A4A3F</color>
+</resources>

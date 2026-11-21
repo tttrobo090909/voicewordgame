@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_pill"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="52dp"
+        android:layout_height="52dp">
+
+        <ImageButton
+            android:id="@+id/avatarButton"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_avatar_ring"
+            android:contentDescription="@string/avatar_pick_title"
+            android:padding="5dp"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/nameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/player_name_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textPersonName"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/ink_soft"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/voiceStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/voice_unregistered"
+            android:textColor="@color/ink_soft"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/enrollButton"
+        style="@style/Widget.CuteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="@string/voice_enroll"
+        android:textSize="12sp" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="2dp"
+        android:background="@null"
+        android:contentDescription="@string/delete_player"
+        android:padding="8dp"
+        android:src="@drawable/ic_trash" />
+</LinearLayout>
