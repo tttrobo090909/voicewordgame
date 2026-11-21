@@ -74,7 +74,7 @@ app/src/main/
   assets/avatars/*.webp        14개 아바타
   assets/categories/*.webp     10개 카테고리 그림
   res/layout, res/drawable, res/values …
-app/src/test/java/…            정답 판정·음높이/화자 매칭 단위 테스트 16개
+app/src/test/java/…            단위 테스트 19개 (정답 판정·음높이/화자 매칭 + Robolectric 화면 스모크)
 tools/word_data.py             250단어 원본 표(그림 코드 포함)
 tools/prepare_assets.py        Noto Emoji 3D 512px → WebP 변환 + words.json + 검증
 tools/make_icons.py            런처 아이콘 생성
@@ -90,10 +90,13 @@ WORKFLOW_YAML.txt              GitHub Actions 워크플로우 원문(웹에서 �
 # 버전: app/build/outputs/version.txt
 ```
 
-### 단위 테스트
+### 단위 테스트 (19개)
 ```bash
 ./gradlew testDebugUnitTest
 ```
+- `AnswerMatcherTest`(11) 정답 판정: 조사·띄어쓰기·문장부호·영/한 혼용·같은 그림 낱말
+- `VoiceFeatureTest`(5) 음높이 추정(배음 오류 방지)·화자 매칭 임계값·무음 처리
+- `MainActivitySmokeTest`(3) Robolectric으로 액티비티를 실제로 띄워 화면 구성·게임 시작·정답 처리 확인
 
 ### GitHub Actions
 `.github/workflows/build-apk.yml` (저장소에는 GitHub App 권한 때문에 아직 없음 →

@@ -54,10 +54,23 @@ android {
         noCompress += listOf("webp")
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     lint {
         abortOnError = false
         checkReleaseBuilds = false
     }
+}
+
+// 로컬 환경에서 user.home 이 비어 있는 경우(JVM 이 홈을 못 찾는 컨테이너)를 위한 선택 설정.
+// 사용: ./gradlew testDebugUnitTest -ProboHome=/workspace
+tasks.withType<Test>().configureEach {
+    providers.gradleProperty("roboHome").orNull?.let { systemProperty("user.home", it) }
 }
 
 dependencies {
@@ -70,6 +83,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("androidx.test:core:1.6.1")
 }
 
 // 빌드된 버전명을 파일로 남겨 워크플로우가 APK 파일 이름에 쓸 수 있게 한다.
