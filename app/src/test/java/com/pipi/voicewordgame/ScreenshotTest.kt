@@ -33,6 +33,9 @@ class ScreenshotTest {
         main.findViewById<View>(R.id.wordImage).alpha = 1f
         main.findViewById<View>(R.id.hintBadge).scaleX = 1f
         main.findViewById<View>(R.id.hintBadge).scaleY = 1f
+        // 실기기(마이크 허용)에서 보이는 상태로 캡처한다.
+        main.findViewById<android.widget.TextView>(R.id.micStatus)
+            .setText(R.string.mic_listening)
         capture(main, File(outDir, "02_game.png"))
 
         val admin = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
