@@ -56,7 +56,7 @@ class MicCapture(private val context: Context) {
         private set
 
     private var writer: PipeWriter? = null
-    private val chunkLock = Any()
+    private var pipeReadEnd: ParcelFileDescriptor? = null
 
     fun hasPermission(): Boolean =
         ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
@@ -160,6 +160,7 @@ class MicCapture(private val context: Context) {
             closePipeSource()
             val pipe = ParcelFileDescriptor.createPipe()
             val readEnd = pipe[0]
+            pipeReadEnd = readEnd
             val out = ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])
             val w = PipeWriter(out)
             writer = w
@@ -175,6 +176,13 @@ class MicCapture(private val context: Context) {
         writer = null
         try {
             w?.close()
+        } catch (e: Exception) {
+            // ignore
+        }
+        val readEnd = pipeReadEnd
+        pipeReadEnd = null
+        try {
+            readEnd?.close()
         } catch (e: Exception) {
             // ignore
         }
@@ -327,6 +335,12 @@ class MicCapture(private val context: Context) {
             queue.clear()
             try {
                 thread?.interrupt()
+            } catch (e: Exception) {
+                // ignore
+            }
+            // 쓰기 스레드가 파이프에 막혀 있으면 닫아서 풀어 준다.
+            try {
+                out.close()
             } catch (e: Exception) {
                 // ignore
             }
