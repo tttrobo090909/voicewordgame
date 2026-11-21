@@ -25,6 +25,8 @@ class ScreenshotTest {
         val outDir = File("build/ui").apply { mkdirs() }
 
         val main = Robolectric.buildActivity(MainActivity::class.java).setup().get()
+        // 살랑살랑 애니메이션 중간 프레임이 아니라 가운데 위치로 캐퓨한다.
+        main.findViewById<View>(R.id.chickImage).translationX = 0f
         capture(main, File(outDir, "01_first.png"))
 
         main.findViewById<View>(R.id.startButton).performClick()

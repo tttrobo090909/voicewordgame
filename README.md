@@ -1,13 +1,25 @@
-# 말해봐요 by 피피 (VoiceWordGame) v2.0
+# 말해봐요 by 피피 (VoiceWordGame) v2.1
 
 그림을 보고 단어를 말하면 맞힌 문제가 쌓이는 가족 단어 놀이 앱입니다.
 v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 모두 걷어내고**,
 아이 혼자서도 바로 시작할 수 있는 단순한 게임으로 다시 만들었습니다.
 
 - 앱 이름: **말해봐요 by 피피** · 패키지 `com.pipi.voicewordgame`
-- 버전 규칙: `v2.0_MMDD_HHmm` (빌드 시점 KST). 예) `v2.0_1121_2152`
+- 버전 규칙: `v2.1_MMDD_HHmm` (빌드 시점 KST). 예) `v2.1_1121_2255`
 - minSdk 24 · targetSdk 35 · compileSdk 35
 - 토스트 팝업 0건 — 모든 안내는 화면 안 배너/배지로 표시합니다.
+
+## v2.1에서 달라진 것
+
+| 영역 | v2.0 | v2.1 |
+| --- | --- | --- |
+| 상·하단 여유 | 시스템 바 인셋만 | 첫 화면·게임 화면·관리자 화면 모두 **시스템 바 + 14dp** 여유 |
+| 관리자 진입(제목 3번 탭) | 리플·눌림 표시 있음 | **리플·포커스·하이라이트·탭 소리·진동 없음** (배경 `null`) |
+| 정답 발음 | 두 번 모두 0.92 | **1번째 0.72(천천히) → 350ms 쉼 → 2번째 0.95(보통)**, 2번째 완료 +500ms 뒤 다음 문제 (안전 타이머 4초) |
+| 병아리 배너 | 96dp · 병아리 76dp, 정지 | **116dp · 병아리 92dp(+20%)**, 첫 화면에서 좌우 ±10dp로 **1.4초 왕복 살랑살랑** |
+| 카테고리 배치 | 전체 무작위가 맨 위, 타일 68dp | **6개 카테고리 2열×3행(78dp, +15%) 먼저 → 전체 무작위는 맨 아래** |
+| 선택 표시 | 2dp 노란 테두리 | **3dp 진한 코랄-오렌지(#E05A3F) 테두리 + 살짝 진한 배경**(노란 전체 무작위도 확실히 구분) |
+| 1글자 한글 힌트 | 글자 그대로 노출(`손`) | **초성만 노출(`ㅅ (1글자)`)** — 42개 1글자 단어의 글자 스포일러 방지 (영문은 기존 방식) |
 
 ## v2.0에서 달라진 것
 
@@ -40,9 +52,9 @@ v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 �
   (`speech/ResultBundles.kt`, 회귀 테스트 `ResultBundlesTest`)
 - **침묵 감지 extra**(`EXTRA_SPEECH_INPUT_*`)는 보내지 않습니다 — 일부 인식기의 빈 결과·조기 종료 원인
 - `AndroidManifest.xml` `<queries>` 에 `com.google.android.tts` 패키지 추가
-- **TTS**: 구글 TTS 엔진 우선 연결, `speechRate 0.92` · `pitch 1.05`,
-  1번째 발음 완료 → 300ms 쉼 → 2번째 발음 → 완료 후 500ms → 다음 문제.
-  TTS 가 없거나 오류면 **3.5초 안전 타이머**가 대신 다음 문제로 넘깁니다 (`tts/Speaker.kt`)
+- **TTS**: 구글 TTS 엔진 우선 연결, `pitch 1.05`,
+  1번째 발음 **0.72(천천히)** → 350ms 쉼 → 2번째 발음 **0.95(보통)** → 완료 후 500ms → 다음 문제.
+  TTS 가 없거나 오류면 **4초 안전 타이머**가 대신 다음 문제로 넘깁니다 (`tts/Speaker.kt`)
 
 ## 숨은 관리자 화면
 
@@ -75,7 +87,9 @@ v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 �
 - `WordStoreTest` 추가·수정·삭제·기본값 복원 영구 저장
 - `ResultBundlesTest` 결과 키 우선순위(회귀)
 - `MainActivitySmokeTest` 첫 화면 구성·게임 시작·정답 카운트·힌트 배지·2번 읽고 넘어가기·구구단 잠금 3종
-- `SystemBarInsetsTest` 상태바·내비바·키보드 인셋이 루트 여백으로 적용
+- `V21DesignTest` 카테고리 2열×3행·무작위 맨 아래·78dp 타일·3dp 코랄 선택 테두리·제목 탭 무반응·116dp 배너·병아리 살랑살랑
+- `SpeakerTest` 1번째 0.72 → 350ms → 2번째 0.95 속도 차등과 4초 안전 타이머 값
+- `SystemBarInsetsTest` 상태바·내비바·키보드 인셋 + 상·하단 14dp 여유가 루트 여백으로 적용
 - `ScreenshotTest` 화면 3장 캡처
 
 ## 빌드
@@ -97,11 +111,11 @@ app/src/main/java/com/pipi/voicewordgame/
   game/WordStore.kt          내부 JSON 저장소(기본값 복사·CRUD)
   game/GameSession.kt        문제 큐·맞힌 문제 수
   game/AnswerMatcher.kt      정답 판정
-  game/Hints.kt              첫 글자 힌트/커스텀 힌트
+  game/Hints.kt              첫 글자·1글자 초성 힌트/커스텀 힌트
   speech/AnswerRecognizer.kt 인식기 생성·DIRECT 마이크
   speech/RecognitionEngines.kt 구글 인식기 우선 선택(순수 로직)
   speech/ResultBundles.kt    결과 번들 읽기(1순위/폴백)
-  tts/Speaker.kt             두 번 읽기·안전 타이머
+  tts/Speaker.kt             천천히/보통 두 번 읽기·안전 타이머
   ui/ParticleView.kt         정답 축하 파티클
   util/ImageStore.kt         assets·내부 파일 그림 로더
   util/Prefs.kt              언어·마지막 카테고리

@@ -13,20 +13,31 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 정답 단어를 두 번 읽어 주는 TTS.
  *
  * - 구글 TTS(com.google.android.tts) 엔진을 우선 연결하고, 없으면 기기 기본 엔진.
- * - speechRate 0.92 · pitch 1.05 로 또박또박 부드럽게.
- * - [speakTwice]: 1번째 발음 완료(onDone) → 300ms 쉼 → 2번째 발음 → 완료되면 onFinished.
- *   TTS 가 없거나 오류가 나면 3.5초 안전 타이머가 대신 onFinished 를 부른다(게임이 멈추지 않게).
+ * - v2.1: 1번째는 **천천히(speechRate 0.72)** → 350ms 쉼 → 2번째는 **보통 속도(0.95)**.
+ *   pitch 는 1.05 로 유지.
+ * - [speakTwice]: 1번째 발음 완료(onDone) → 350ms 쉼 → 2번째 발음 → 완료되면 onFinished.
+ *   TTS 가 없거나 오류가 나면 4초 안전 타이머가 대신 onFinished 를 부른다(게임이 멈추지 않게).
  */
 class Speaker(context: Context) {
 
     companion object {
         const val GOOGLE_TTS_ENGINE = "com.google.android.tts"
-        const val SPEECH_RATE = 0.92f
+
+        /** 1번째 발음: 천천히. */
+        const val FIRST_SPEECH_RATE = 0.72f
+
+        /** 2번째 발음: 보통 속도. */
+        const val SECOND_SPEECH_RATE = 0.95f
+
         const val PITCH = 1.05f
-        const val PAUSE_BETWEEN_MS = 300L
-        const val SAFETY_TIMEOUT_MS = 3500L
+        const val PAUSE_BETWEEN_MS = 350L
+        const val SAFETY_TIMEOUT_MS = 4000L
         private const val UTTERANCE_FIRST = "answer-1"
         private const val UTTERANCE_SECOND = "answer-2"
+
+        /** 1번째 발음은 천천히, 2번째 발음은 보통 속도로 읽는다. */
+        fun rateFor(round: Int): Float =
+            if (round <= 1) FIRST_SPEECH_RATE else SECOND_SPEECH_RATE
     }
 
     private val appContext = context.applicationContext
@@ -38,6 +49,9 @@ class Speaker(context: Context) {
     private var onFinished: (() -> Unit)? = null
     private val finished = AtomicBoolean(true)
     private var retriedWithDefaultEngine = false
+
+    /** 엔진에 실제로 요청한 발음 속도를 차례대로 남긴다(1번째·2번째). 단위 테스트가 읽는다. */
+    internal val appliedRates: MutableList<Float> = java.util.Collections.synchronizedList(mutableListOf<Float>())
 
     var ready: Boolean = false
         private set
@@ -114,7 +128,7 @@ class Speaker(context: Context) {
 
     private fun configure() {
         runCatching {
-            tts?.setSpeechRate(SPEECH_RATE)
+            tts?.setSpeechRate(FIRST_SPEECH_RATE)
             tts?.setPitch(PITCH)
         }
     }
@@ -129,6 +143,7 @@ class Speaker(context: Context) {
         pendingLang = langTag
         this.onFinished = onFinished
         finished.set(false)
+        appliedRates.clear()
 
         handler.removeCallbacks(safety)
         handler.postDelayed(safety, SAFETY_TIMEOUT_MS)
@@ -162,6 +177,10 @@ class Speaker(context: Context) {
             return
         }
         val id = if (round == 1) UTTERANCE_FIRST else UTTERANCE_SECOND
+        // 발음마다 속도를 바꿔야 해서 speak 직전에 적용한다(1번째 천천히 · 2번째 보통).
+        val rate = rateFor(round)
+        appliedRates.add(rate)
+        runCatching { engine.setSpeechRate(rate) }
         val params = Bundle().apply {
             putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id)
         }
@@ -199,6 +218,7 @@ class Speaker(context: Context) {
         pendingText = null
         onFinished = null
         finished.set(true)
+        runCatching { tts?.setSpeechRate(FIRST_SPEECH_RATE) }
         runCatching { tts?.stop() }
     }
 

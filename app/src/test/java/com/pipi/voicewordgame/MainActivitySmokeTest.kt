@@ -60,7 +60,7 @@ class MainActivitySmokeTest {
         )
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.0_"))
+        assertTrue(version.text.toString().startsWith("v2.1_"))
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()
@@ -119,8 +119,8 @@ class MainActivitySmokeTest {
         activity.findViewById<Button>(R.id.answerButton).performClick()
         assertTrue(reveal.text.toString().startsWith("정답!"))
 
-        // TTS 완료(또는 3.5초 안전 타이머) + 500ms 뒤 다음 문제로 넘어간다.
-        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4300))
+        // TTS 완료(또는 4초 안전 타이머) + 500ms 뒤 다음 문제로 넘어간다.
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4600))
         assertEquals("무엇일까요?", reveal.text.toString())
     }
 
@@ -133,7 +133,7 @@ class MainActivitySmokeTest {
         activity.findViewById<Button>(R.id.skipButton).performClick()
         assertTrue(reveal.text.toString().startsWith("정답은 "))
 
-        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4300))
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4600))
         assertEquals("무엇일까요?", reveal.text.toString())
     }
 

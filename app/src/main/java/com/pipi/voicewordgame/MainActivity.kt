@@ -7,6 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Typeface
+import android.animation.Keyframe
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +19,8 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -28,6 +33,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -48,22 +54,35 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.0 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금.
+ * 말해봐요! v2.1 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금.
  *
- * - 가족 등록·목소리 등록·소음 측정·화자 판별은 v2.0에서 모두 빠졌다(아이와 함께 쓰는 단순한 게임).
- * - 음성인식은 실기기 검증(dictationtest v1.2) 방식: 구글 인식기 우선, DIRECT 마이크,
- *   RESULTS_RECOGNITION 1순위 읽기.
- * - 정답·건너뛰기 모두 정답 단어를 두 번 읽어 준 뒤 다음 문제로 넘어간다.
+ * v2.1 디자인·발음 다듬기:
+ * - 시스템 바 여백 위에 상·하단 14dp 여유를 더한다(첫 화면·게임 화면·관리자 화면).
+ * - 제목 3번 탭은 리플·포커스·소리 없이 동작한다(관리자 진입을 눈에 띄지 않게).
+ * - 카테고리 6개를 2열×3행(78dp)으로 먼저 두고 `전체 무작위`는 맨 아래로 옮겼다.
+ * - 선택된 카테고리·무작위 버튼은 3dp 코랄-오렌지 테두리로 확실히 구분한다.
+ * - 병아리 배너를 20% 키우고(116dp) 병아리가 좌우로 살랑살랑 흔들린다.
+ * - 정답 단어는 1번째 천천히(0.72) → 2번째 보통(0.95) 속도로 읽는다.
  */
 class MainActivity : AppCompatActivity() {
 
     private enum class BannerKind { INFO, GOOD, BAD, WAIT }
 
-    private companion object {
+    internal companion object {
         const val REQ_MIC = 2001
         const val NEXT_DELAY_MS = 500L
         const val TAP_WINDOW_MS = 1200L
         const val MAX_START_FAILURES = 3
+
+        /** 시스템 바 인셋 위에 더하는 상·하단 여유. */
+        const val EXTRA_VERTICAL_DP = 14
+
+        /** 카테고리 타일 높이(v2.1: 68dp → 78dp, 약 +15%). */
+        const val TILE_HEIGHT_DP = 78
+
+        /** 병아리 좌우 살랑살랑: 좌우 ±10dp, 1.4초에 한 왕복. */
+        const val CHICK_WOBBLE_DP = 10
+        const val CHICK_WOBBLE_CYCLE_MS = 1400L
     }
 
     private lateinit var prefs: Prefs
@@ -103,6 +122,8 @@ class MainActivity : AppCompatActivity() {
     private val setupMessageReset = Runnable { showBannerLine() }
 
     private var session: GameSession? = null
+    private var chickWobble: ValueAnimator? = null
+    private var wobbleActive = false
     private var gameActive = false
     private var awaiting = false
     private var resumeNext = false
@@ -145,6 +166,7 @@ class MainActivity : AppCompatActivity() {
         updateLangToggle()
         updateCategorySelection()
         showBannerLine()
+        startChickWobble()
 
         wireListeners()
         recognizer.listener = recognitionListener
@@ -165,6 +187,7 @@ class MainActivity : AppCompatActivity() {
             store.load()
             buildCategoryButtons()
             updateCategorySelection()
+            startChickWobble()
         } else if (awaiting) {
             handler.postDelayed(restartRunnable, 350)
         } else if (resumeNext) {
@@ -175,6 +198,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        stopChickWobble()
         handler.removeCallbacks(nextRunnable)
         handler.removeCallbacks(restartRunnable)
         resumeNext = gameActive && !awaiting
@@ -184,6 +208,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopChickWobble()
         handler.removeCallbacksAndMessages(null)
         recognizer.destroy()
         speaker.shutdown()
@@ -220,6 +245,12 @@ class MainActivity : AppCompatActivity() {
         stopButton = findViewById(R.id.stopButton)
         micStatus = findViewById(R.id.micStatus)
         particles = findViewById(R.id.particles)
+
+        // 제목 3번 탭은 숨은 관리자 입구다 — 리플·포커스·소리 같은 시각·청각 반응을 남기지 않는다.
+        titleText.background = null
+        titleText.foreground = null
+        titleText.isSoundEffectsEnabled = false
+        titleText.isHapticFeedbackEnabled = false
     }
 
     private fun wireListeners() {
@@ -237,18 +268,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** 시스템 바·컷아웃·키보드 여백을 루트 뷰에 적용한다. */
+    /** 시스템 바·컷아웃·키보드 여백을 루트 뷰에 적용한다. 상·하단에는 14dp 여유를 더한다. */
     private fun applySystemBarInsets(root: View) {
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            view.setPadding(bars.left, bars.top, bars.right, max(bars.bottom, ime.bottom))
+            val extra = dp(EXTRA_VERTICAL_DP)
+            view.setPadding(bars.left, bars.top + extra, bars.right, max(bars.bottom, ime.bottom) + extra)
             insets
         }
         ViewCompat.requestApplyInsets(root)
     }
+
+    /** 첫 화면 병아리가 좌우로 부드럽게 흔들린다(±10dp, 1.4초 한 왕복). */
+    private fun startChickWobble() {
+        if (wobbleActive) return
+        val amp = dp(CHICK_WOBBLE_DP).toFloat()
+        val ease = AccelerateDecelerateInterpolator()
+        val keyframes = PropertyValuesHolder.ofKeyframe(
+            View.TRANSLATION_X,
+            Keyframe.ofFloat(0f, 0f).apply { interpolator = ease },
+            Keyframe.ofFloat(0.25f, amp).apply { interpolator = ease },
+            Keyframe.ofFloat(0.5f, 0f).apply { interpolator = ease },
+            Keyframe.ofFloat(0.75f, -amp).apply { interpolator = ease },
+            Keyframe.ofFloat(1f, 0f)
+        )
+        val animator = ValueAnimator().apply {
+            setValues(keyframes)
+            duration = CHICK_WOBBLE_CYCLE_MS
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            addUpdateListener { chickImage.translationX = it.animatedValue as Float }
+        }
+        wobbleActive = true
+        chickWobble = animator
+        animator.start()
+    }
+
+    private fun stopChickWobble() {
+        wobbleActive = false
+        chickWobble?.cancel()
+        chickWobble = null
+        chickImage.translationX = 0f
+    }
+
+    /** 첫 화면 병아리 애니메이션이 켜져 있는지(화면을 떠나면 꺼진다). */
+    internal val isChickWobbling: Boolean
+        get() = wobbleActive
 
     private fun dp(value: Int): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
@@ -286,7 +354,7 @@ class MainActivity : AppCompatActivity() {
             setPadding(dp(10), 0, dp(8), 0)
             isClickable = true
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(0, dp(68), 1f).apply {
+            layoutParams = LinearLayout.LayoutParams(0, dp(TILE_HEIGHT_DP), 1f).apply {
                 setMargins(dp(4), dp(4), dp(4), dp(4))
             }
             setOnClickListener { selectCategory(categoryId) }
@@ -360,8 +428,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun categoryTileBackground(categoryId: Int, selected: Boolean) = GradientDrawable().apply {
         cornerRadius = dp(20).toFloat()
-        setColor(if (selected) ContextCompat.getColor(this@MainActivity, R.color.lemon) else categoryTint(categoryId))
-        setStroke(dp(2), if (selected) ContextCompat.getColor(this@MainActivity, R.color.lemon_deep) else android.graphics.Color.TRANSPARENT)
+        val tint = categoryTint(categoryId)
+        val edge = ContextCompat.getColor(this@MainActivity, R.color.select_edge)
+        // 선택되면 배경을 살짝 진하게(코랄 쪽으로 12%) 칠하고 3dp 진한 테두리를 두른다.
+        setColor(if (selected) ColorUtils.blendARGB(tint, edge, 0.12f) else tint)
+        if (selected) setStroke(dp(3), edge) else setStroke(0, Color.TRANSPARENT)
     }
 
     private fun showBannerLine() {
@@ -471,6 +542,7 @@ class MainActivity : AppCompatActivity() {
         startFailures = 0
 
         particles.clear()
+        stopChickWobble()
         handler.removeCallbacks(setupMessageReset)
         setupScreen.visibility = View.GONE
         gameScreen.visibility = View.VISIBLE
@@ -678,6 +750,7 @@ class MainActivity : AppCompatActivity() {
         gameScreen.visibility = View.GONE
         setupScreen.visibility = View.VISIBLE
         scoreText.visibility = View.GONE
+        startChickWobble()
         hintBadge.visibility = View.GONE
         micStatus.text = ""
         particles.clear()

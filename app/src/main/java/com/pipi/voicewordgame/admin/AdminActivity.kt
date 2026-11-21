@@ -43,6 +43,11 @@ import kotlin.math.max
  */
 class AdminActivity : AppCompatActivity() {
 
+    private companion object {
+        /** 시스템 바 인셋 위에 더하는 상·하단 여유. */
+        const val EXTRA_VERTICAL_DP = 14
+    }
+
     private lateinit var store: WordStore
     private lateinit var adapter: ProblemAdapter
     private lateinit var list: RecyclerView
@@ -408,13 +413,15 @@ class AdminActivity : AppCompatActivity() {
 
     // ---------------------------------------------------------------- 유틸
 
+    /** 시스템 바·컷아웃·키보드 여백을 루트 뷰에 적용한다. 상·하단에는 14dp 여유를 더한다. */
     private fun applySystemBarInsets(root: View) {
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            view.setPadding(bars.left, bars.top, bars.right, max(bars.bottom, ime.bottom))
+            val extra = dp(EXTRA_VERTICAL_DP)
+            view.setPadding(bars.left, bars.top + extra, bars.right, max(bars.bottom, ime.bottom) + extra)
             insets
         }
         ViewCompat.requestApplyInsets(root)

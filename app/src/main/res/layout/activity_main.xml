@@ -28,11 +28,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@null"
                 android:clickable="true"
                 android:focusable="true"
+                android:foreground="@null"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
+                android:soundEffectsEnabled="false"
+                android:stateListAnimator="@null"
                 android:text="@string/app_title"
                 android:textSize="26sp" />
 
@@ -115,11 +118,11 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="10dp">
 
-                    <!-- 슬림 배너: 작은 병아리 + 한 줄 안내 -->
+                    <!-- 슬림 배너: 작은 병아리 + 한 줄 안내 (v2.1: 높이 96→116dp, 병아리 92dp) -->
                     <LinearLayout
                         android:id="@+id/slimBanner"
                         android:layout_width="match_parent"
-                        android:layout_height="96dp"
+                        android:layout_height="116dp"
                         android:background="@drawable/bg_banner_slim"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -128,8 +131,8 @@
 
                         <ImageView
                             android:id="@+id/chickImage"
-                            android:layout_width="76dp"
-                            android:layout_height="76dp"
+                            android:layout_width="92dp"
+                            android:layout_height="92dp"
                             android:contentDescription="@string/app_name"
                             android:scaleType="fitCenter"
                             android:src="@drawable/chick_mascot" />
@@ -154,21 +157,24 @@
                         android:layout_marginTop="18dp"
                         android:text="@string/choose_problems" />
 
-                    <Button
-                        android:id="@+id/randomButton"
-                        style="@style/Widget.CuteChoice"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/category_all"
-                        android:textSize="18sp" />
-
+                    <!-- v2.1: 6개 카테고리를 먼저 두고, 전체 무작위는 맨 아래에 둔다. -->
                     <LinearLayout
                         android:id="@+id/categoryGrid"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/randomButton"
+                        style="@style/Widget.CuteChoice"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/category_all"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/versionText"
