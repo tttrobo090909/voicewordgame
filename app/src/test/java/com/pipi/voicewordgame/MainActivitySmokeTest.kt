@@ -31,7 +31,7 @@ class MainActivitySmokeTest {
         assertEquals(11, chips.childCount)
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v1.0_"))
+        assertTrue(version.text.toString().startsWith("v1.1_"))
     }
 
     @Test

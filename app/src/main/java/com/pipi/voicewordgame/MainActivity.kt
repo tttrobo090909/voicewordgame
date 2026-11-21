@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,9 +25,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -132,7 +137,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Android 15(targetSdk 35)는 화면 꽉 채우기(Edge-to-Edge)가 강제된다.
+        // 상태바·내비게이션 바는 앱 배경 뒤로 투명하게 두고, 앱 내용이 그 아래로 들어가므로
+        // 루트 뷰에 시스템 바·키보드(IME) 만큼 안쪽 여백을 줘서 버튼이 절대 가려지지 않게 한다.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(
+                ContextCompat.getColor(this, R.color.cream_deep),
+                ContextCompat.getColor(this, R.color.cream_deep)
+            )
+        )
         setContentView(R.layout.activity_main)
+        applySystemBarInsets(findViewById(R.id.root))
 
         prefs = Prefs(this)
         mic = MicCapture(this)
@@ -255,6 +272,19 @@ class MainActivity : AppCompatActivity() {
         setupScroll.setOnScrollChangeListener { _, _, _, _, _ ->
             if (setupBanner.visibility == View.VISIBLE) setupBanner.visibility = View.GONE
         }
+    }
+
+    /** 루트 뷰에 상태바·내비게이션 바·컷아웃·키보드 여백을 적용한다(상하단 버튼 가림 방지). */
+    private fun applySystemBarInsets(root: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(bars.left, bars.top, bars.right, max(bars.bottom, ime.bottom))
+            insets
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
     private fun dp(value: Int): Int =
