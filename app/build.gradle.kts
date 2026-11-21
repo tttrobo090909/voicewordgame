@@ -10,7 +10,7 @@ plugins {
 // 버전 규칙: v1.0_MMDD_HHmm (빌드 시점 KST 기준)
 val kstStamp: String = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
     .format(DateTimeFormatter.ofPattern("MMdd_HHmm"))
-val appVersionName: String = "1.1_$kstStamp"
+val appVersionName: String = "2.0_$kstStamp"
 val appVersionCode: Int = kstStamp.replace("_", "").toInt()
 
 android {

@@ -8,8 +8,10 @@
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <!-- Android 11+ 패키지 가시성: 음성인식 서비스와 TTS 엔진을 찾기 위해 필요 -->
+    <!-- Android 11+ 패키지 가시성: 구글 음성인식기(ComponentName 지정)와 TTS 엔진을 찾기 위해 필요 -->
     <queries>
+        <!-- 실기기에서 검증된 구글 인식기(com.google.android.tts)를 직접 지정하기 위해 필요 -->
+        <package android:name="com.google.android.tts" />
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
@@ -38,6 +40,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 숨은 관리자 화면(구구단 잠금을 통과해야만 열린다) -->
+        <activity
+            android:name=".admin.AdminActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

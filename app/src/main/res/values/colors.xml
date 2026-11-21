@@ -17,7 +17,13 @@
     <color name="rose">#FFD3E0</color>
     <color name="good">#2FA97A</color>
     <color name="bad">#DD6A5F</color>
-    <color name="icon_bg">#FFEFCE</color>
+    <color name="icon_bg">#FFF6E4</color>
+    <color name="tint_animal">#FFF6DC</color>
+    <color name="tint_food">#FFE9EC</color>
+    <color name="tint_vehicle">#E6F3FD</color>
+    <color name="tint_home">#E8F7F0</color>
+    <color name="tint_nature">#EFF6E4</color>
+    <color name="tint_person">#FDEEE4</color>
     <color name="white">#FFFFFF</color>
     <color name="shadow">#1A5A4A3F</color>
 </resources>

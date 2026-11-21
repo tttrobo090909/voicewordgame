@@ -1,90 +1,120 @@
 package com.pipi.voicewordgame.game
 
-import android.content.Context
+import org.json.JSONArray
 import org.json.JSONObject
 
+/** 문제 한 개. [hint] 가 비어 있으면 [Hints] 가 첫 글자 힌트를 자동으로 만든다. */
 data class Word(
     val id: Int,
     val ko: String,
     val en: String,
     val categoryId: Int,
     val image: String,
-    val synKo: List<String>,
-    val synEn: List<String>
+    val synKo: List<String> = emptyList(),
+    val synEn: List<String> = emptyList(),
+    val hint: String = ""
 ) {
     fun text(lang: String): String = if (lang == "en") en else ko
+
+    fun toJson(): JSONObject {
+        val o = JSONObject()
+        o.put("id", id)
+        o.put("ko", ko)
+        o.put("en", en)
+        o.put("category", categoryId)
+        o.put("image", image)
+        o.put("synKo", JSONArray(synKo))
+        o.put("synEn", JSONArray(synEn))
+        o.put("hint", hint)
+        return o
+    }
 }
 
-data class WordCategory(val id: Int, val ko: String, val en: String, val image: String) {
+/** v2.0 카테고리: 동물 / 음식·과일 / 탈것 / 사물·집 / 자연 / 사람·몸 */
+data class WordCategory(val id: Int, val ko: String, val en: String) {
     fun label(lang: String): String = if (lang == "en") en else ko
 }
 
-data class AvatarInfo(val id: Int, val name: String, val image: String)
+data class WordBook(
+    val words: List<Word>,
+    val categories: List<WordCategory>,
+    val appVersion: String = ""
+) {
+    fun byCategory(categoryId: Int): List<Word> =
+        if (categoryId <= 0) words else words.filter { it.categoryId == categoryId }
 
-/** assets/words.json 을 읽어 250단어·10카테고리·아바타를 제공한다. */
-object WordRepository {
+    fun find(id: Int): Word? = words.firstOrNull { it.id == id }
 
-    var words: List<Word> = emptyList()
-        private set
-    var categories: List<WordCategory> = emptyList()
-        private set
-    var avatars: List<AvatarInfo> = emptyList()
-        private set
-    var loaded: Boolean = false
-        private set
+    fun categoryOf(word: Word): WordCategory? = categories.firstOrNull { it.id == word.categoryId }
 
-    private var byId: Map<Int, Word> = emptyMap()
+    fun copyWithWords(words: List<Word>): WordBook = copy(words = words)
+}
 
-    fun load(context: Context) {
-        if (loaded) return
-        val raw = context.assets.open("words.json").bufferedReader().use { it.readText() }
+/** words.json 읽기/쓰기(앱 assets 과 내부 저장 파일이 같은 형식을 쓴다). */
+object WordJson {
+
+    const val SCHEMA = 2
+
+    fun parse(raw: String): WordBook {
         val root = JSONObject(raw)
 
-        val catArr = root.getJSONArray("categories")
-        val cats = ArrayList<WordCategory>(catArr.length())
+        val catArr = root.optJSONArray("categories") ?: JSONArray()
+        val categories = ArrayList<WordCategory>(catArr.length())
         for (i in 0 until catArr.length()) {
             val o = catArr.getJSONObject(i)
-            cats.add(
+            categories.add(
                 WordCategory(
                     id = o.getInt("id"),
                     ko = o.getString("ko"),
-                    en = o.optString("en", o.getString("ko")),
-                    image = o.getString("image")
+                    en = o.optString("en", o.getString("ko"))
                 )
             )
         }
-        categories = cats
 
-        val avatarArr = root.getJSONArray("avatars")
-        val avs = ArrayList<AvatarInfo>(avatarArr.length())
-        for (i in 0 until avatarArr.length()) {
-            val o = avatarArr.getJSONObject(i)
-            avs.add(AvatarInfo(o.getInt("id"), o.optString("name", ""), o.getString("image")))
-        }
-        avatars = avs
-
-        val wordArr = root.getJSONArray("words")
-        val list = ArrayList<Word>(wordArr.length())
+        val wordArr = root.optJSONArray("words") ?: JSONArray()
+        val words = ArrayList<Word>(wordArr.length())
         for (i in 0 until wordArr.length()) {
             val o = wordArr.getJSONObject(i)
-            list.add(
+            words.add(
                 Word(
                     id = o.getInt("id"),
                     ko = o.getString("ko"),
                     en = o.optString("en", ""),
-                    categoryId = o.getInt("category"),
+                    categoryId = o.optInt("category", 1),
                     image = o.getString("image"),
-                    synKo = stringList(o.optJSONArray("synKo")),
-                    synEn = stringList(o.optJSONArray("synEn"))
+                    synKo = strings(o.optJSONArray("synKo")),
+                    synEn = strings(o.optJSONArray("synEn")),
+                    hint = o.optString("hint", "")
                 )
             )
         }
-        words = list
-        byId = list.associateBy { it.id }
-        loaded = true
+
+        return WordBook(words, categories, root.optString("appVersion", ""))
     }
 
-    private fun stringList(arr: org.json.JSONArray?): List<String> {
+    fun write(book: WordBook): String {
+        val root = JSONObject()
+        root.put("schema", SCHEMA)
+        root.put("appVersion", book.appVersion)
+        root.put("wordCount", book.words.size)
+
+        val cats = JSONArray()
+        book.categories.forEach { c ->
+            cats.put(JSONObject().apply {
+                put("id", c.id)
+                put("ko", c.ko)
+                put("en", c.en)
+            })
+        }
+        root.put("categories", cats)
+
+        val arr = JSONArray()
+        book.words.forEach { arr.put(it.toJson()) }
+        root.put("words", arr)
+        return root.toString(1)
+    }
+
+    private fun strings(arr: JSONArray?): List<String> {
         if (arr == null) return emptyList()
         val out = ArrayList<String>(arr.length())
         for (i in 0 until arr.length()) {
@@ -93,15 +123,4 @@ object WordRepository {
         }
         return out
     }
-
-    fun find(id: Int): Word? = byId[id]
-
-    fun categoryOf(word: Word): WordCategory? = categories.firstOrNull { it.id == word.categoryId }
-
-    fun byCategory(categoryId: Int): List<Word> =
-        if (categoryId <= 0) words else words.filter { it.categoryId == categoryId }
-
-    /** 같은 그림을 함께 쓰는 단어들(이모지 한 장으로는 구분이 어려운 낱말). */
-    fun siblingsOf(word: Word): List<Word> =
-        words.filter { it.id != word.id && it.image == word.image }
 }

@@ -1,139 +1,37 @@
 {
- "schema": 1,
- "appVersion": "1.0",
+ "schema": 2,
+ "appVersion": "2.0",
  "wordCount": 250,
  "categories": [
   {
    "id": 1,
    "ko": "동물",
-   "en": "Animals",
-   "image": "categories/1.webp"
+   "en": "Animals"
   },
   {
    "id": 2,
-   "ko": "바다·곤충",
-   "en": "Sea & Bugs",
-   "image": "categories/2.webp"
+   "ko": "음식·과일",
+   "en": "Food & Fruit"
   },
   {
    "id": 3,
-   "ko": "과일·채소",
-   "en": "Fruits & Veggies",
-   "image": "categories/3.webp"
+   "ko": "탈것",
+   "en": "Vehicles"
   },
   {
    "id": 4,
-   "ko": "음식·간식",
-   "en": "Food & Snacks",
-   "image": "categories/4.webp"
+   "ko": "사물·집",
+   "en": "Things & Home"
   },
   {
    "id": 5,
-   "ko": "탈것·교통",
-   "en": "Vehicles",
-   "image": "categories/5.webp"
+   "ko": "자연",
+   "en": "Nature"
   },
   {
    "id": 6,
-   "ko": "자연·날씨·우주",
-   "en": "Nature & Space",
-   "image": "categories/6.webp"
-  },
-  {
-   "id": 7,
-   "ko": "옷·신체",
-   "en": "Clothes & Body",
-   "image": "categories/7.webp"
-  },
-  {
-   "id": 8,
-   "ko": "집·생활용품",
-   "en": "Home & Things",
-   "image": "categories/8.webp"
-  },
-  {
-   "id": 9,
-   "ko": "학교·놀이·악기",
-   "en": "School & Play",
-   "image": "categories/9.webp"
-  },
-  {
-   "id": 10,
-   "ko": "장소·직업·공룡",
-   "en": "Places & Jobs",
-   "image": "categories/10.webp"
-  }
- ],
- "avatars": [
-  {
-   "id": 0,
-   "name": "곰",
-   "image": "avatars/00.webp"
-  },
-  {
-   "id": 1,
-   "name": "고양이",
-   "image": "avatars/01.webp"
-  },
-  {
-   "id": 2,
-   "name": "강아지",
-   "image": "avatars/02.webp"
-  },
-  {
-   "id": 3,
-   "name": "토끼",
-   "image": "avatars/03.webp"
-  },
-  {
-   "id": 4,
-   "name": "판다",
-   "image": "avatars/04.webp"
-  },
-  {
-   "id": 5,
-   "name": "여우",
-   "image": "avatars/05.webp"
-  },
-  {
-   "id": 6,
-   "name": "사자",
-   "image": "avatars/06.webp"
-  },
-  {
-   "id": 7,
-   "name": "병아리",
-   "image": "avatars/07.webp"
-  },
-  {
-   "id": 8,
-   "name": "펭귄",
-   "image": "avatars/08.webp"
-  },
-  {
-   "id": 9,
-   "name": "코알라",
-   "image": "avatars/09.webp"
-  },
-  {
-   "id": 10,
-   "name": "공룡",
-   "image": "avatars/10.webp"
-  },
-  {
-   "id": 11,
-   "name": "로봇",
-   "image": "avatars/11.webp"
-  },
-  {
-   "id": 12,
-   "name": "공주",
-   "image": "avatars/12.webp"
-  },
-  {
-   "id": 13,
-   "name": "우주인",
-   "image": "avatars/13.webp"
+   "ko": "사람·몸",
+   "en": "People & Body"
   }
  ],
  "words": [
@@ -152,7 +50,7 @@
     "puppy",
     "doggy"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 2,
@@ -168,7 +66,7 @@
    "synEn": [
     "kitty"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 3,
@@ -182,7 +80,7 @@
    "synEn": [
     "bunny"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 4,
@@ -192,7 +90,7 @@
    "image": "words/004.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 5,
@@ -204,7 +102,7 @@
     "범"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 6,
@@ -214,7 +112,7 @@
    "image": "words/006.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 7,
@@ -224,7 +122,7 @@
    "image": "words/007.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 8,
@@ -236,7 +134,7 @@
     "지브라"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 9,
@@ -248,7 +146,7 @@
     "숭이"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 10,
@@ -263,7 +161,7 @@
    "synEn": [
     "teddy bear"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 11,
@@ -275,7 +173,7 @@
     "팬더"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 12,
@@ -285,7 +183,7 @@
    "image": "words/012.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 13,
@@ -295,7 +193,7 @@
    "image": "words/013.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 14,
@@ -307,7 +205,7 @@
     "노루"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 15,
@@ -317,7 +215,7 @@
    "image": "words/015.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 16,
@@ -331,7 +229,7 @@
    "synEn": [
     "piggy"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 17,
@@ -346,7 +244,7 @@
    "synEn": [
     "cattle"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 18,
@@ -360,7 +258,7 @@
    "synEn": [
     "pony"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 19,
@@ -374,7 +272,7 @@
    "synEn": [
     "lamb"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 20,
@@ -389,7 +287,7 @@
     "hen",
     "rooster"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 21,
@@ -403,7 +301,7 @@
    "synEn": [
     "duckling"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 22,
@@ -413,7 +311,7 @@
    "image": "words/022.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 23,
@@ -425,7 +323,7 @@
     "올빼미"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 24,
@@ -439,7 +337,7 @@
    "synEn": [
     "ribbit"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 25,
@@ -454,90 +352,90 @@
    "synEn": [
     "tortoise"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 26,
    "ko": "고래",
    "en": "Whale",
-   "category": 2,
+   "category": 1,
    "image": "words/026.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 27,
    "ko": "상어",
    "en": "Shark",
-   "category": 2,
+   "category": 1,
    "image": "words/027.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 28,
    "ko": "돌고래",
    "en": "Dolphin",
-   "category": 2,
+   "category": 1,
    "image": "words/028.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 29,
    "ko": "문어",
    "en": "Octopus",
-   "category": 2,
+   "category": 1,
    "image": "words/029.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 30,
    "ko": "오징어",
    "en": "Squid",
-   "category": 2,
+   "category": 1,
    "image": "words/030.webp",
    "synKo": [],
    "synEn": [
     "calamari"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 31,
    "ko": "게",
    "en": "Crab",
-   "category": 2,
+   "category": 1,
    "image": "words/031.webp",
    "synKo": [
     "꽃게",
     "대게"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 32,
    "ko": "새우",
    "en": "Shrimp",
-   "category": 2,
+   "category": 1,
    "image": "words/032.webp",
    "synKo": [],
    "synEn": [
     "prawn"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 33,
    "ko": "불가사리",
    "en": "Starfish",
-   "category": 2,
+   "category": 1,
    "image": "words/033.webp",
    "synKo": [
     "별불가사리"
@@ -545,46 +443,46 @@
    "synEn": [
     "sea star"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 34,
    "ko": "해파리",
    "en": "Jellyfish",
-   "category": 2,
+   "category": 1,
    "image": "words/034.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 35,
    "ko": "물고기",
    "en": "Fish",
-   "category": 2,
+   "category": 1,
    "image": "words/035.webp",
    "synKo": [
     "붕어",
     "생선"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 36,
    "ko": "금붕어",
    "en": "Goldfish",
-   "category": 2,
+   "category": 1,
    "image": "words/036.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 37,
    "ko": "악어",
    "en": "Crocodile",
-   "category": 2,
+   "category": 1,
    "image": "words/037.webp",
    "synKo": [
     "크로커다일"
@@ -592,13 +490,13 @@
    "synEn": [
     "alligator"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 38,
    "ko": "뱀",
    "en": "Snake",
-   "category": 2,
+   "category": 1,
    "image": "words/038.webp",
    "synKo": [
     "구렁이"
@@ -606,23 +504,23 @@
    "synEn": [
     "serpent"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 39,
    "ko": "나비",
    "en": "Butterfly",
-   "category": 2,
+   "category": 1,
    "image": "words/039.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 40,
    "ko": "꿀벌",
    "en": "Bee",
-   "category": 2,
+   "category": 1,
    "image": "words/040.webp",
    "synKo": [
     "벌"
@@ -630,13 +528,13 @@
    "synEn": [
     "honeybee"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 41,
    "ko": "무당벌레",
    "en": "Ladybug",
-   "category": 2,
+   "category": 1,
    "image": "words/041.webp",
    "synKo": [
     "레이디버그"
@@ -644,63 +542,63 @@
    "synEn": [
     "ladybird"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 42,
    "ko": "잠자리",
    "en": "Dragonfly",
-   "category": 2,
+   "category": 1,
    "image": "words/042.webp",
    "synKo": [],
    "synEn": [],
-   "art": "approx"
+   "hint": ""
   },
   {
    "id": 43,
    "ko": "개미",
    "en": "Ant",
-   "category": 2,
+   "category": 1,
    "image": "words/043.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 44,
    "ko": "매미",
    "en": "Cicada",
-   "category": 2,
+   "category": 1,
    "image": "words/044.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 45,
    "ko": "거미",
    "en": "Spider",
-   "category": 2,
+   "category": 1,
    "image": "words/045.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 46,
    "ko": "달팽이",
    "en": "Snail",
-   "category": 2,
+   "category": 1,
    "image": "words/046.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 47,
    "ko": "애벌레",
    "en": "Caterpillar",
-   "category": 2,
+   "category": 1,
    "image": "words/047.webp",
    "synKo": [
     "벌레"
@@ -708,23 +606,23 @@
    "synEn": [
     "worm"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 48,
    "ko": "메뚜기",
    "en": "Grasshopper",
-   "category": 2,
+   "category": 1,
    "image": "words/048.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 49,
    "ko": "사슴벌레",
    "en": "Stag beetle",
-   "category": 2,
+   "category": 1,
    "image": "words/049.webp",
    "synKo": [
     "딱정벌레"
@@ -732,13 +630,13 @@
    "synEn": [
     "beetle"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 50,
    "ko": "반딧불이",
    "en": "Firefly",
-   "category": 2,
+   "category": 1,
    "image": "words/050.webp",
    "synKo": [
     "개똥벌레"
@@ -746,43 +644,43 @@
    "synEn": [
     "lightning bug"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 51,
    "ko": "사과",
    "en": "Apple",
-   "category": 3,
+   "category": 2,
    "image": "words/051.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 52,
    "ko": "바나나",
    "en": "Banana",
-   "category": 3,
+   "category": 2,
    "image": "words/052.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 53,
    "ko": "딸기",
    "en": "Strawberry",
-   "category": 3,
+   "category": 2,
    "image": "words/053.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 54,
    "ko": "포도",
    "en": "Grape",
-   "category": 3,
+   "category": 2,
    "image": "words/054.webp",
    "synKo": [
     "포도송이"
@@ -790,33 +688,33 @@
    "synEn": [
     "grapes"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 55,
    "ko": "수박",
    "en": "Watermelon",
-   "category": 3,
+   "category": 2,
    "image": "words/055.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 56,
    "ko": "오렌지",
    "en": "Orange",
-   "category": 3,
+   "category": 2,
    "image": "words/056.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 57,
    "ko": "귤",
    "en": "Tangerine",
-   "category": 3,
+   "category": 2,
    "image": "words/057.webp",
    "synKo": [
     "감귤",
@@ -825,43 +723,43 @@
    "synEn": [
     "mandarin"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 58,
    "ko": "복숭아",
    "en": "Peach",
-   "category": 3,
+   "category": 2,
    "image": "words/058.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 59,
    "ko": "배",
    "en": "Pear",
-   "category": 3,
+   "category": 2,
    "image": "words/059.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 60,
    "ko": "파인애플",
    "en": "Pineapple",
-   "category": 3,
+   "category": 2,
    "image": "words/060.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 61,
    "ko": "키위",
    "en": "Kiwi",
-   "category": 3,
+   "category": 2,
    "image": "words/061.webp",
    "synKo": [
     "참다래"
@@ -869,23 +767,23 @@
    "synEn": [
     "kiwifruit"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 62,
    "ko": "망고",
    "en": "Mango",
-   "category": 3,
+   "category": 2,
    "image": "words/062.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 63,
    "ko": "체리",
    "en": "Cherry",
-   "category": 3,
+   "category": 2,
    "image": "words/063.webp",
    "synKo": [
     "앵두"
@@ -893,35 +791,35 @@
    "synEn": [
     "cherries"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 64,
    "ko": "블루베리",
    "en": "Blueberry",
-   "category": 3,
+   "category": 2,
    "image": "words/064.webp",
    "synKo": [],
    "synEn": [
     "blueberries"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 65,
    "ko": "레몬",
    "en": "Lemon",
-   "category": 3,
+   "category": 2,
    "image": "words/065.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 66,
    "ko": "멜론",
    "en": "Melon",
-   "category": 3,
+   "category": 2,
    "image": "words/066.webp",
    "synKo": [
     "메론"
@@ -929,156 +827,156 @@
    "synEn": [
     "cantaloupe"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 67,
    "ko": "당근",
    "en": "Carrot",
-   "category": 3,
+   "category": 2,
    "image": "words/067.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 68,
    "ko": "토마토",
    "en": "Tomato",
-   "category": 3,
+   "category": 2,
    "image": "words/068.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 69,
    "ko": "오이",
    "en": "Cucumber",
-   "category": 3,
+   "category": 2,
    "image": "words/069.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 70,
    "ko": "옥수수",
    "en": "Corn",
-   "category": 3,
+   "category": 2,
    "image": "words/070.webp",
    "synKo": [
     "강냉이"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 71,
    "ko": "감자",
    "en": "Potato",
-   "category": 3,
+   "category": 2,
    "image": "words/071.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 72,
    "ko": "고구마",
    "en": "Sweet potato",
-   "category": 3,
+   "category": 2,
    "image": "words/072.webp",
    "synKo": [],
    "synEn": [
     "yam"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 73,
    "ko": "양파",
    "en": "Onion",
-   "category": 3,
+   "category": 2,
    "image": "words/073.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 74,
    "ko": "버섯",
    "en": "Mushroom",
-   "category": 3,
+   "category": 2,
    "image": "words/074.webp",
    "synKo": [
     "송이버섯"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 75,
    "ko": "브로콜리",
    "en": "Broccoli",
-   "category": 3,
+   "category": 2,
    "image": "words/075.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 76,
    "ko": "빵",
    "en": "Bread",
-   "category": 4,
+   "category": 2,
    "image": "words/076.webp",
    "synKo": [
     "식빵"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 77,
    "ko": "우유",
    "en": "Milk",
-   "category": 4,
+   "category": 2,
    "image": "words/077.webp",
    "synKo": [
     "밀크"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 78,
    "ko": "치즈",
    "en": "Cheese",
-   "category": 4,
+   "category": 2,
    "image": "words/078.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 79,
    "ko": "계란",
    "en": "Egg",
-   "category": 4,
+   "category": 2,
    "image": "words/079.webp",
    "synKo": [
     "달걀",
     "에그"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 80,
    "ko": "밥",
    "en": "Rice",
-   "category": 4,
+   "category": 2,
    "image": "words/080.webp",
    "synKo": [
     "쌀밥",
@@ -1087,25 +985,25 @@
    "synEn": [
     "cooked rice"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 81,
    "ko": "김밥",
    "en": "Gimbap",
-   "category": 4,
+   "category": 2,
    "image": "words/081.webp",
    "synKo": [],
    "synEn": [
     "kimbap"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 82,
    "ko": "라면",
    "en": "Ramen",
-   "category": 4,
+   "category": 2,
    "image": "words/082.webp",
    "synKo": [
     "라멘",
@@ -1114,13 +1012,13 @@
    "synEn": [
     "noodles"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 83,
    "ko": "국수",
    "en": "Noodles",
-   "category": 4,
+   "category": 2,
    "image": "words/083.webp",
    "synKo": [
     "칼국수",
@@ -1129,13 +1027,13 @@
    "synEn": [
     "noodle"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 84,
    "ko": "만두",
    "en": "Dumpling",
-   "category": 4,
+   "category": 2,
    "image": "words/084.webp",
    "synKo": [
     "교자"
@@ -1143,35 +1041,35 @@
    "synEn": [
     "dumplings"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 85,
    "ko": "떡볶이",
    "en": "Tteokbokki",
-   "category": 4,
+   "category": 2,
    "image": "words/085.webp",
    "synKo": [],
    "synEn": [
     "rice cake"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 86,
    "ko": "피자",
    "en": "Pizza",
-   "category": 4,
+   "category": 2,
    "image": "words/086.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 87,
    "ko": "햄버거",
    "en": "Hamburger",
-   "category": 4,
+   "category": 2,
    "image": "words/087.webp",
    "synKo": [
     "버거"
@@ -1179,13 +1077,13 @@
    "synEn": [
     "burger"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 88,
    "ko": "치킨",
    "en": "Fried chicken",
-   "category": 4,
+   "category": 2,
    "image": "words/088.webp",
    "synKo": [
     "후라이드",
@@ -1194,13 +1092,13 @@
    "synEn": [
     "chicken"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 89,
    "ko": "감자튀김",
    "en": "French fries",
-   "category": 4,
+   "category": 2,
    "image": "words/089.webp",
    "synKo": [
     "프렌치프라이",
@@ -1209,23 +1107,23 @@
    "synEn": [
     "fries"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 90,
    "ko": "샌드위치",
    "en": "Sandwich",
-   "category": 4,
+   "category": 2,
    "image": "words/090.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 91,
    "ko": "스파게티",
    "en": "Spaghetti",
-   "category": 4,
+   "category": 2,
    "image": "words/091.webp",
    "synKo": [
     "파스타"
@@ -1233,13 +1131,13 @@
    "synEn": [
     "pasta"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 92,
    "ko": "소시지",
    "en": "Sausage",
-   "category": 4,
+   "category": 2,
    "image": "words/092.webp",
    "synKo": [
     "소세지",
@@ -1248,25 +1146,25 @@
    "synEn": [
     "hot dog"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 93,
    "ko": "케이크",
    "en": "Cake",
-   "category": 4,
+   "category": 2,
    "image": "words/093.webp",
    "synKo": [
     "케익"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 94,
    "ko": "쿠키",
    "en": "Cookie",
-   "category": 4,
+   "category": 2,
    "image": "words/094.webp",
    "synKo": [
     "과자"
@@ -1274,13 +1172,13 @@
    "synEn": [
     "biscuit"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 95,
    "ko": "도넛",
    "en": "Donut",
-   "category": 4,
+   "category": 2,
    "image": "words/095.webp",
    "synKo": [
     "도너츠"
@@ -1288,73 +1186,73 @@
    "synEn": [
     "doughnut"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 96,
    "ko": "아이스크림",
    "en": "Ice cream",
-   "category": 4,
+   "category": 2,
    "image": "words/096.webp",
    "synKo": [
     "아이스"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 97,
    "ko": "초콜릿",
    "en": "Chocolate",
-   "category": 4,
+   "category": 2,
    "image": "words/097.webp",
    "synKo": [
     "초코",
     "초콜렛"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 98,
    "ko": "사탕",
    "en": "Candy",
-   "category": 4,
+   "category": 2,
    "image": "words/098.webp",
    "synKo": [
     "캔디"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 99,
    "ko": "팝콘",
    "en": "Popcorn",
-   "category": 4,
+   "category": 2,
    "image": "words/099.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 100,
    "ko": "주스",
    "en": "Juice",
-   "category": 4,
+   "category": 2,
    "image": "words/100.webp",
    "synKo": [
     "쥬스",
     "과일주스"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 101,
    "ko": "자동차",
    "en": "Car",
-   "category": 5,
+   "category": 3,
    "image": "words/101.webp",
    "synKo": [
     "차",
@@ -1363,35 +1261,35 @@
    "synEn": [
     "automobile"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 102,
    "ko": "버스",
    "en": "Bus",
-   "category": 5,
+   "category": 3,
    "image": "words/102.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 103,
    "ko": "택시",
    "en": "Taxi",
-   "category": 5,
+   "category": 3,
    "image": "words/103.webp",
    "synKo": [],
    "synEn": [
     "cab"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 104,
    "ko": "트럭",
    "en": "Truck",
-   "category": 5,
+   "category": 3,
    "image": "words/104.webp",
    "synKo": [
     "화물차"
@@ -1399,13 +1297,13 @@
    "synEn": [
     "lorry"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 105,
    "ko": "기차",
    "en": "Train",
-   "category": 5,
+   "category": 3,
    "image": "words/105.webp",
    "synKo": [
     "증기기관차"
@@ -1413,13 +1311,13 @@
    "synEn": [
     "locomotive"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 106,
    "ko": "지하철",
    "en": "Subway",
-   "category": 5,
+   "category": 3,
    "image": "words/106.webp",
    "synKo": [
     "전철",
@@ -1428,13 +1326,13 @@
    "synEn": [
     "metro"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 107,
    "ko": "비행기",
    "en": "Airplane",
-   "category": 5,
+   "category": 3,
    "image": "words/107.webp",
    "synKo": [
     "항공기"
@@ -1442,13 +1340,13 @@
    "synEn": [
     "plane"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 108,
    "ko": "헬리콥터",
    "en": "Helicopter",
-   "category": 5,
+   "category": 3,
    "image": "words/108.webp",
    "synKo": [
     "헬기"
@@ -1456,25 +1354,25 @@
    "synEn": [
     "copter"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 109,
    "ko": "로켓",
    "en": "Rocket",
-   "category": 5,
+   "category": 3,
    "image": "words/109.webp",
    "synKo": [
     "우주선"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 110,
    "ko": "배",
    "en": "Boat",
-   "category": 5,
+   "category": 3,
    "image": "words/110.webp",
    "synKo": [
     "보트",
@@ -1483,13 +1381,13 @@
    "synEn": [
     "ship"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 111,
    "ko": "요트",
    "en": "Yacht",
-   "category": 5,
+   "category": 3,
    "image": "words/111.webp",
    "synKo": [
     "범선"
@@ -1497,25 +1395,25 @@
    "synEn": [
     "sailboat"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 112,
    "ko": "잠수함",
    "en": "Submarine",
-   "category": 5,
+   "category": 3,
    "image": "words/112.webp",
    "synKo": [],
    "synEn": [
     "sub"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 113,
    "ko": "자전거",
    "en": "Bicycle",
-   "category": 5,
+   "category": 3,
    "image": "words/113.webp",
    "synKo": [
     "싸이클"
@@ -1523,13 +1421,13 @@
    "synEn": [
     "bike"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 114,
    "ko": "오토바이",
    "en": "Motorcycle",
-   "category": 5,
+   "category": 3,
    "image": "words/114.webp",
    "synKo": [
     "바이크",
@@ -1538,13 +1436,13 @@
    "synEn": [
     "motorbike"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 115,
    "ko": "킥보드",
    "en": "Scooter",
-   "category": 5,
+   "category": 3,
    "image": "words/115.webp",
    "synKo": [
     "씽씽이"
@@ -1552,13 +1450,13 @@
    "synEn": [
     "kickboard"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 116,
    "ko": "유모차",
    "en": "Stroller",
-   "category": 5,
+   "category": 3,
    "image": "words/116.webp",
    "synKo": [
     "베이비카"
@@ -1566,13 +1464,13 @@
    "synEn": [
     "baby carriage"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 117,
    "ko": "소방차",
    "en": "Fire truck",
-   "category": 5,
+   "category": 3,
    "image": "words/117.webp",
    "synKo": [
     "불자동차"
@@ -1580,13 +1478,13 @@
    "synEn": [
     "fire engine"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 118,
    "ko": "경찰차",
    "en": "Police car",
-   "category": 5,
+   "category": 3,
    "image": "words/118.webp",
    "synKo": [
     "순찰차"
@@ -1594,25 +1492,25 @@
    "synEn": [
     "patrol car"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 119,
    "ko": "구급차",
    "en": "Ambulance",
-   "category": 5,
+   "category": 3,
    "image": "words/119.webp",
    "synKo": [
     "엠뷸런스"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 120,
    "ko": "포크레인",
    "en": "Excavator",
-   "category": 5,
+   "category": 3,
    "image": "words/120.webp",
    "synKo": [
     "굴착기",
@@ -1621,13 +1519,13 @@
    "synEn": [
     "digger"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 121,
    "ko": "불도저",
    "en": "Bulldozer",
-   "category": 5,
+   "category": 3,
    "image": "words/121.webp",
    "synKo": [
     "도저"
@@ -1635,47 +1533,47 @@
    "synEn": [
     "dozer"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 122,
    "ko": "크레인",
    "en": "Crane",
-   "category": 5,
+   "category": 3,
    "image": "words/122.webp",
    "synKo": [
     "기중기"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 123,
    "ko": "트랙터",
    "en": "Tractor",
-   "category": 5,
+   "category": 3,
    "image": "words/123.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 124,
    "ko": "열기구",
    "en": "Hot air balloon",
-   "category": 5,
+   "category": 3,
    "image": "words/124.webp",
    "synKo": [
     "하늘풍선"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 125,
    "ko": "케이블카",
    "en": "Cable car",
-   "category": 5,
+   "category": 3,
    "image": "words/125.webp",
    "synKo": [
     "삭도"
@@ -1683,74 +1581,74 @@
    "synEn": [
     "gondola"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 126,
    "ko": "해",
    "en": "Sun",
-   "category": 6,
+   "category": 5,
    "image": "words/126.webp",
    "synKo": [
     "태양",
     "해님"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 127,
    "ko": "달",
    "en": "Moon",
-   "category": 6,
+   "category": 5,
    "image": "words/127.webp",
    "synKo": [
     "보름달",
     "달님"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 128,
    "ko": "별",
    "en": "Star",
-   "category": 6,
+   "category": 5,
    "image": "words/128.webp",
    "synKo": [
     "별님"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 129,
    "ko": "구름",
    "en": "Cloud",
-   "category": 6,
+   "category": 5,
    "image": "words/129.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 130,
    "ko": "비",
    "en": "Rain",
-   "category": 6,
+   "category": 5,
    "image": "words/130.webp",
    "synKo": [
     "소나기",
     "빗방울"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 131,
    "ko": "눈",
    "en": "Snow",
-   "category": 6,
+   "category": 5,
    "image": "words/131.webp",
    "synKo": [
     "함박눈",
@@ -1759,13 +1657,13 @@
    "synEn": [
     "snowflake"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 132,
    "ko": "바람",
    "en": "Wind",
-   "category": 6,
+   "category": 5,
    "image": "words/132.webp",
    "synKo": [
     "돌풍"
@@ -1773,13 +1671,13 @@
    "synEn": [
     "breeze"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 133,
    "ko": "번개",
    "en": "Lightning",
-   "category": 6,
+   "category": 5,
    "image": "words/133.webp",
    "synKo": [
     "벼락"
@@ -1787,47 +1685,47 @@
    "synEn": [
     "thunder"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 134,
    "ko": "무지개",
    "en": "Rainbow",
-   "category": 6,
+   "category": 5,
    "image": "words/134.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 135,
    "ko": "하늘",
    "en": "Sky",
-   "category": 6,
+   "category": 5,
    "image": "words/135.webp",
    "synKo": [
     "파란하늘"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 136,
    "ko": "산",
    "en": "Mountain",
-   "category": 6,
+   "category": 5,
    "image": "words/136.webp",
    "synKo": [
     "봉우리"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 137,
    "ko": "바다",
    "en": "Sea",
-   "category": 6,
+   "category": 5,
    "image": "words/137.webp",
    "synKo": [
     "파도",
@@ -1837,13 +1735,13 @@
     "ocean",
     "wave"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 138,
    "ko": "강",
    "en": "River",
-   "category": 6,
+   "category": 5,
    "image": "words/138.webp",
    "synKo": [
     "냇물",
@@ -1852,35 +1750,35 @@
    "synEn": [
     "stream"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 139,
    "ko": "호수",
    "en": "Lake",
-   "category": 6,
+   "category": 5,
    "image": "words/139.webp",
    "synKo": [
     "못"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 140,
    "ko": "섬",
    "en": "Island",
-   "category": 6,
+   "category": 5,
    "image": "words/140.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 141,
    "ko": "숲",
    "en": "Forest",
-   "category": 6,
+   "category": 5,
    "image": "words/141.webp",
    "synKo": [
     "수풀"
@@ -1888,25 +1786,25 @@
    "synEn": [
     "woods"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 142,
    "ko": "나무",
    "en": "Tree",
-   "category": 6,
+   "category": 5,
    "image": "words/142.webp",
    "synKo": [
     "목"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 143,
    "ko": "꽃",
    "en": "Flower",
-   "category": 6,
+   "category": 5,
    "image": "words/143.webp",
    "synKo": [
     "벚꽃",
@@ -1915,13 +1813,13 @@
    "synEn": [
     "blossom"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 144,
    "ko": "풀",
    "en": "Grass",
-   "category": 6,
+   "category": 5,
    "image": "words/144.webp",
    "synKo": [
     "잔디"
@@ -1929,13 +1827,13 @@
    "synEn": [
     "plant"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 145,
    "ko": "나뭇잎",
    "en": "Leaf",
-   "category": 6,
+   "category": 5,
    "image": "words/145.webp",
    "synKo": [
     "잎사귀",
@@ -1944,13 +1842,13 @@
    "synEn": [
     "leaves"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 146,
    "ko": "돌",
    "en": "Rock",
-   "category": 6,
+   "category": 5,
    "image": "words/146.webp",
    "synKo": [
     "바위",
@@ -1959,13 +1857,13 @@
    "synEn": [
     "stone"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 147,
    "ko": "불",
    "en": "Fire",
-   "category": 6,
+   "category": 5,
    "image": "words/147.webp",
    "synKo": [
     "불꽃",
@@ -1974,25 +1872,25 @@
    "synEn": [
     "flame"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 148,
    "ko": "물",
    "en": "Water",
-   "category": 6,
+   "category": 5,
    "image": "words/148.webp",
    "synKo": [
     "물방울"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 149,
    "ko": "지구",
    "en": "Earth",
-   "category": 6,
+   "category": 5,
    "image": "words/149.webp",
    "synKo": [
     "행성"
@@ -2000,7 +1898,7 @@
    "synEn": [
     "planet"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 150,
@@ -2014,13 +1912,13 @@
    "synEn": [
     "spaceman"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 151,
    "ko": "모자",
    "en": "Hat",
-   "category": 7,
+   "category": 6,
    "image": "words/151.webp",
    "synKo": [
     "야구모자",
@@ -2029,13 +1927,13 @@
    "synEn": [
     "cap"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 152,
    "ko": "안경",
    "en": "Glasses",
-   "category": 7,
+   "category": 6,
    "image": "words/152.webp",
    "synKo": [
     "돋보기"
@@ -2043,23 +1941,23 @@
    "synEn": [
     "spectacles"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 153,
    "ko": "마스크",
    "en": "Mask",
-   "category": 7,
+   "category": 6,
    "image": "words/153.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 154,
    "ko": "티셔츠",
    "en": "T-shirt",
-   "category": 7,
+   "category": 6,
    "image": "words/154.webp",
    "synKo": [
     "반팔",
@@ -2069,13 +1967,13 @@
     "tshirt",
     "shirt"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 155,
    "ko": "바지",
    "en": "Pants",
-   "category": 7,
+   "category": 6,
    "image": "words/155.webp",
    "synKo": [
     "청바지"
@@ -2083,35 +1981,35 @@
    "synEn": [
     "trousers"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 156,
    "ko": "치마",
    "en": "Skirt",
-   "category": 7,
+   "category": 6,
    "image": "words/156.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 157,
    "ko": "원피스",
    "en": "Dress",
-   "category": 7,
+   "category": 6,
    "image": "words/157.webp",
    "synKo": [
     "드레스"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 158,
    "ko": "잠바",
    "en": "Jacket",
-   "category": 7,
+   "category": 6,
    "image": "words/158.webp",
    "synKo": [
     "자켓",
@@ -2121,25 +2019,25 @@
    "synEn": [
     "coat"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 159,
    "ko": "양말",
    "en": "Socks",
-   "category": 7,
+   "category": 6,
    "image": "words/159.webp",
    "synKo": [],
    "synEn": [
     "sock"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 160,
    "ko": "신발",
    "en": "Shoes",
-   "category": 7,
+   "category": 6,
    "image": "words/160.webp",
    "synKo": [
     "운동화",
@@ -2148,13 +2046,13 @@
    "synEn": [
     "sneakers"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 161,
    "ko": "장화",
    "en": "Boots",
-   "category": 7,
+   "category": 6,
    "image": "words/161.webp",
    "synKo": [
     "부츠"
@@ -2162,25 +2060,25 @@
    "synEn": [
     "boot"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 162,
    "ko": "장갑",
    "en": "Gloves",
-   "category": 7,
+   "category": 6,
    "image": "words/162.webp",
    "synKo": [],
    "synEn": [
     "glove"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 163,
    "ko": "목도리",
    "en": "Scarf",
-   "category": 7,
+   "category": 6,
    "image": "words/163.webp",
    "synKo": [
     "스카프",
@@ -2189,13 +2087,13 @@
    "synEn": [
     "muffler"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 164,
    "ko": "가방",
    "en": "Bag",
-   "category": 7,
+   "category": 4,
    "image": "words/164.webp",
    "synKo": [
     "핸드백"
@@ -2203,25 +2101,25 @@
    "synEn": [
     "handbag"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 165,
    "ko": "우산",
    "en": "Umbrella",
-   "category": 7,
+   "category": 4,
    "image": "words/165.webp",
    "synKo": [
     "양산"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 166,
    "ko": "눈",
    "en": "Eye",
-   "category": 7,
+   "category": 6,
    "image": "words/166.webp",
    "synKo": [
     "두눈",
@@ -2230,23 +2128,23 @@
    "synEn": [
     "eyes"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 167,
    "ko": "코",
    "en": "Nose",
-   "category": 7,
+   "category": 6,
    "image": "words/167.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 168,
    "ko": "입",
    "en": "Mouth",
-   "category": 7,
+   "category": 6,
    "image": "words/168.webp",
    "synKo": [
     "입술"
@@ -2254,23 +2152,23 @@
    "synEn": [
     "lips"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 169,
    "ko": "귀",
    "en": "Ear",
-   "category": 7,
+   "category": 6,
    "image": "words/169.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 170,
    "ko": "손",
    "en": "Hand",
-   "category": 7,
+   "category": 6,
    "image": "words/170.webp",
    "synKo": [
     "손바닥"
@@ -2278,35 +2176,35 @@
    "synEn": [
     "palm"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 171,
    "ko": "발",
    "en": "Foot",
-   "category": 7,
+   "category": 6,
    "image": "words/171.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 172,
    "ko": "손가락",
    "en": "Finger",
-   "category": 7,
+   "category": 6,
    "image": "words/172.webp",
    "synKo": [
     "엄지"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 173,
    "ko": "이",
    "en": "Tooth",
-   "category": 7,
+   "category": 6,
    "image": "words/173.webp",
    "synKo": [
     "이빨",
@@ -2315,39 +2213,39 @@
    "synEn": [
     "teeth"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 174,
    "ko": "머리카락",
    "en": "Hair",
-   "category": 7,
+   "category": 6,
    "image": "words/174.webp",
    "synKo": [
     "머리",
     "헤어"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 175,
    "ko": "심장",
    "en": "Heart",
-   "category": 7,
+   "category": 6,
    "image": "words/175.webp",
    "synKo": [
     "하트",
     "마음"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 176,
    "ko": "집",
    "en": "House",
-   "category": 8,
+   "category": 4,
    "image": "words/176.webp",
    "synKo": [
     "우리집"
@@ -2355,47 +2253,47 @@
    "synEn": [
     "home"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 177,
    "ko": "문",
    "en": "Door",
-   "category": 8,
+   "category": 4,
    "image": "words/177.webp",
    "synKo": [
     "대문"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 178,
    "ko": "창문",
    "en": "Window",
-   "category": 8,
+   "category": 4,
    "image": "words/178.webp",
    "synKo": [
     "창"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 179,
    "ko": "침대",
    "en": "Bed",
-   "category": 8,
+   "category": 4,
    "image": "words/179.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 180,
    "ko": "베개",
    "en": "Pillow",
-   "category": 8,
+   "category": 4,
    "image": "words/180.webp",
    "synKo": [
     "베게",
@@ -2404,13 +2302,13 @@
    "synEn": [
     "cushion"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 181,
    "ko": "이불",
    "en": "Blanket",
-   "category": 8,
+   "category": 4,
    "image": "words/181.webp",
    "synKo": [
     "담요"
@@ -2418,25 +2316,25 @@
    "synEn": [
     "quilt"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 182,
    "ko": "의자",
    "en": "Chair",
-   "category": 8,
+   "category": 4,
    "image": "words/182.webp",
    "synKo": [
     "걸상"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 183,
    "ko": "책상",
    "en": "Desk",
-   "category": 8,
+   "category": 4,
    "image": "words/183.webp",
    "synKo": [
     "테이블"
@@ -2444,13 +2342,13 @@
    "synEn": [
     "table"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 184,
    "ko": "소파",
    "en": "Sofa",
-   "category": 8,
+   "category": 4,
    "image": "words/184.webp",
    "synKo": [
     "카우치"
@@ -2458,13 +2356,13 @@
    "synEn": [
     "couch"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 185,
    "ko": "시계",
    "en": "Clock",
-   "category": 8,
+   "category": 4,
    "image": "words/185.webp",
    "synKo": [
     "알람시계"
@@ -2472,23 +2370,23 @@
    "synEn": [
     "watch"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 186,
    "ko": "거울",
    "en": "Mirror",
-   "category": 8,
+   "category": 4,
    "image": "words/186.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 187,
    "ko": "텔레비전",
    "en": "TV",
-   "category": 8,
+   "category": 4,
    "image": "words/187.webp",
    "synKo": [
     "티비"
@@ -2496,13 +2394,13 @@
    "synEn": [
     "television"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 188,
    "ko": "냉장고",
    "en": "Refrigerator",
-   "category": 8,
+   "category": 4,
    "image": "words/188.webp",
    "synKo": [
     "냉동고"
@@ -2510,37 +2408,37 @@
    "synEn": [
     "fridge"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 189,
    "ko": "세탁기",
    "en": "Washing machine",
-   "category": 8,
+   "category": 4,
    "image": "words/189.webp",
    "synKo": [],
    "synEn": [
     "laundry"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 190,
    "ko": "선풍기",
    "en": "Fan",
-   "category": 8,
+   "category": 4,
    "image": "words/190.webp",
    "synKo": [
     "팬"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 191,
    "ko": "청소기",
    "en": "Vacuum",
-   "category": 8,
+   "category": 4,
    "image": "words/191.webp",
    "synKo": [
     "진공청소기"
@@ -2548,13 +2446,13 @@
    "synEn": [
     "vacuum cleaner"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 192,
    "ko": "전화기",
    "en": "Phone",
-   "category": 8,
+   "category": 4,
    "image": "words/192.webp",
    "synKo": [
     "전화",
@@ -2563,13 +2461,13 @@
    "synEn": [
     "telephone"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 193,
    "ko": "컴퓨터",
    "en": "Computer",
-   "category": 8,
+   "category": 4,
    "image": "words/193.webp",
    "synKo": [
     "노트북"
@@ -2577,59 +2475,59 @@
    "synEn": [
     "laptop"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 194,
    "ko": "카메라",
    "en": "Camera",
-   "category": 8,
+   "category": 4,
    "image": "words/194.webp",
    "synKo": [
     "사진기"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 195,
    "ko": "컵",
    "en": "Cup",
-   "category": 8,
+   "category": 4,
    "image": "words/195.webp",
    "synKo": [
     "유리컵"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 196,
    "ko": "숟가락",
    "en": "Spoon",
-   "category": 8,
+   "category": 4,
    "image": "words/196.webp",
    "synKo": [
     "스푼"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 197,
    "ko": "젓가락",
    "en": "Chopsticks",
-   "category": 8,
+   "category": 4,
    "image": "words/197.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 198,
    "ko": "접시",
    "en": "Plate",
-   "category": 8,
+   "category": 4,
    "image": "words/198.webp",
    "synKo": [
     "그릇"
@@ -2637,89 +2535,89 @@
    "synEn": [
     "dish"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 199,
    "ko": "칫솔",
    "en": "Toothbrush",
-   "category": 8,
+   "category": 4,
    "image": "words/199.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 200,
    "ko": "비누",
    "en": "Soap",
-   "category": 8,
+   "category": 4,
    "image": "words/200.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 201,
    "ko": "책",
    "en": "Book",
-   "category": 9,
+   "category": 4,
    "image": "words/201.webp",
    "synKo": [
     "동화책"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 202,
    "ko": "공책",
    "en": "Notebook",
-   "category": 9,
+   "category": 4,
    "image": "words/202.webp",
    "synKo": [
     "노트"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 203,
    "ko": "연필",
    "en": "Pencil",
-   "category": 9,
+   "category": 4,
    "image": "words/203.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 204,
    "ko": "지우개",
    "en": "Eraser",
-   "category": 9,
+   "category": 4,
    "image": "words/204.webp",
    "synKo": [],
    "synEn": [
     "rubber"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 205,
    "ko": "가위",
    "en": "Scissors",
-   "category": 9,
+   "category": 4,
    "image": "words/205.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 206,
    "ko": "풀",
    "en": "Glue",
-   "category": 9,
+   "category": 4,
    "image": "words/206.webp",
    "synKo": [
     "접착제",
@@ -2728,25 +2626,25 @@
    "synEn": [
     "paste"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 207,
    "ko": "크레파스",
    "en": "Crayon",
-   "category": 9,
+   "category": 4,
    "image": "words/207.webp",
    "synKo": [
     "크레용"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 208,
    "ko": "물감",
    "en": "Paint",
-   "category": 9,
+   "category": 4,
    "image": "words/208.webp",
    "synKo": [
     "팔레트"
@@ -2754,45 +2652,45 @@
    "synEn": [
     "palette"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 209,
    "ko": "붓",
    "en": "Brush",
-   "category": 9,
+   "category": 4,
    "image": "words/209.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 210,
    "ko": "자",
    "en": "Ruler",
-   "category": 9,
+   "category": 4,
    "image": "words/210.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 211,
    "ko": "공",
    "en": "Ball",
-   "category": 9,
+   "category": 4,
    "image": "words/211.webp",
    "synKo": [
     "볼"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 212,
    "ko": "축구공",
    "en": "Soccer ball",
-   "category": 9,
+   "category": 4,
    "image": "words/212.webp",
    "synKo": [
     "축구"
@@ -2800,25 +2698,25 @@
    "synEn": [
     "football"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 213,
    "ko": "농구공",
    "en": "Basketball",
-   "category": 9,
+   "category": 4,
    "image": "words/213.webp",
    "synKo": [
     "농구"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 214,
    "ko": "인형",
    "en": "Doll",
-   "category": 9,
+   "category": 4,
    "image": "words/214.webp",
    "synKo": [
     "곰인형",
@@ -2827,25 +2725,25 @@
    "synEn": [
     "teddy bear"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 215,
    "ko": "로봇",
    "en": "Robot",
-   "category": 9,
+   "category": 4,
    "image": "words/215.webp",
    "synKo": [
     "로보트"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 216,
    "ko": "블록",
    "en": "Block",
-   "category": 9,
+   "category": 4,
    "image": "words/216.webp",
    "synKo": [
     "레고",
@@ -2854,91 +2752,91 @@
    "synEn": [
     "brick"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 217,
    "ko": "퍼즐",
    "en": "Puzzle",
-   "category": 9,
+   "category": 4,
    "image": "words/217.webp",
    "synKo": [
     "조각"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 218,
    "ko": "풍선",
    "en": "Balloon",
-   "category": 9,
+   "category": 4,
    "image": "words/218.webp",
    "synKo": [
     "벌룬"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 219,
    "ko": "연",
    "en": "Kite",
-   "category": 9,
+   "category": 4,
    "image": "words/219.webp",
    "synKo": [
     "연날리기"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 220,
    "ko": "그네",
    "en": "Swing",
-   "category": 9,
+   "category": 4,
    "image": "words/220.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 221,
    "ko": "미끄럼틀",
    "en": "Slide",
-   "category": 9,
+   "category": 4,
    "image": "words/221.webp",
    "synKo": [
     "미끄럼대"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 222,
    "ko": "피아노",
    "en": "Piano",
-   "category": 9,
+   "category": 4,
    "image": "words/222.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 223,
    "ko": "기타",
    "en": "Guitar",
-   "category": 9,
+   "category": 4,
    "image": "words/223.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 224,
    "ko": "드럼",
    "en": "Drum",
-   "category": 9,
+   "category": 4,
    "image": "words/224.webp",
    "synKo": [
     "북"
@@ -2946,35 +2844,35 @@
    "synEn": [
     "drums"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 225,
    "ko": "바이올린",
    "en": "Violin",
-   "category": 9,
+   "category": 4,
    "image": "words/225.webp",
    "synKo": [],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 226,
    "ko": "학교",
    "en": "School",
-   "category": 10,
+   "category": 4,
    "image": "words/226.webp",
    "synKo": [
     "초등학교"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 227,
    "ko": "유치원",
    "en": "Kindergarten",
-   "category": 10,
+   "category": 4,
    "image": "words/227.webp",
    "synKo": [
     "어린이집"
@@ -2982,25 +2880,25 @@
    "synEn": [
     "preschool"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 228,
    "ko": "병원",
    "en": "Hospital",
-   "category": 10,
+   "category": 4,
    "image": "words/228.webp",
    "synKo": [
     "의원"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 229,
    "ko": "약국",
    "en": "Pharmacy",
-   "category": 10,
+   "category": 4,
    "image": "words/229.webp",
    "synKo": [
     "약",
@@ -3009,97 +2907,97 @@
    "synEn": [
     "medicine"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 230,
    "ko": "경찰서",
    "en": "Police station",
-   "category": 10,
+   "category": 4,
    "image": "words/230.webp",
    "synKo": [
     "파출소"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 231,
    "ko": "소방서",
    "en": "Fire station",
-   "category": 10,
+   "category": 4,
    "image": "words/231.webp",
    "synKo": [
     "119"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 232,
    "ko": "공원",
    "en": "Park",
-   "category": 10,
+   "category": 4,
    "image": "words/232.webp",
    "synKo": [
     "근린공원"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 233,
    "ko": "놀이터",
    "en": "Playground",
-   "category": 10,
+   "category": 4,
    "image": "words/233.webp",
    "synKo": [
     "놀이동산"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 234,
    "ko": "동물원",
    "en": "Zoo",
-   "category": 10,
+   "category": 4,
    "image": "words/234.webp",
    "synKo": [
     "사파리"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 235,
    "ko": "수족관",
    "en": "Aquarium",
-   "category": 10,
+   "category": 4,
    "image": "words/235.webp",
    "synKo": [
     "아쿠아리움"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 236,
    "ko": "도서관",
    "en": "Library",
-   "category": 10,
+   "category": 4,
    "image": "words/236.webp",
    "synKo": [
     "책방"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 237,
    "ko": "마트",
    "en": "Mart",
-   "category": 10,
+   "category": 4,
    "image": "words/237.webp",
    "synKo": [
     "슈퍼",
@@ -3108,13 +3006,13 @@
    "synEn": [
     "supermarket"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 238,
    "ko": "식당",
    "en": "Restaurant",
-   "category": 10,
+   "category": 4,
    "image": "words/238.webp",
    "synKo": [
     "음식점",
@@ -3123,13 +3021,13 @@
    "synEn": [
     "diner"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 239,
    "ko": "카페",
    "en": "Cafe",
-   "category": 10,
+   "category": 4,
    "image": "words/239.webp",
    "synKo": [
     "커피숍"
@@ -3137,13 +3035,13 @@
    "synEn": [
     "coffee shop"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 240,
    "ko": "베이커리",
    "en": "Bakery",
-   "category": 10,
+   "category": 4,
    "image": "words/240.webp",
    "synKo": [
     "빵집"
@@ -3151,25 +3049,25 @@
    "synEn": [
     "bread shop"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 241,
    "ko": "공항",
    "en": "Airport",
-   "category": 10,
+   "category": 4,
    "image": "words/241.webp",
    "synKo": [
     "비행장"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 242,
    "ko": "수영장",
    "en": "Swimming pool",
-   "category": 10,
+   "category": 4,
    "image": "words/242.webp",
    "synKo": [
     "풀"
@@ -3177,35 +3075,35 @@
    "synEn": [
     "pool"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 243,
    "ko": "의사",
    "en": "Doctor",
-   "category": 10,
+   "category": 6,
    "image": "words/243.webp",
    "synKo": [
     "선생님"
    ],
    "synEn": [],
-   "art": "approx"
+   "hint": ""
   },
   {
    "id": 244,
    "ko": "간호사",
    "en": "Nurse",
-   "category": 10,
+   "category": 6,
    "image": "words/244.webp",
    "synKo": [],
    "synEn": [],
-   "art": "approx"
+   "hint": ""
   },
   {
    "id": 245,
    "ko": "경찰관",
    "en": "Police officer",
-   "category": 10,
+   "category": 6,
    "image": "words/245.webp",
    "synKo": [
     "경찰"
@@ -3213,13 +3111,13 @@
    "synEn": [
     "police"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 246,
    "ko": "소방관",
    "en": "Firefighter",
-   "category": 10,
+   "category": 6,
    "image": "words/246.webp",
    "synKo": [
     "불끄는사람"
@@ -3227,25 +3125,25 @@
    "synEn": [
     "fireman"
    ],
-   "art": "approx"
+   "hint": ""
   },
   {
    "id": 247,
    "ko": "선생님",
    "en": "Teacher",
-   "category": 10,
+   "category": 6,
    "image": "words/247.webp",
    "synKo": [
     "쌤"
    ],
    "synEn": [],
-   "art": "approx"
+   "hint": ""
   },
   {
    "id": 248,
    "ko": "요리사",
    "en": "Chef",
-   "category": 10,
+   "category": 6,
    "image": "words/248.webp",
    "synKo": [
     "셰프"
@@ -3253,25 +3151,25 @@
    "synEn": [
     "cook"
    ],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 249,
    "ko": "공주",
    "en": "Princess",
-   "category": 10,
+   "category": 6,
    "image": "words/249.webp",
    "synKo": [
     "공주님"
    ],
    "synEn": [],
-   "art": "exact"
+   "hint": ""
   },
   {
    "id": 250,
    "ko": "공룡",
    "en": "Dinosaur",
-   "category": 10,
+   "category": 1,
    "image": "words/250.webp",
    "synKo": [
     "티라노",
@@ -3280,7 +3178,7 @@
    "synEn": [
     "t-rex"
    ],
-   "art": "exact"
+   "hint": ""
   }
  ]
 }
