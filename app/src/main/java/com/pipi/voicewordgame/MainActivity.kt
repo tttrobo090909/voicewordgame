@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var speaker: Speaker
     private lateinit var recognizer: AnswerRecognizer
 
+    private lateinit var setupScreen: LinearLayout
     private lateinit var setupScroll: ScrollView
     private lateinit var setupBanner: TextView
     private lateinit var gameScreen: LinearLayout
@@ -144,7 +145,8 @@ class MainActivity : AppCompatActivity() {
         lang = prefs.lang
         categoryId = prefs.categoryId
         versionText.text = BuildConfig.VERSION_DISPLAY
-        heroImage.setImageResource(R.mipmap.ic_launcher_foreground)
+        val hero = ImageStore.load(this, "brand/hero.webp")
+        if (hero != null) heroImage.setImageBitmap(hero) else heroImage.setImageResource(R.mipmap.ic_launcher_foreground)
 
         loadPlayers()
         buildCategoryChips()
@@ -207,6 +209,7 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------- views
 
     private fun bindViews() {
+        setupScreen = findViewById(R.id.setupScreen)
         setupScroll = findViewById(R.id.setupScroll)
         setupBanner = findViewById(R.id.setupBanner)
         gameScreen = findViewById(R.id.gameScreen)
@@ -657,7 +660,7 @@ class MainActivity : AppCompatActivity() {
         errorStreak = 0
 
         particles.clear()
-        setupScroll.visibility = View.GONE
+        setupScreen.visibility = View.GONE
         gameScreen.visibility = View.VISIBLE
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -715,7 +718,8 @@ class MainActivity : AppCompatActivity() {
         gateRejects = 0
         errorStreak = 0
         hintText.text = ""
-        answerReveal.text = ""
+        answerReveal.text = getString(R.string.what_is_it)
+        answerReveal.setTextColor(ContextCompat.getColor(this, R.color.ink_soft))
         mic.resetPeak()
         progressBadge.text = "${s.servedCount}번째 그림"
 
@@ -841,6 +845,7 @@ class MainActivity : AppCompatActivity() {
         recognizer.cancel()
 
         answerReveal.text = "정답! ${word.text(lang)}"
+        answerReveal.setTextColor(ContextCompat.getColor(this, R.color.ink))
         particles.celebrate()
 
         val s = session ?: return
@@ -949,7 +954,7 @@ class MainActivity : AppCompatActivity() {
         mic.stop()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         gameScreen.visibility = View.GONE
-        setupScroll.visibility = View.VISIBLE
+        setupScreen.visibility = View.VISIBLE
         hideCountdown()
         handler.removeCallbacks(meterTicker)
         handler.post(meterTicker)

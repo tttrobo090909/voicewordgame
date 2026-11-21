@@ -38,6 +38,7 @@
 
     <style name="Widget.CuteButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/bg_button_soft</item>
+        <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/ink</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
@@ -49,6 +50,7 @@
 
     <style name="Widget.CutePrimary" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/ink</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>

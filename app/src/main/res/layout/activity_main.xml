@@ -83,10 +83,18 @@
         </LinearLayout>
 
         <!-- ============ 설정 화면 ============ -->
+        <LinearLayout
+            android:id="@+id/setupScreen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
         <ScrollView
             android:id="@+id/setupScroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="4dp"
             android:layout_weight="1"
             android:clipToPadding="false"
             android:fillViewport="true"
@@ -110,8 +118,8 @@
 
                     <ImageView
                         android:id="@+id/heroImage"
-                        android:layout_width="92dp"
-                        android:layout_height="92dp"
+                        android:layout_width="104dp"
+                        android:layout_height="104dp"
                         android:contentDescription="@string/app_title"
                         android:src="@mipmap/ic_launcher_foreground" />
 
@@ -268,23 +276,27 @@
                         app:singleSelection="true" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/startButton"
-                    style="@style/Widget.CutePrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/start_game" />
-
                 <TextView
                     style="@style/TextBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:text="@string/footer_note"
                     android:textSize="10sp" />
             </LinearLayout>
         </ScrollView>
+
+            <Button
+                android:id="@+id/startButton"
+                style="@style/Widget.CutePrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="14dp"
+                android:text="@string/start_game" />
+        </LinearLayout>
 
         <!-- ============ 게임 화면 ============ -->
         <LinearLayout
@@ -335,31 +347,19 @@
                 android:layout_marginEnd="14dp"
                 android:layout_weight="1">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_image_card"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="14dp">
 
                     <ImageView
                         android:id="@+id/wordImage"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
+                        android:layout_height="match_parent"
                         android:contentDescription="@string/app_title"
                         android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:id="@+id/hintText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/ink_soft"
-                        android:textSize="15sp" />
-                </LinearLayout>
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/progressBadge"
@@ -377,11 +377,22 @@
                     android:textStyle="bold" />
             </FrameLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/hintText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="14dp"
+                android:gravity="center"
+                android:textColor="@color/ink_soft"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="14dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -462,6 +473,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:minHeight="44dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/ink"
                     android:textSize="18sp"
                     android:textStyle="bold" />

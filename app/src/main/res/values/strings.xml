@@ -17,6 +17,7 @@
     <string name="voice_registered">목소리 등록 완료</string>
     <string name="player_name_hint">이름</string>
     <string name="delete_player">가족 지우기</string>
+    <string name="what_is_it">무엇일까요?</string>
     <string name="hint_button">힌트</string>
     <string name="skip_button">건너뛰기</string>
     <string name="answer_button">정답 처리</string>

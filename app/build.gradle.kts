@@ -70,7 +70,10 @@ android {
 // 로컬 환경에서 user.home 이 비어 있는 경우(JVM 이 홈을 못 찾는 컨테이너)를 위한 선택 설정.
 // 사용: ./gradlew testDebugUnitTest -ProboHome=/workspace
 tasks.withType<Test>().configureEach {
-    providers.gradleProperty("roboHome").orNull?.let { systemProperty("user.home", it) }
+    providers.gradleProperty("roboHome").orNull?.let {
+        systemProperty("user.home", it)
+        systemProperty("java.io.tmpdir", "$it/tmp/robolectric")
+    }
 }
 
 dependencies {
