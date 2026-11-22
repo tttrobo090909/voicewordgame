@@ -143,10 +143,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:lineSpacingExtra="2dp"
+                            android:lineSpacingExtra="3dp"
                             android:text="@string/banner_line"
                             android:textColor="@color/ink"
-                            android:textSize="17sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -176,6 +176,17 @@
                         android:text="@string/category_all"
                         android:textSize="18sp" />
 
+                    <!-- v2.2: 게임 시작은 화면 맨 아래가 아니라 전체 무작위 바로 아래에 둔다. -->
+                    <Button
+                        android:id="@+id/startButton"
+                        style="@style/Widget.CutePrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/start_game" />
+
                     <TextView
                         android:id="@+id/versionText"
                         style="@style/TextBody"
@@ -194,17 +205,6 @@
                         android:textSize="10sp" />
                 </LinearLayout>
             </ScrollView>
-
-            <Button
-                android:id="@+id/startButton"
-                style="@style/Widget.CutePrimary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="14dp"
-                android:text="@string/start_game" />
         </LinearLayout>
 
         <!-- ==================== 게임 화면 ==================== -->
@@ -215,6 +215,38 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:visibility="gone">
+
+            <!-- v2.2: 8초 시간 제한을 병아리 걷기로 보여 주는 슬림 배너(50dp, 첫 화면 116dp 의 절반보다 작다) -->
+            <FrameLayout
+                android:id="@+id/timerBanner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/bg_banner_slim"
+                android:clipToPadding="false"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <!-- 병아리가 걸어가는 길: 남은 시간이 줄어드는 것을 한 줄로 보여 준다 -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:background="@drawable/bg_timer_track" />
+
+                <ImageView
+                    android:id="@+id/timerChick"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/chick_mascot" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/gameStatus"

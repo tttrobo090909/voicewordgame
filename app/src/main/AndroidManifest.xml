@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- v2.2 대중 공개용: 앱 코드가 직접 인터넷을 쓰지 않아 INTERNET 권한을 뺄댔다
+         (음성인식은 구글 음성인식 서비스 앱이 대신 통신한다). -->
 
     <uses-feature
         android:name="android.hardware.microphone"

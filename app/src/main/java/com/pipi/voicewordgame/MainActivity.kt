@@ -7,8 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Typeface
-import android.animation.Keyframe
-import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.Handler
@@ -19,7 +17,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.EditText
@@ -47,6 +44,7 @@ import com.pipi.voicewordgame.game.Word
 import com.pipi.voicewordgame.game.WordStore
 import com.pipi.voicewordgame.speech.AnswerRecognizer
 import com.pipi.voicewordgame.tts.Speaker
+import com.pipi.voicewordgame.ui.ChickWalk
 import com.pipi.voicewordgame.ui.ParticleView
 import com.pipi.voicewordgame.util.ImageStore
 import com.pipi.voicewordgame.util.Prefs
@@ -54,15 +52,16 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.1 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금.
+ * 말해봐요! v2.2 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금.
  *
- * v2.1 디자인·발음 다듬기:
- * - 시스템 바 여백 위에 상·하단 14dp 여유를 더한다(첫 화면·게임 화면·관리자 화면).
- * - 제목 3번 탭은 리플·포커스·소리 없이 동작한다(관리자 진입을 눈에 띄지 않게).
- * - 카테고리 6개를 2열×3행(78dp)으로 먼저 두고 `전체 무작위`는 맨 아래로 옮겼다.
- * - 선택된 카테고리·무작위 버튼은 3dp 코랄-오렌지 테두리로 확실히 구분한다.
- * - 병아리 배너를 20% 키우고(116dp) 병아리가 좌우로 살랑살랑 흔들린다.
- * - 정답 단어는 1번째 천천히(0.72) → 2번째 보통(0.95) 속도로 읽는다.
+ * v2.2 (대중 공개용 수정본):
+ * - 첫 화면 병아리가 이동 방향에 맞춰 몸을 돌리고(scaleX ±1), 바운스·기울기와 함께 아장아장 걷는다.
+ * - 배너 문구를 20sp 굵게 키우고, `게임 시작!` 버튼을 `전체 무작위` 바로 아래로 옮겼다(하단 표기는 그대로).
+ * - 게임 화면 상단에 50dp 타이머 배너를 두고, 병아리가 7.7초 동안 왼쪽 끝 → 오른쪽 끝으로 걷는다.
+ *   문제 시작 후 8초가 지나면 시간 초과: 타이머·마이크를 멈추고 정답을 **1번** 읽은 뒤 다음 문제로 간다.
+ * - `그만하기`는 확인창 없이 바로 끝내고 결과창만 한 번 띄운다.
+ * - 게임 중에도 제목 3연속 탭으로 관리자에 들어갈 수 있고, 그동안 타이머·마이크·TTS 를 멈췄다가 돌아오면 잇는다.
+ * - ENG 모드는 문제 단어·카테고리 타일·음성인식·정답 발음만 영어이고 화면 문구는 한국어 그대로다.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -80,9 +79,28 @@ class MainActivity : AppCompatActivity() {
         /** 카테고리 타일 높이(v2.1: 68dp → 78dp, 약 +15%). */
         const val TILE_HEIGHT_DP = 78
 
-        /** 병아리 좌우 살랑살랑: 좌우 ±10dp, 1.4초에 한 왕복. */
+        /** 첫 화면 병아리: 좌우 ±10dp, 1.4초에 한 왕복(그 사이 4걸음). */
         const val CHICK_WOBBLE_DP = 10
         const val CHICK_WOBBLE_CYCLE_MS = 1400L
+
+        /** 첫 화면 병아리 바운스(위로 4dp) — 걷는 느낌. */
+        const val CHICK_BOUNCE_DP = 4
+
+        /** 게임 화면 타이머 배너 높이(첫 화면 116dp 의 절반보다 작다)와 병아리 크기. */
+        const val TIMER_BANNER_DP = 50
+        const val TIMER_CHICK_DP = 40
+
+        /** 타이머 병아리가 걷는 거리를 잴 수 없을 때(레이아웃 전) 쓰는 폴백. */
+        const val TIMER_FALLBACK_TRAVEL_DP = 260
+
+        /** 타이머 병아리 바운스(위로 3dp). */
+        const val TIMER_BOUNCE_DP = 3
+
+        /** 한 문제의 제한 시간(8초) — 타이머 병아리는 7.7초에 오른쪽 끝에 닿는다. */
+        const val ROUND_LIMIT_MS = ChickWalk.LIMIT_MS
+
+        /** 타이머 병아리 걷기 갱신 간격(약 30fps). 남은 시간에서 위치를 계산해 그린다. */
+        const val TIMER_TICK_MS = 32L
     }
 
     private lateinit var prefs: Prefs
@@ -100,6 +118,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var versionText: TextView
     private lateinit var bannerText: TextView
     private lateinit var chickImage: ImageView
+    private lateinit var timerBanner: View
+    private lateinit var timerChick: ImageView
     private lateinit var randomButton: Button
     private lateinit var categoryGrid: LinearLayout
     private lateinit var startButton: Button
@@ -120,10 +140,33 @@ class MainActivity : AppCompatActivity() {
     private val nextRunnable = Runnable { nextRound() }
     private val restartRunnable = Runnable { startListening() }
     private val setupMessageReset = Runnable { showBannerLine() }
+    private val roundTimeout = Runnable { handleTimeUp() }
+
+    /**
+     * 타이머 병아리는 남은 시간(roundDeadline)에서 위치를 계산해 그린다.
+     * 애니메이터 대신 시계 하나만 쓰므로 일시정지·재개·시간 초과가 서로 어긋나지 않는다.
+     */
+    private val timerTick = object : Runnable {
+        override fun run() {
+            if (!gameActive || !awaiting || !roundTimerOn) {
+                stopTimerWalk()
+                return
+            }
+            val elapsed = ROUND_LIMIT_MS - (roundDeadline - SystemClock.elapsedRealtime())
+            applyTimerWalk(ChickWalk.timerProgress(elapsed.coerceAtLeast(0L)))
+            handler.postDelayed(this, TIMER_TICK_MS)
+        }
+    }
 
     private var session: GameSession? = null
     private var chickWobble: ValueAnimator? = null
     private var wobbleActive = false
+    private var timerWalking = false
+    private var roundTimerOn = false
+    private var roundRemainingMs = -1L
+    private var roundDeadline = 0L
+    private var overlayPause = false
+    private var adminOpening = false
     private var gameActive = false
     private var awaiting = false
     private var resumeNext = false
@@ -188,17 +231,16 @@ class MainActivity : AppCompatActivity() {
             buildCategoryButtons()
             updateCategorySelection()
             startChickWobble()
-        } else if (awaiting) {
-            handler.postDelayed(restartRunnable, 350)
-        } else if (resumeNext) {
-            resumeNext = false
-            handler.postDelayed(nextRunnable, 500)
+        } else {
+            // 게임 중에 관리자 화면에 다녀온 경우: 문제 목록을 다시 읽고 타이머·마이크를 잇는다.
+            resumeGameAfterOverlay()
         }
     }
 
     override fun onPause() {
         super.onPause()
         stopChickWobble()
+        pauseRoundTimer()
         handler.removeCallbacks(nextRunnable)
         handler.removeCallbacks(restartRunnable)
         resumeNext = gameActive && !awaiting
@@ -209,6 +251,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopChickWobble()
+        stopTimerWalk()
         handler.removeCallbacksAndMessages(null)
         recognizer.destroy()
         speaker.shutdown()
@@ -216,7 +259,7 @@ class MainActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (gameActive) confirmStop() else super.onBackPressed()
+        if (gameActive) finishGame(true) else super.onBackPressed()
     }
 
     // ---------------------------------------------------------------- views
@@ -232,6 +275,8 @@ class MainActivity : AppCompatActivity() {
         versionText = findViewById(R.id.versionText)
         bannerText = findViewById(R.id.bannerText)
         chickImage = findViewById(R.id.chickImage)
+        timerBanner = findViewById(R.id.timerBanner)
+        timerChick = findViewById(R.id.timerChick)
         randomButton = findViewById(R.id.randomButton)
         categoryGrid = findViewById(R.id.categoryGrid)
         startButton = findViewById(R.id.startButton)
@@ -261,7 +306,8 @@ class MainActivity : AppCompatActivity() {
         hintButton.setOnClickListener { showHint() }
         skipButton.setOnClickListener { skipWord() }
         answerButton.setOnClickListener { handleCorrect() }
-        stopButton.setOnClickListener { confirmStop() }
+        // v2.2: 확인창 없이 바로 끝내고 결과창만 한 번 띄운다.
+        stopButton.setOnClickListener { finishGame(true) }
         titleText.setOnClickListener { onTitleTapped() }
         setupScroll.setOnScrollChangeListener { _, _, _, _, _ ->
             handler.removeCallbacks(setupMessageReset)
@@ -282,29 +328,31 @@ class MainActivity : AppCompatActivity() {
         ViewCompat.requestApplyInsets(root)
     }
 
-    /** 첫 화면 병아리가 좌우로 부드럽게 흔들린다(±10dp, 1.4초 한 왕복). */
+    /**
+     * 첫 화면 병아리가 아장아장 걷는다(v2.2): 좌우 ±10dp 이동하면서
+     * 이동 방향에 맞춰 몸을 돌리고(scaleX ±1), 걸음마다 바운스(위로 4dp)와 기울기(±5도)를 준다.
+     */
     private fun startChickWobble() {
         if (wobbleActive) return
-        val amp = dp(CHICK_WOBBLE_DP).toFloat()
-        val ease = AccelerateDecelerateInterpolator()
-        val keyframes = PropertyValuesHolder.ofKeyframe(
-            View.TRANSLATION_X,
-            Keyframe.ofFloat(0f, 0f).apply { interpolator = ease },
-            Keyframe.ofFloat(0.25f, amp).apply { interpolator = ease },
-            Keyframe.ofFloat(0.5f, 0f).apply { interpolator = ease },
-            Keyframe.ofFloat(0.75f, -amp).apply { interpolator = ease },
-            Keyframe.ofFloat(1f, 0f)
-        )
-        val animator = ValueAnimator().apply {
-            setValues(keyframes)
+        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = CHICK_WOBBLE_CYCLE_MS
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
-            addUpdateListener { chickImage.translationX = it.animatedValue as Float }
+            addUpdateListener { applySwayPose(it.animatedValue as Float) }
         }
         wobbleActive = true
         chickWobble = animator
         animator.start()
+        applySwayPose(0f)
+    }
+
+    private fun applySwayPose(progress: Float) {
+        chickImage.translationX = ChickWalk.swayX(progress, dp(CHICK_WOBBLE_DP).toFloat())
+        chickImage.scaleX = ChickWalk.facingForSway(progress)
+        chickImage.translationY =
+            ChickWalk.bounce(progress, ChickWalk.SWAY_STEPS, dp(CHICK_BOUNCE_DP).toFloat())
+        chickImage.rotation =
+            ChickWalk.tilt(progress, ChickWalk.SWAY_STEPS, ChickWalk.TILT_MAX_DEG)
     }
 
     private fun stopChickWobble() {
@@ -312,6 +360,9 @@ class MainActivity : AppCompatActivity() {
         chickWobble?.cancel()
         chickWobble = null
         chickImage.translationX = 0f
+        chickImage.translationY = 0f
+        chickImage.scaleX = 1f
+        chickImage.rotation = 0f
     }
 
     /** 첫 화면 병아리 애니메이션이 켜져 있는지(화면을 떠나면 꺼진다). */
@@ -447,6 +498,10 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed(setupMessageReset, 2600)
     }
 
+    /**
+     * v2.2 ENG 정책(사용자 선택 2번): 문제 단어·카테고리 타일·음성인식·정답 발음만 영어로 바뀌고
+     * 화면의 버튼·안내 문구는 한국어 그대로 둔다.
+     */
     private fun setLang(newLang: String) {
         if (lang == newLang) return
         lang = newLang
@@ -458,7 +513,7 @@ class MainActivity : AppCompatActivity() {
             recognizer.cancel()
             scheduleRestart(250)
             gameStatus(
-                if (newLang == "en") "Now say it in English" else "이제 한국어로 말해요",
+                getString(if (newLang == "en") R.string.lang_switched_en else R.string.lang_switched_ko),
                 BannerKind.INFO
             )
         }
@@ -484,8 +539,8 @@ class MainActivity : AppCompatActivity() {
 
     // ---------------------------------------------------------------- 숨은 관리자
 
+    /** 게임 중에도 제목 3연속 탭으로 관리자 잠금을 열 수 있다(v2.2). */
     private fun onTitleTapped() {
-        if (gameActive) return
         if (tapCounter.tap(SystemClock.elapsedRealtime())) showGuguLock()
     }
 
@@ -498,6 +553,9 @@ class MainActivity : AppCompatActivity() {
         questionText.text = question.text
         error.visibility = View.GONE
 
+        // 잠금창이 떠 있는 동안에는 8초 타이머·마이크·TTS 를 멈춘다.
+        pauseForAdmin()
+
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.gugu_title)
             .setMessage(R.string.gugu_body)
@@ -509,6 +567,7 @@ class MainActivity : AppCompatActivity() {
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (Gugu.isCorrect(question, input.text.toString())) {
+                    adminOpening = true
                     dialog.dismiss()
                     startActivity(Intent(this, AdminActivity::class.java))
                 } else {
@@ -521,9 +580,42 @@ class MainActivity : AppCompatActivity() {
         dialog.setOnDismissListener {
             input.clearFocus()
             tapCounter.reset()
+            // 관리자 화면으로 넘어간 경우에는 onResume 에서 잇는다.
+            if (!adminOpening) resumeGameAfterOverlay()
+            adminOpening = false
         }
         dialog.show()
         input.requestFocus()
+    }
+
+    /** 관리자 잠금창·관리자 화면에 들어가는 동안 게임을 멈춰 둔다. */
+    private fun pauseForAdmin() {
+        if (!gameActive) return
+        overlayPause = true
+        pauseRoundTimer()
+        handler.removeCallbacks(restartRunnable)
+        handler.removeCallbacks(nextRunnable)
+        // 정답을 읽어 주는 중이었다면 돌아왔을 때 다음 문제로 넘어가게 한다.
+        if (!awaiting) resumeNext = true
+        recognizer.cancel()
+        speaker.stop()
+        micStatus.text = ""
+    }
+
+    /** 관리자 잠금창을 닫거나 관리자 화면에서 돌아오면 게임을 자연스럽게 잇는다. */
+    private fun resumeGameAfterOverlay() {
+        if (!gameActive) return
+        overlayPause = false
+        store.load()
+        buildCategoryButtons()
+        updateCategorySelection()
+        if (awaiting) {
+            resumeRoundTimer()
+            scheduleRestart(300)
+        } else if (resumeNext) {
+            resumeNext = false
+            handler.postDelayed(nextRunnable, 500)
+        }
     }
 
     // ---------------------------------------------------------------- 게임
@@ -538,8 +630,10 @@ class MainActivity : AppCompatActivity() {
         gameActive = true
         awaiting = false
         resumeNext = false
+        overlayPause = false
         errorStreak = 0
         startFailures = 0
+        speechLog.clear()
 
         particles.clear()
         stopChickWobble()
@@ -580,7 +674,98 @@ class MainActivity : AppCompatActivity() {
 
         gameStatus(getString(R.string.game_hint_line), BannerKind.INFO)
         updateScore()
+        startRoundTimer()
         startListening()
+    }
+
+    // ---------------------------------------------------------------- 8초 타이머
+
+    /** 문제를 시작할 때: 8초 제한을 걸고 타이머 병아리를 왼쪽 끝에서 걷게 한다. */
+    private fun startRoundTimer() {
+        handler.removeCallbacks(roundTimeout)
+        roundRemainingMs = -1L
+        roundTimerOn = true
+        roundDeadline = SystemClock.elapsedRealtime() + ROUND_LIMIT_MS
+        handler.postDelayed(roundTimeout, ROUND_LIMIT_MS)
+        beginTimerWalk(0f)
+    }
+
+    /** 남은 시간을 기억해 두고 타이머를 멈춘다(관리자 진입·화면 전환). */
+    private fun pauseRoundTimer() {
+        if (!roundTimerOn) return
+        roundTimerOn = false
+        roundRemainingMs = (roundDeadline - SystemClock.elapsedRealtime()).coerceIn(0L, ROUND_LIMIT_MS)
+        handler.removeCallbacks(roundTimeout)
+        stopTimerWalk()
+    }
+
+    /** 멈춰 둔 남은 시간부터 타이머를 다시 잇는다. */
+    private fun resumeRoundTimer() {
+        if (!gameActive || !awaiting || roundTimerOn) return
+        val remaining = if (roundRemainingMs in 1..ROUND_LIMIT_MS) roundRemainingMs else ROUND_LIMIT_MS
+        roundRemainingMs = -1L
+        roundTimerOn = true
+        roundDeadline = SystemClock.elapsedRealtime() + remaining
+        handler.removeCallbacks(roundTimeout)
+        handler.postDelayed(roundTimeout, remaining)
+        beginTimerWalk(ChickWalk.timerProgress(ROUND_LIMIT_MS - remaining))
+    }
+
+    /** 타이머를 완전히 내린다(정답·건너뛰기·시간 초과·게임 종료). */
+    private fun stopRoundTimer() {
+        roundTimerOn = false
+        roundRemainingMs = -1L
+        handler.removeCallbacks(roundTimeout)
+        stopTimerWalk()
+    }
+
+    private fun timerTravelPx(): Float {
+        val track = timerBanner.width - timerBanner.paddingLeft - timerBanner.paddingRight - timerChick.width
+        return if (track > 0) track.toFloat() else dp(TIMER_FALLBACK_TRAVEL_DP).toFloat()
+    }
+
+    /** 타이머 병아리가 [fromProgress] 부터 오른쪽 끝까지 걷는다. */
+    private fun beginTimerWalk(fromProgress: Float) {
+        handler.removeCallbacks(timerTick)
+        timerWalking = true
+        applyTimerWalk(fromProgress)
+        handler.postDelayed(timerTick, TIMER_TICK_MS)
+    }
+
+    private fun applyTimerWalk(progress: Float) {
+        timerChick.translationX = ChickWalk.walkX(progress, timerTravelPx())
+        timerChick.scaleX = 1f
+        timerChick.translationY =
+            ChickWalk.bounce(progress, ChickWalk.TIMER_STEPS, dp(TIMER_BOUNCE_DP).toFloat())
+        timerChick.rotation =
+            ChickWalk.tilt(progress, ChickWalk.TIMER_STEPS, ChickWalk.TILT_MAX_DEG)
+    }
+
+    private fun stopTimerWalk() {
+        timerWalking = false
+        handler.removeCallbacks(timerTick)
+        timerChick.translationX = 0f
+        timerChick.translationY = 0f
+        timerChick.rotation = 0f
+        timerChick.scaleX = 1f
+    }
+
+    /**
+     * 8초가 지났다: 타이머·마이크를 즉시 멈추고 정답을 **한 번만** 읽어 준 뒤 다음 문제로 넘어간다.
+     */
+    private fun handleTimeUp() {
+        if (!gameActive || !awaiting) return
+        val word = session?.current ?: return
+        awaiting = false
+        stopRoundTimer()
+        handler.removeCallbacks(restartRunnable)
+        recognizer.cancel()
+        micStatus.text = ""
+        hintBadge.visibility = View.GONE
+        answerReveal.text = getString(R.string.time_up_line, word.text(lang))
+        answerReveal.setTextColor(ContextCompat.getColor(this, R.color.bad))
+        gameStatus(getString(R.string.time_up_banner), BannerKind.BAD)
+        speakOnceThenNext(word)
     }
 
     private fun startListening() {
@@ -682,6 +867,7 @@ class MainActivity : AppCompatActivity() {
         if (!gameActive || !awaiting) return
         val word = session?.current ?: return
         awaiting = false
+        stopRoundTimer()
         handler.removeCallbacks(restartRunnable)
         recognizer.cancel()
 
@@ -698,6 +884,7 @@ class MainActivity : AppCompatActivity() {
         if (!gameActive || !awaiting) return
         val word = session?.current ?: return
         awaiting = false
+        stopRoundTimer()
         handler.removeCallbacks(restartRunnable)
         recognizer.cancel()
 
@@ -711,8 +898,20 @@ class MainActivity : AppCompatActivity() {
     private fun speakThenNext(word: Word) {
         handler.removeCallbacks(nextRunnable)
         micStatus.text = ""
+        speechLog.add(word.text(lang) to 2)
         speaker.speakTwice(word.text(lang), langTag()) {
             if (!gameActive) return@speakTwice
+            handler.postDelayed(nextRunnable, NEXT_DELAY_MS)
+        }
+    }
+
+    /** 시간 초과: 정답을 한 번만 읽고 다음 문제로 넘어간다. */
+    private fun speakOnceThenNext(word: Word) {
+        handler.removeCallbacks(nextRunnable)
+        micStatus.text = ""
+        speechLog.add(word.text(lang) to 1)
+        speaker.speakOnce(word.text(lang), langTag()) {
+            if (!gameActive) return@speakOnce
             handler.postDelayed(nextRunnable, NEXT_DELAY_MS)
         }
     }
@@ -727,21 +926,14 @@ class MainActivity : AppCompatActivity() {
         hintBadge.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
     }
 
-    private fun confirmStop() {
-        if (!gameActive) return
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.stop_confirm_title)
-            .setMessage(R.string.stop_confirm_body)
-            .setPositiveButton(R.string.stop_game) { _, _ -> finishGame(true) }
-            .setNegativeButton(R.string.continue_game, null)
-            .show()
-    }
-
     private fun finishGame(showSummary: Boolean) {
         val correct = session?.correctCount ?: 0
         gameActive = false
         awaiting = false
         resumeNext = false
+        overlayPause = false
+        adminOpening = false
+        stopRoundTimer()
         handler.removeCallbacks(nextRunnable)
         handler.removeCallbacks(restartRunnable)
         recognizer.cancel()
@@ -782,6 +974,48 @@ class MainActivity : AppCompatActivity() {
         )
         gameStatus.visibility = View.VISIBLE
     }
+
+    // ---------------------------------------------------------------- 테스트용 훅
+
+    /** 실제로 요청한 발음 기록(단어, 읽는 횟수). 게임을 시작할 때 비운다. */
+    private val speechLog = mutableListOf<Pair<String, Int>>()
+
+    internal val speechLogForTest: List<Pair<String, Int>>
+        get() = speechLog.toList()
+
+    /** 첫 화면 병아리 자세를 특정 진행도로 맞춘다(애니메이션 프레임 대신). */
+    internal fun applySwayPoseForTest(progress: Float) = applySwayPose(progress)
+
+    /** 타이머 병아리 자세를 특정 진행도로 맞춘다. */
+    internal fun applyTimerPoseForTest(progress: Float) = applyTimerWalk(progress)
+
+    /** 타이머 병아리가 걷는 거리(px). */
+    internal val timerTravel: Float
+        get() = timerTravelPx()
+
+    /** 지금 정답을 기다리는 중인지. */
+    internal val isAwaiting: Boolean
+        get() = awaiting
+
+    /** 8초 제한 타이머가 돌고 있는지. */
+    internal val isRoundTimerRunning: Boolean
+        get() = roundTimerOn
+
+    /** 멈춰 둔 남은 시간(ms). 돌고 있으면 -1. */
+    internal val pausedRoundRemainingMs: Long
+        get() = roundRemainingMs
+
+    /** 타이머 병아리 걷기 애니메이션이 켜져 있는지. */
+    internal val isTimerWalking: Boolean
+        get() = timerWalking
+
+    /** 엔진에 실제로 요청한 발음 속도(1번째·2번째·시간 초과 1회). */
+    internal val appliedSpeechRates: List<Float>
+        get() = synchronized(speaker.appliedRates) { speaker.appliedRates.toList() }
+
+    /** 현재 문제 단어(테스트가 정답 문자열을 확인할 때). */
+    internal val currentWord: Word?
+        get() = session?.current
 
     // ---------------------------------------------------------------- 권한
 

@@ -15,6 +15,8 @@
 
     <string name="lang_ko">한글</string>
     <string name="lang_en">ENG</string>
+    <string name="lang_switched_en">이제 영어로 말해요</string>
+    <string name="lang_switched_ko">이제 한국어로 말해요</string>
 
     <string name="game_hint_line">그림을 보고 단어를 말해보세요</string>
     <string name="what_is_it">무엇일까요?</string>
@@ -34,6 +36,8 @@
     <string name="skipped_banner">건너뛰었어요</string>
     <string name="not_heard">잘 못 들었어요. 한 번 더 말해볼까요?</string>
     <string name="heard_line">이렇게 들었어요 · %1$s</string>
+    <string name="time_up_line">시간 초과! 정답은 %1$s</string>
+    <string name="time_up_banner">시간 초과예요</string>
 
     <string name="stop_confirm_title">그만할까요?</string>
     <string name="stop_confirm_body">지금까지 맞힌 문제를 알려 줄게요.</string>

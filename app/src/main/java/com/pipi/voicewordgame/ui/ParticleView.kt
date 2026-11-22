@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
 import kotlin.math.cos
@@ -19,6 +20,11 @@ class ParticleView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private enum class Kind { HEART, STAR, DOT }
+
+    private companion object {
+        /** 티커 갱신 간격(약 60fps). */
+        const val FRAME_MS = 16L
+    }
 
     private class Particle(
         var x: Float,
@@ -42,18 +48,22 @@ class ParticleView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val heartPath = Path()
     private val starPath = Path()
-    private var lastFrameNanos = 0L
+    private var lastFrameMillis = 0L
     private val random = Random(System.currentTimeMillis())
 
+    /**
+     * 16ms 마다 직접 도는 티커.
+     * (프레임 콜백 대신 Handler 를 쓰면 화면이 멈춰 있어도 시간 계산이 흔들리지 않는다)
+     */
     private val ticker = object : Runnable {
         override fun run() {
-            val now = System.nanoTime()
-            if (lastFrameNanos == 0L) lastFrameNanos = now
-            val dt = ((now - lastFrameNanos) / 1_000_000_000f).coerceIn(0f, 0.05f)
-            lastFrameNanos = now
+            val now = SystemClock.uptimeMillis()
+            if (lastFrameMillis == 0L) lastFrameMillis = now
+            val dt = ((now - lastFrameMillis) / 1000f).coerceIn(0f, 0.05f)
+            lastFrameMillis = now
             step(dt)
             invalidate()
-            if (particles.isNotEmpty()) postOnAnimation(this)
+            if (particles.isNotEmpty()) postDelayed(this, FRAME_MS)
         }
     }
 
@@ -110,12 +120,14 @@ class ParticleView @JvmOverloads constructor(
                 )
             )
         }
-        lastFrameNanos = 0L
-        postOnAnimation(ticker)
+        lastFrameMillis = 0L
+        removeCallbacks(ticker)
+        postDelayed(ticker, FRAME_MS)
     }
 
     fun clear() {
         particles.clear()
+        removeCallbacks(ticker)
         invalidate()
     }
 

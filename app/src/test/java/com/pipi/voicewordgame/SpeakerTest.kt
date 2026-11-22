@@ -57,6 +57,23 @@ class SpeakerTest {
         assertEquals(4000L, Speaker.SAFETY_TIMEOUT_MS)
     }
 
+    /** v2.2: 시간 초과 때는 정답을 한 번만 읽고 바로 완료를 알린다. */
+    @Test
+    fun speakOnceReadsExactlyOneTimeAndFinishes() {
+        var finished = 0
+        speaker.speakOnce("사과", "ko-KR") { finished += 1 }
+        shadowOf(Looper.getMainLooper()).idle()
+
+        assertEquals(listOf("사과"), shadowTts.spokenTextList.toList())
+        assertEquals(listOf(0.72f), speaker.appliedRates.toList())
+        assertEquals("한 번 읽고 끝난다", 1, finished)
+
+        // 두 번째 발음이 뒤따라 나오지 않는다.
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1500))
+        assertEquals(listOf("사과"), shadowTts.spokenTextList.toList())
+        assertEquals(1, finished)
+    }
+
     @Test
     fun firstReadsSlowlyThenSecondReadsNormallyAfterThreeHundredFiftyMs() {
         var finished = 0

@@ -10,12 +10,13 @@ import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 정답 단어를 두 번 읽어 주는 TTS.
+ * 정답 단어를 읽어 주는 TTS.
  *
  * - 구글 TTS(com.google.android.tts) 엔진을 우선 연결하고, 없으면 기기 기본 엔진.
  * - v2.1: 1번째는 **천천히(speechRate 0.72)** → 350ms 쉼 → 2번째는 **보통 속도(0.95)**.
  *   pitch 는 1.05 로 유지.
  * - [speakTwice]: 1번째 발음 완료(onDone) → 350ms 쉼 → 2번째 발음 → 완료되면 onFinished.
+ * - v2.2 [speakOnce]: 시간 초과일 때 정답을 **한 번만** 읽고 onFinished.
  *   TTS 가 없거나 오류가 나면 4초 안전 타이머가 대신 onFinished 를 부른다(게임이 멈추지 않게).
  */
 class Speaker(context: Context) {
@@ -46,6 +47,7 @@ class Speaker(context: Context) {
 
     private var pendingText: String? = null
     private var pendingLang: String = "ko-KR"
+    private var plannedRounds: Int = 2
     private var onFinished: (() -> Unit)? = null
     private val finished = AtomicBoolean(true)
     private var retriedWithDefaultEngine = false
@@ -110,7 +112,10 @@ class Speaker(context: Context) {
 
             override fun onDone(utteranceId: String?) {
                 when (utteranceId) {
-                    UTTERANCE_FIRST -> handler.postDelayed(secondUtterance, PAUSE_BETWEEN_MS)
+                    UTTERANCE_FIRST ->
+                        if (plannedRounds <= 1) finishOnce()
+                        else handler.postDelayed(secondUtterance, PAUSE_BETWEEN_MS)
+
                     UTTERANCE_SECOND -> finishOnce()
                 }
             }
@@ -138,9 +143,21 @@ class Speaker(context: Context) {
      * (다음 문제로 넘기는 것은 호출하는 쪽이 500ms 뒤에 한다)
      */
     fun speakTwice(text: String, langTag: String, onFinished: () -> Unit) {
+        speak(text, langTag, rounds = 2, onFinished = onFinished)
+    }
+
+    /**
+     * 정답 단어를 **한 번만** 읽고 [onFinished] 를 정확히 한 번 부른다(시간 초과용).
+     */
+    fun speakOnce(text: String, langTag: String, onFinished: () -> Unit) {
+        speak(text, langTag, rounds = 1, onFinished = onFinished)
+    }
+
+    private fun speak(text: String, langTag: String, rounds: Int, onFinished: () -> Unit) {
         stop()
         pendingText = text
         pendingLang = langTag
+        plannedRounds = rounds
         this.onFinished = onFinished
         finished.set(false)
         appliedRates.clear()
@@ -178,6 +195,7 @@ class Speaker(context: Context) {
         }
         val id = if (round == 1) UTTERANCE_FIRST else UTTERANCE_SECOND
         // 발음마다 속도를 바꿔야 해서 speak 직전에 적용한다(1번째 천천히 · 2번째 보통).
+        // 한 번만 읽는 경우(시간 초과)에도 같은 천천히 속도를 쓴다.
         val rate = rateFor(round)
         appliedRates.add(rate)
         runCatching { engine.setSpeechRate(rate) }
