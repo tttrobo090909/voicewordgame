@@ -741,13 +741,14 @@ class MainActivity : AppCompatActivity() {
             ChickWalk.tilt(progress, ChickWalk.TIMER_STEPS, ChickWalk.TILT_MAX_DEG)
     }
 
+    /**
+     * 걷기를 멈춘다. 자세는 그 자리에 그대로 둬서(정답을 읽어 주는 동안)
+     * 병아리가 왼쪽 끝으로 되돌아가는 것처럼 보이지 않게 한다.
+     * 다음 문제가 시작될 때 beginTimerWalk(0f) 가 다시 왼쪽 끝으로 세운다.
+     */
     private fun stopTimerWalk() {
         timerWalking = false
         handler.removeCallbacks(timerTick)
-        timerChick.translationX = 0f
-        timerChick.translationY = 0f
-        timerChick.rotation = 0f
-        timerChick.scaleX = 1f
     }
 
     /**
