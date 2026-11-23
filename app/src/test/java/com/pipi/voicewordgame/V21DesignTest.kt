@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable
 import android.util.TypedValue
 import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -61,7 +62,7 @@ class V21DesignTest {
     // ------------------------------------------------------------ 5) 카테고리 배치
 
     @Test
-    fun sixCategoriesComeFirstInTwoColumnsAndRandomIsLast() {
+    fun sixCategoriesComeFirstInTwoColumnsWithTwoLineLabels() {
         val activity = launch()
         val grid = rows(activity)
         assertEquals("2열×3행", 3, grid.childCount)
@@ -69,7 +70,10 @@ class V21DesignTest {
             assertEquals(2, (grid.getChildAt(row) as LinearLayout).childCount)
         }
         assertEquals(
-            listOf("동물 (91)", "음식·과일 (91)", "탈것 (40)", "사물·집 (119)", "자연 (42)", "사람·몸 (42)"),
+            listOf(
+                "동물\n(91)", "음식·과일\n(91)", "탈것\n(40)",
+                "사물·집\n(119)", "자연\n(42)", "사람·몸\n(42)"
+            ),
             (0 until 3).flatMap { row ->
                 (0 until 2).map { column ->
                     tile(activity, row, column).findViewById<TextView>(R.id.tileLabel).text.toString()
@@ -77,14 +81,10 @@ class V21DesignTest {
             }
         )
 
-        // 전체 무작위는 카테고리 6개 바로 아래(같은 부모 안에서 그리드 다음).
-        val random = activity.findViewById<Button>(R.id.randomButton)
-        val parent = random.parent as LinearLayout
-        assertEquals(
-            "무작위 버튼은 카테고리 그리드 바로 뒤",
-            parent.indexOfChild(grid) + 1,
-            parent.indexOfChild(random)
-        )
+        // v2.7: `전체 무작위` 는 없고, 게임 시작이 카테고리 그리드 바로 뒤다.
+        val start = activity.findViewById<Button>(R.id.startButton)
+        val parent = grid.parent as LinearLayout
+        assertEquals("게임 시작은 카테고리 바로 아래", parent.indexOfChild(grid) + 1, parent.indexOfChild(start))
     }
 
     @Test
@@ -107,39 +107,38 @@ class V21DesignTest {
         val coral = Color.parseColor("#E05A3F")
         val tint = ContextCompat.getColor(activity, R.color.tint_animal)
 
+        // v2.7: 처음에는 모든 카테고리가 선택되어 있다.
         val first = tile(activity, 0, 0)
-        first.performClick()
         val selected = render(first.background, 240, 120)
         assertEquals("선택된 타일 테두리는 진한 코랄", coral, selected.getPixel(4, 60))
         assertNotEquals("선택되면 배경이 살짝 진해진다", tint, selected.getPixel(120, 60))
         assertEquals(ColorUtils.blendARGB(tint, coral, 0.12f), selected.getPixel(120, 60))
 
-        // 다른 카테고리를 고르면 이전 타일의 테두리는 사라진다.
-        tile(activity, 0, 1).performClick()
+        // 한 번 누르면 그 타일만 선택이 풀리고, 이웃 타일은 그대로다.
+        first.performClick()
         val unselected = render(first.background, 240, 120)
         assertEquals("선택이 풀리면 배경은 원래 톤", tint, unselected.getPixel(120, 60))
         assertEquals("선택이 풀리면 테두리 없음", tint, unselected.getPixel(4, 60))
+        val neighbour = render(tile(activity, 0, 1).background, 240, 120)
+        assertEquals("이웃 타일은 선택 유지", coral, neighbour.getPixel(4, 60))
 
-        // 새로 고른 타일에는 테두리가 생긴다.
-        val second = render(tile(activity, 0, 1).background, 240, 120)
-        assertEquals(coral, second.getPixel(4, 60))
+        // 다시 누르면 선택된다.
+        first.performClick()
+        val again = render(first.background, 240, 120)
+        assertEquals(coral, again.getPixel(4, 60))
     }
 
     @Test
-    fun randomButtonSelectedStateIsClearlyDifferentFromUnselected() {
+    fun everyCategoryTileIsSelectedOnFirstRun() {
         val activity = launch()
-        val random = activity.findViewById<Button>(R.id.randomButton)
-
-        val selected = render(shapeOf(random.background), 240, 120)
-        assertEquals("선택된 무작위 테두리", Color.parseColor("#E05A3F"), selected.getPixel(4, 60))
-        assertEquals("선택된 무작위 배경", Color.parseColor("#FFD98A"), selected.getPixel(120, 60))
-
-        tile(activity, 1, 0).performClick()
-        val unselected = render(shapeOf(random.background), 240, 120)
-        assertEquals("선택 해제 시 테두리", Color.parseColor("#E9C97B"), unselected.getPixel(4, 60))
-        assertEquals("선택 해제 시 배경", Color.parseColor("#FFE8A3"), unselected.getPixel(120, 60))
-        assertNotEquals(selected.getPixel(4, 60), unselected.getPixel(4, 60))
-        assertNotEquals(selected.getPixel(120, 60), unselected.getPixel(120, 60))
+        val coral = Color.parseColor("#E05A3F")
+        // v2.7: 처음에는 문제가 있는 카테고리 6개가 모두 선택되어 있다.
+        for (row in 0 until 3) {
+            for (column in 0 until 2) {
+                val bitmap = render(tile(activity, row, column).background, 240, 120)
+                assertEquals(coral, bitmap.getPixel(4, 60))
+            }
+        }
     }
 
     // ------------------------------------------------------------ 2) 제목 탭 무반응
@@ -164,7 +163,7 @@ class V21DesignTest {
     @Test
     fun bannerAndChickAreTwentyPercentBigger() {
         val activity = launch()
-        val banner = activity.findViewById<LinearLayout>(R.id.slimBanner)
+        val banner = activity.findViewById<FrameLayout>(R.id.slimBanner)
         val chick = activity.findViewById<ImageView>(R.id.chickImage)
 
         assertEquals("배너 높이 96dp → 116dp", px(activity, 116), banner.layoutParams.height)
@@ -181,7 +180,13 @@ class V21DesignTest {
         // 흔들림 폭과 한 왕복 시간은 코드 상수로 고정한다(v2.3: ±10dp, 3.6초에 한 왕복).
         assertEquals(10, MainActivity.CHICK_WOBBLE_DP)
         assertEquals(3600L, MainActivity.CHICK_WOBBLE_CYCLE_MS)
-        assertEquals("가운데에서 시작", 0f, chick.translationX, 0.01f)
+        // v2.7: 흔들림의 중심은 글자 왼쪽 여백의 가운데다.
+        assertEquals(
+            "여백 가운데에서 시작",
+            activity.chickSwayRoomForTest / 2f,
+            chick.translationX,
+            0.01f
+        )
     }
 
     @Test

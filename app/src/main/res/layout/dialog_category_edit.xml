@@ -27,6 +27,7 @@
             android:hint="@string/category_ko_hint"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:maxLength="8"
             android:paddingStart="14dp"
             android:paddingTop="10dp"
             android:paddingEnd="14dp"
@@ -34,6 +35,16 @@
             android:singleLine="true"
             android:textColor="@color/ink"
             android:textSize="15sp" />
+
+        <!-- v2.7: 카테고리 이름은 8자까지 -->
+        <TextView
+            android:id="@+id/categoryKoLimit"
+            style="@style/TextBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/category_name_limit"
+            android:textSize="11sp" />
 
         <TextView
             style="@style/TextSection"

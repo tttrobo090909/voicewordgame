@@ -63,9 +63,9 @@ class AdminScreenTest {
     @Test
     fun categoryFilterLimitsList() {
         val filters = activity.findViewById<LinearLayout>(R.id.adminFilterRow)
-        assertEquals(7, filters.childCount) // 전체 + 6개 카테고리
+        assertEquals(8, filters.childCount) // + 카테고리 + 전체 + 6개 카테고리
 
-        (filters.getChildAt(3) as Button).performClick() // 탈것
+        (filters.getChildAt(4) as Button).performClick() // 탈것
         shadowOf(Looper.getMainLooper()).idle()
         assertEquals(40, list().adapter?.itemCount)
     }

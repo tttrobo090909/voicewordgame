@@ -73,12 +73,15 @@ class V22Test {
     fun firstScreenChickStaysUprightAndSwaysGently() {
         val activity = launch()
         val chick = activity.findViewById<ImageView>(R.id.chickImage)
-        val swayPx = px(activity, MainActivity.CHICK_WOBBLE_DP).toFloat()
+        // v2.7: 병아리는 글자 왼쪽 여백의 가운데를 기준으로 좌우로 움직인다.
+        val room = activity.chickSwayRoomForTest
+        val center = room / 2f
+        assertTrue("글자 왼쪽에 움직일 여백이 있다", room > 0f)
 
-        // 오른쪽으로 가는 구간: 정방향(scaleX = 1), 오른쪽(+10dp) 이동, 바운스·기울기는 잔잔하게.
+        // 오른쪽으로 가는 구간: 정방향(scaleX = 1), 여백 가운데보다 오른쪽.
         activity.applySwayPoseForTest(0.20f)
         assertEquals("오른쪽으로 갈 때도 scaleX = 1", 1f, chick.scaleX, 0.001f)
-        assertTrue("오른쪽으로 이동", chick.translationX > swayPx * 0.9f)
+        assertTrue("오른쪽으로 이동", chick.translationX > center + room * 0.2f)
 
         activity.applySwayPoseForTest(0.05f)
         assertTrue("걷는 동안 위아래 바운스가 들어간다", chick.translationY < -0.5f)
@@ -92,11 +95,11 @@ class V22Test {
         // 왼쪽으로 돌아오는 구간에도 몸은 뒤집히지 않고(명암이 좌우로 바뀌지 않음) 왼쪽(-)으로 이동한다.
         activity.applySwayPoseForTest(0.70f)
         assertEquals("왼쪽으로 갈 때도 scaleX = 1", 1f, chick.scaleX, 0.001f)
-        assertTrue("왼쪽으로 이동", chick.translationX < -swayPx * 0.9f)
+        assertTrue("왼쪽으로 이동", chick.translationX < center - room * 0.2f)
 
-        // 왕복 중간(0.5)에서는 가운데.
+        // 왕복 중간(0.5)에서는 여백의 가운데.
         activity.applySwayPoseForTest(0.5f)
-        assertEquals(0f, chick.translationX, 0.01f)
+        assertEquals(center, chick.translationX, 1f)
         assertEquals(1f, chick.scaleX, 0.001f)
 
         // 애니메이션 자체는 계속 살아 있고, 한 왕복은 3.6초로 느긋하다.
@@ -106,27 +109,28 @@ class V22Test {
     }
 
     @Test
-    fun bannerLineIsBiggerAndStillBold() {
+    fun bannerLineFitsOneLineAtEighteenSp() {
         val activity = launch()
         val banner = activity.findViewById<TextView>(R.id.bannerText)
-        val twentySp = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP, 20f, activity.resources.displayMetrics
+        val sp18 = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, 18f, activity.resources.displayMetrics
         )
-        assertTrue("배너 문구가 20sp 이상", banner.textSize >= twentySp - 0.5f)
+        assertTrue("v2.7 배너 문구는 18sp", banner.textSize >= sp18 - 0.5f)
         assertTrue("배너 문구는 굵게", banner.typeface.style and android.graphics.Typeface.BOLD != 0)
-        assertEquals("그림을 보고\n단어를 맞혀요!", banner.text.toString())
+        assertEquals("한 줄(줄바꿈 없음)", "그림을 보고 단어를 맞혀요!", banner.text.toString())
+        assertEquals("한 줄만 보여 준다", 1, banner.maxLines)
     }
 
     // -------------------------------------------------- 2) 게임 시작 버튼 위치·하단 표기
 
     @Test
-    fun startButtonSitsRightBelowRandomButtonAndFooterNotesStay() {
+    fun startButtonSitsRightBelowTheCategoryGridAndFooterNotesStay() {
         val activity = launch()
-        val random = activity.findViewById<Button>(R.id.randomButton)
+        val grid = activity.findViewById<LinearLayout>(R.id.categoryGrid)
         val start = activity.findViewById<Button>(R.id.startButton)
-        val parent = random.parent as LinearLayout
+        val parent = grid.parent as LinearLayout
 
-        assertEquals("게임 시작은 전체 무작위 바로 아래", parent.indexOfChild(random) + 1, parent.indexOfChild(start))
+        assertEquals("게임 시작은 카테고리 바로 아래", parent.indexOfChild(grid) + 1, parent.indexOfChild(start))
         assertEquals("같은 스크롤 영역 안", parent, start.parent)
         assertTrue("버튼 사이에 적당한 간격", start.layoutParams is LinearLayout.LayoutParams)
         val params = start.layoutParams as LinearLayout.LayoutParams
@@ -135,7 +139,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.6_"))
+        assertEquals("v2.7", version.text.toString())
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -188,26 +192,26 @@ class V22Test {
     }
 
     @Test
-    fun roundStartsTheTimerAndNineSecondsReadsAnswerTwiceThenMovesOn() {
+    fun roundStartsTheTimerAndTenSecondsReadsAnswerTwiceThenMovesOn() {
         val activity = launch()
         activity.findViewById<Button>(R.id.startButton).performClick()
         val reveal = activity.findViewById<TextView>(R.id.answerReveal)
         val score = activity.findViewById<TextView>(R.id.scoreText)
 
-        assertEquals("기본 제한시간은 9초", 9000L, activity.roundLimitForTest)
+        assertEquals("기본 제한시간은 10초(v2.7)", 10000L, activity.roundLimitForTest)
         assertTrue("문제가 시작되면 제한시간 타이머가 돈다", activity.isRoundTimerRunning)
         assertTrue(activity.isTimerWalking)
         assertTrue(activity.isAwaiting)
         val word = activity.currentWord!!
         assertEquals("무엇일까요?", reveal.text.toString())
 
-        idle(8900)
-        assertTrue("9초 전에는 시간 초과가 아니다", activity.isRoundTimerRunning)
+        idle(9900)
+        assertTrue("10초 전에는 시간 초과가 아니다", activity.isRoundTimerRunning)
         assertEquals("무엇일까요?", reveal.text.toString())
 
         idle(200)
-        assertFalse("9초가 지나면 타이머 정지", activity.isRoundTimerRunning)
-        assertFalse("9초가 지나면 정답 대기 종료", activity.isAwaiting)
+        assertFalse("10초가 지나면 타이머 정지", activity.isRoundTimerRunning)
+        assertFalse("10초가 지나면 정답 대기 종료", activity.isAwaiting)
         assertFalse("타이머 병아리도 멈춘다", activity.isTimerWalking)
         assertEquals("시간 초과! 정답은 ${word.ko}", reveal.text.toString())
         assertEquals("v2.4: 시간 초과에도 정답을 2번 읽는다", 2, activity.speechLogForTest.last().second)
@@ -226,7 +230,7 @@ class V22Test {
         activity.findViewById<Button>(R.id.startButton).performClick()
         activity.findViewById<TextView>(R.id.micStatus).text = "듣고 있어요"
 
-        idle(9000)
+        idle(10000)
         assertEquals("시간 초과 시 마이크 안내도 지운다", "", activity.findViewById<TextView>(R.id.micStatus).text.toString())
     }
 
@@ -306,7 +310,7 @@ class V22Test {
         assertFalse("잠금창이 떠 있는 동안 타이머 정지", activity.isRoundTimerRunning)
         assertTrue(
             "남은 시간을 기억한다: ${activity.pausedRoundRemainingMs}",
-            activity.pausedRoundRemainingMs in 7000L..7800L
+            activity.pausedRoundRemainingMs in 8000L..8800L
         )
 
         // 잠금창이 떠 있는 동안에는 8초가 지나도 시간 초과가 나지 않는다.
@@ -361,9 +365,8 @@ class V22Test {
         val firstLabel = (grid.getChildAt(0) as LinearLayout)
             .getChildAt(0).findViewById<TextView>(R.id.tileLabel).text.toString()
         assertTrue("카테고리 타일은 영어: $firstLabel", firstLabel.startsWith("Animals"))
-        assertEquals("전체 무작위 (425)", activity.findViewById<Button>(R.id.randomButton).text.toString())
         assertEquals("게임 시작!", activity.findViewById<Button>(R.id.startButton).text.toString())
-        assertEquals("그림을 보고\n단어를 맞혀요!", activity.findViewById<TextView>(R.id.bannerText).text.toString())
+        assertEquals("그림을 보고 단어를 맞혀요!", activity.findViewById<TextView>(R.id.bannerText).text.toString())
 
         // 게임 화면: 버튼·안내 문구는 한국어, 정답 단어는 영어.
         activity.findViewById<Button>(R.id.startButton).performClick()
@@ -392,7 +395,7 @@ class V22Test {
         activity.findViewById<Button>(R.id.startButton).performClick()
         val word = activity.currentWord!!
 
-        idle(9100)
+        idle(10100)
         assertEquals(
             "시간 초과! 정답은 ${word.en}",
             activity.findViewById<TextView>(R.id.answerReveal).text.toString()
@@ -419,10 +422,11 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV26() {
+    fun versionIsV27Only() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertTrue("버전 표기 v2.6_...: $version", version.startsWith("v2.6_"))
-        assertTrue(version.length >= "v2.6_1123_0000".length)
+        assertEquals("날짜·시간 없이 v2.7", "v2.7", version)
+        assertTrue("빌드 버전은 2.7_...", BuildConfig.VERSION_NAME.startsWith("2.7_"))
+        assertTrue("versionCode 는 기존 11232258 보다 크다", BuildConfig.VERSION_CODE > 11232258)
     }
 }

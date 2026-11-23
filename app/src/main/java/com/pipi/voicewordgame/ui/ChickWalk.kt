@@ -13,8 +13,8 @@ import kotlin.math.sin
  */
 object ChickWalk {
 
-    /** 설정 기본값(9초) — 제한시간 설정이 없을 때 쓰는 한 문제 제한 시간. */
-    const val DEFAULT_LIMIT_MS = 9000L
+    /** 설정 기본값(10초) — 제한시간 설정이 없을 때 쓰는 한 문제 제한 시간. */
+    const val DEFAULT_LIMIT_MS = 10000L
 
     /** 첫 화면 좌우 살랑살랑 한 왕복에 들어가는 걸음 수. */
     const val SWAY_STEPS = 4f

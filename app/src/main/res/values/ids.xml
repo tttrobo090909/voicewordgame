@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="tileLabel" type="id" />
+    <!-- v2.7: 문제 목록 필터 줄 맨 왼쪽의 `+ 카테고리` 버튼(코드로 만들지만 테스트·검색용 id 유지) -->
+    <item name="addCategory" type="id" />
 </resources>

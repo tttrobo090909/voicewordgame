@@ -49,6 +49,9 @@ class AdminActivity : AppCompatActivity() {
         /** 시스템 바 인셋 위에 더하는 상·하단 여유. */
         const val EXTRA_VERTICAL_DP = 14
 
+        /** 카테고리 이름 길이 제한(v2.7). */
+        const val CATEGORY_NAME_MAX = 8
+
         /** 한 번에 조절되는 값(문제 수는 5문제씩, 제한시간은 1초씩). */
         const val COUNT_STEP = 5
         const val TIME_STEP = 1
@@ -114,7 +117,6 @@ class AdminActivity : AppCompatActivity() {
         list.adapter = adapter
 
         buildFilters()
-        buildCategoryChips()
         refresh()
         setupGameSettings()
         setupResets()
@@ -193,14 +195,57 @@ class AdminActivity : AppCompatActivity() {
     private fun buildFilters() {
         filterRow.removeAllViews()
         filterButtons.clear()
-        addFilterButton(0, getString(R.string.admin_filter_all))
-        store.book.categories.forEach { addFilterButton(it.id, it.ko) }
+        // v2.7: 필터 줄 맨 왼쪽에 `+ 카테고리` 를 둔다(카테고리 카드 삭제).
+        filterRow.addView(buildAddCategoryButton())
+        addFilterButton(0, getString(R.string.admin_filter_all), store.book.words.size, null)
+        store.book.categories.forEach { category ->
+            addFilterButton(category.id, category.ko, store.countIn(category.id), category)
+        }
+        updateFilterSelection()
     }
 
-    private fun addFilterButton(id: Int, label: String) {
+    /** 필터 줄 왼쪽의 `+ 카테고리` 버튼. 10개를 다 만들었으면 흐리게 두고 눌렀을 때 안내만 한다. */
+    private fun buildAddCategoryButton(): Button {
+        val button = Button(this).apply {
+            id = R.id.addCategory
+            text = getString(R.string.admin_category_add)
+            setTextColor(ContextCompat.getColor(this@AdminActivity, R.color.ink))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            typeface = Typeface.DEFAULT_BOLD
+            isAllCaps = false
+            minHeight = dp(36)
+            minWidth = 0
+            setPadding(dp(12), 0, dp(12), 0)
+            setBackgroundResource(R.drawable.bg_button_soft)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                dp(36)
+            ).apply { setMargins(dp(4), dp(4), dp(4), dp(4)) }
+            alpha = if (store.canAddCategory()) 1f else 0.45f
+            setOnClickListener {
+                if (store.canAddCategory()) openCategoryEditor(null) else showCategoryLimit()
+            }
+        }
+        return button
+    }
+
+    /** 더는 카테고리를 만들 수 없을 때(최대 10개) 안내. */
+    private fun showCategoryLimit() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.admin_categories_title)
+            .setMessage(R.string.admin_category_full)
+            .setPositiveButton(R.string.close, null)
+            .show()
+    }
+
+    /**
+     * 필터 버튼 하나(전체 또는 카테고리).
+     * 카테고리 버튼은 길게 누르면 수정·삭제 창이 열린다(v2.7).
+     */
+    private fun addFilterButton(id: Int, label: String, count: Int, category: WordCategory?) {
         val button = Button(this)
-        button.text = label
         button.tag = id
+        setFilterLabel(button, label, count, category)
         button.setTextColor(ContextCompat.getColor(this, R.color.ink))
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
         button.typeface = Typeface.DEFAULT_BOLD
@@ -219,9 +264,36 @@ class AdminActivity : AppCompatActivity() {
             updateFilterSelection()
             refresh()
         }
+        if (category != null) {
+            button.setOnLongClickListener {
+                openCategoryEditor(category)
+                true
+            }
+        }
         filterRow.addView(button)
         filterButtons[id] = button
-        updateFilterSelection()
+    }
+
+    /** `전체 (425)` · `동물 (91)` 처럼 제목 옆에 문제 수를 붙인다. */
+    private fun setFilterLabel(button: Button, label: String, count: Int, category: WordCategory?) {
+        val emoji = category?.emoji.orEmpty()
+        button.text = if (emoji.isBlank()) {
+            getString(R.string.admin_category_chip, label, count)
+        } else {
+            getString(R.string.admin_category_chip_emoji, emoji, label, count)
+        }
+    }
+
+    /** 문제를 더하거나 지우면 숫자가 바로 바뀌도록 필터 이름을 다시 채운다. */
+    private fun updateFilterLabels() {
+        filterButtons.forEach { (id, button) ->
+            if (id == 0) {
+                setFilterLabel(button, getString(R.string.admin_filter_all), store.book.words.size, null)
+            } else {
+                val category = store.book.categories.firstOrNull { it.id == id } ?: return@forEach
+                setFilterLabel(button, category.ko, store.countIn(id), category)
+            }
+        }
     }
 
     private fun updateFilterSelection() {
@@ -246,6 +318,7 @@ class AdminActivity : AppCompatActivity() {
         adapter.submit(items)
         countText.text = getString(R.string.admin_count, items.size)
         empty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+        updateFilterLabels()
     }
 
     // ---------------------------------------------------------------- 기본값 복원
@@ -276,7 +349,6 @@ class AdminActivity : AppCompatActivity() {
                     store.restoreDefaults()
                     if (store.book.categories.none { it.id == filterCategory }) filterCategory = 0
                     buildFilters()
-                    buildCategoryChips()
                     refresh()
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -292,7 +364,6 @@ class AdminActivity : AppCompatActivity() {
             .setMessage(getString(R.string.delete_confirm_body, word.ko))
             .setPositiveButton(R.string.delete) { _, _ ->
                 store.delete(word.id)
-                buildCategoryChips()
                 refresh()
             }
             .setNegativeButton(R.string.cancel, null)
@@ -300,58 +371,6 @@ class AdminActivity : AppCompatActivity() {
     }
 
     // ---------------------------------------------------------------- 카테고리
-
-    /** 카테고리 칩 목록을 다시 그린다(기본 6개 + 추가한 카테고리, 이름을 누르면 수정). */
-    private fun buildCategoryChips() {
-        val row = findViewById<LinearLayout>(R.id.adminCategoryRow)
-        row.removeAllViews()
-        val add = findViewById<Button>(R.id.addCategory)
-        add.isEnabled = store.canAddCategory()
-        add.alpha = if (add.isEnabled) 1f else 0.45f
-        add.setOnClickListener {
-            if (store.canAddCategory()) {
-                openCategoryEditor(null)
-            } else {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.admin_categories_title)
-                    .setMessage(R.string.admin_category_full)
-                    .setPositiveButton(R.string.close, null)
-                    .show()
-            }
-        }
-
-        var line: LinearLayout? = null
-        store.book.categories.forEachIndexed { index, category ->
-            if (index % 3 == 0) {
-                line = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    row.addView(this)
-                }
-            }
-            val button = Button(this)
-            val emoji = category.emoji.ifBlank { "" }
-            button.text = getString(
-                if (emoji.isBlank()) R.string.admin_category_chip else R.string.admin_category_chip_emoji,
-                *if (emoji.isBlank()) {
-                    arrayOf<Any>(category.ko, store.countIn(category.id))
-                } else {
-                    arrayOf<Any>(emoji, category.ko, store.countIn(category.id))
-                }
-            )
-            button.setTextColor(ContextCompat.getColor(this, R.color.ink))
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            button.typeface = Typeface.DEFAULT_BOLD
-            button.isAllCaps = false
-            button.minHeight = dp(34)
-            button.setPadding(dp(2), 0, dp(2), 0)
-            val params = LinearLayout.LayoutParams(0, dp(34), 1f)
-            params.setMargins(dp(2), dp(2), dp(2), dp(2))
-            button.layoutParams = params
-            button.setBackgroundResource(R.drawable.bg_button_soft)
-            button.setOnClickListener { openCategoryEditor(category) }
-            line?.addView(button)
-        }
-    }
 
     /** 카테고리 추가·수정 창(한글 이름·영문 이름·대표 이모지). 추가한 카테고리는 여기서 지울 수 있다. */
     private fun openCategoryEditor(category: WordCategory?) {
@@ -394,7 +413,8 @@ class AdminActivity : AppCompatActivity() {
 
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val koText = ko.text.toString().trim()
+                // v2.7: 카테고리 이름은 8자까지.
+                val koText = ko.text.toString().trim().take(CATEGORY_NAME_MAX)
                 if (koText.isEmpty()) {
                     error.visibility = View.VISIBLE
                     return@setOnClickListener
@@ -412,7 +432,6 @@ class AdminActivity : AppCompatActivity() {
                 }
                 dialog.dismiss()
                 buildFilters()
-                buildCategoryChips()
                 refresh()
             }
             if (category != null && category.isCustom) {
@@ -436,7 +455,6 @@ class AdminActivity : AppCompatActivity() {
                 if (store.deleteCategory(category.id)) {
                     if (filterCategory == category.id) filterCategory = 0
                     buildFilters()
-                    buildCategoryChips()
                     refresh()
                 }
             }

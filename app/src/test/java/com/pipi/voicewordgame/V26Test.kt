@@ -2,6 +2,7 @@ package com.pipi.voicewordgame
 
 import android.content.Context
 import android.os.Looper
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -190,8 +191,8 @@ class V26Test {
 
         val admin = adminActivity()
         assertTrue(
-            "관리자 카테고리 목록에 보인다",
-            texts(admin.findViewById(R.id.adminCategoryRow)).any { it.contains("우리 가족") }
+            "관리자 필터 줄에 보인다",
+            texts(admin.findViewById(R.id.adminFilterRow)).any { it.contains("우리 가족") }
         )
         // 문제 추가 창에서도 새 카테고리를 고를 수 있다.
         admin.findViewById<Button>(R.id.addProblem).performClick()
@@ -204,28 +205,25 @@ class V26Test {
     }
 
     @Test
-    fun categoryWithNoProblemCannotBeSelectedOrStarted() {
+    fun categoryWithNoProblemIsDisabledAndNotSelected() {
         val store = WordStore(context)
         store.load()
         val created = store.addCategory("빈 칸", "Empty", "🙂")!!
 
         val main = mainActivity()
-        // 타일을 눌러도 선택되지 않고 안내 문구가 뜬다.
-        val tile = findTile(main.findViewById(R.id.categoryGrid), "빈 칸 (0)")
+        // v2.7: 문제가 0개인 카테고리 타일은 비활성이라 눌러도 선택되지 않는다.
+        val tile = findTile(main.findViewById(R.id.categoryGrid), "빈 칸\n(0)")
         assertNotNull("타일이 있어야 함", tile)
-        tile!!.performClick()
+        assertFalse("비활성 타일", tile!!.isEnabled)
+        tile.performClick()
         idle()
-        assertEquals("전체 무작위가 그대로 선택", 0, Prefs(main).categoryId)
-        assertEquals(
-            "안내 문구",
-            main.getString(R.string.need_questions),
-            main.findViewById<TextView>(R.id.bannerText).text.toString()
-        )
+        assertFalse("선택 목록에 들어가지 않는다", created.id in main.selectedCategoryIdsForTest)
 
-        // 저장된 값이 비어 있는 카테고리면 시작할 때 전체 무작위로 되돌린다.
-        Prefs(context).categoryId = created.id
+        // 저장된 선택에 비어 있는 카테고리만 남으면 시작할 때 문제가 있는 카테고리로 다시 채운다.
+        Prefs(context).savedCategoryIds = setOf(created.id)
         val reopened = mainActivity()
-        assertEquals(0, Prefs(reopened).categoryId)
+        assertFalse(created.id in reopened.selectedCategoryIdsForTest)
+        assertEquals("6개 카테고리가 다시 선택된다", 6, reopened.selectedCategoryIdsForTest.size)
     }
 
     @Test
@@ -281,7 +279,7 @@ class V26Test {
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         idle()
         assertEquals(15, Prefs(admin).questionCount)
-        assertEquals(9, Prefs(admin).timeLimitSeconds)
+        assertEquals(10, Prefs(admin).timeLimitSeconds)
         assertEquals("카테고리는 그대로", 7, WordStore(admin).apply { load() }.book.categories.size)
     }
 
@@ -332,7 +330,7 @@ class V26Test {
     // ------------------------------------------------- 5. 첫 화면 배치·배너
 
     @Test
-    fun randomButtonStaysRightBelowTheGridAndAboveStart() {
+    fun startButtonSitsRightBelowTheCategoryGrid() {
         val store = WordStore(context)
         store.load()
         store.addCategory("하나", "One", "⭐")
@@ -341,24 +339,29 @@ class V26Test {
         val main = mainActivity()
         val parent = main.findViewById<View>(R.id.categoryGrid).parent as LinearLayout
         val gridIndex = parent.indexOfChild(main.findViewById(R.id.categoryGrid))
-        val randomIndex = parent.indexOfChild(main.findViewById(R.id.randomButton))
         val startIndex = parent.indexOfChild(main.findViewById(R.id.startButton))
-        assertEquals("카테고리 그리드 바로 다음", gridIndex + 1, randomIndex)
-        assertEquals("게임 시작 바로 위", startIndex, randomIndex + 1)
-        assertEquals("전체 무작위 (425)", main.findViewById<Button>(R.id.randomButton).text.toString())
+        assertEquals("카테고리 그리드 바로 다음", gridIndex + 1, startIndex)
+        // v2.7: 전체 무작위 버튼은 없다.
+        val all = texts(main.window.decorView)
+        assertTrue(all.none { it.contains("전체 무작위") })
+        assertEquals("v2.7", main.findViewById<TextView>(R.id.versionText).text.toString())
     }
 
     @Test
-    fun bannerTextIsBiggerAndRightAligned() {
+    fun bannerTextIsOneLineEighteenSpAndRightAligned() {
         val main = mainActivity()
         val banner = main.findViewById<TextView>(R.id.bannerText)
-        assertTrue("글자가 커졌다(20sp → 23sp)", banner.textSize / banner.resources.displayMetrics.scaledDensity >= 22f)
+        val sp18 = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, 18f, main.resources.displayMetrics
+        )
+        assertTrue("18sp", banner.textSize >= sp18 - 0.5f)
         assertEquals(
             "오른쪽 정렬",
             Gravity.RIGHT,
             banner.gravity and Gravity.HORIZONTAL_GRAVITY_MASK
         )
-        assertEquals("문구는 그대로(두 줄)", "그림을 보고\n단어를 맞혀요!", banner.text.toString())
+        assertEquals("한 줄만", 1, banner.maxLines)
+        assertEquals("문구는 한 줄", "그림을 보고 단어를 맞혀요!", banner.text.toString())
     }
 
     @Test

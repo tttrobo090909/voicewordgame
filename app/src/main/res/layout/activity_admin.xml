@@ -176,70 +176,13 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- v2.6: 카테고리 관리(기본 6개 + 최대 4개 추가, 이름·영문·대표 이모지 수정, 추가분 삭제) -->
-        <LinearLayout
-            android:id="@+id/adminCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:paddingStart="12dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextSection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/admin_categories_title"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/addCategory"
-                    style="@style/Widget.CuteButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:minHeight="34dp"
-                    android:minWidth="0dp"
-                    android:text="@string/admin_category_add"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/adminCategoryHint"
-                style="@style/TextBody"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/admin_category_hint"
-                android:textSize="11sp" />
-
-            <LinearLayout
-                android:id="@+id/adminCategoryRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:orientation="vertical" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"
-            android:paddingTop="2dp"
+            android:paddingTop="6dp"
             android:paddingEnd="16dp">
 
             <EditText
@@ -270,7 +213,10 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- v2.7: 카테고리 관리는 문제 목록 필터 줄로 합쳤다.
+             맨 왼쪽 `+ 카테고리` → `전체 (425)` → 카테고리별 `동물 (91)` 순서. -->
         <HorizontalScrollView
+            android:id="@+id/adminFilterScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="12dp"
@@ -284,6 +230,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
         </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/adminCategoryHint"
+            style="@style/TextBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/admin_category_hint"
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/adminEmpty"

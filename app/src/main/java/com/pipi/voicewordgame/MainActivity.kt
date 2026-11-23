@@ -55,7 +55,15 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.4 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ * 말해봐요! v2.7 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ *
+ * v2.7 (사용자 확정 8가지):
+ * - 첫 화면 배너는 `그림을 보고 단어를 맞혀요!` 한 줄(18sp)을 오른쪽 정렬로 두고,
+ *   병아리는 글자 왼쪽 빈 여백 안에서만 좌우로 움직인다(이동 폭을 계산해 글자와 겹치지 않게).
+ * - 카테고리 타일 글자는 18sp(약 +10%)·`동물\n(91)` 두 줄 가운데 정렬, 항상 2열 절반 너비.
+ * - `전체 무작위` 버튼을 없애고 카테고리를 여러 개 탭해 고른다(초기에는 문제가 있는 모든 카테고리 선택).
+ *   문제가 0개인 카테고리는 비활성, 하나도 안 고르고 시작하면 안내 문구를 띄운다.
+ * - 하단 버전은 `v2.7` 만 보여 준다.
  *
  * v2.4 (사용자 피드백 반영):
  * - 게임 화면 통합 바의 병아리를 v2.2만큼 크게(44dp) 되돌려 바 높이를 채우고,
@@ -90,9 +98,18 @@ class MainActivity : AppCompatActivity() {
         /** 카테고리 타일 높이(v2.1: 68dp → 78dp, 약 +15%). */
         const val TILE_HEIGHT_DP = 78
 
-        /** 첫 화면 병아리: 좌우 ±10dp, 3.6초에 한 왕복(그 사이 4걸음) — 잔잔하게. */
+        /** 첫 화면 병아리: 좌우 ±10dp, 3.6초에 한 왕복(그 사이 4걸음) — 글자 왼쪽 여백 안에서.
+         *  여백을 잴 수 없을 때(첫 레이아웃 전)만 이 값을 쓴다. */
         const val CHICK_WOBBLE_DP = 10
         const val CHICK_WOBBLE_CYCLE_MS = 3600L
+
+        /** 병아리 오른쪽 끝과 글자 왼쪽 사이에 두는 최소 여백. */
+        const val CHICK_TEXT_GAP_DP = 6
+
+        /** 카테고리 타일 글자 크기(약 +10%)와 긴 이름을 2줄 안에 넣기 위한 기준. */
+        const val TILE_TEXT_SP = 18f
+        const val TILE_TEXT_LONG_SP = 15f
+        const val TILE_TEXT_LONG_NAME = 7
 
         /** 첫 화면 병아리 바운스(위로 3dp)·기울기(±2.5도) — 과하지 않게. */
         const val CHICK_BOUNCE_DP = 3
@@ -108,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         /** 타이머 병아리 바운스(위로 3dp). */
         const val TIMER_BOUNCE_DP = 3
 
-        /** 제한시간 설정이 없을 때 쓰는 기본값(9초). 실제 값은 관리자 설정에서 온다. */
+        /** 제한시간 설정이 없을 때 쓰는 기본값(10초). 실제 값은 관리자 설정에서 온다. */
         const val ROUND_LIMIT_MS = ChickWalk.DEFAULT_LIMIT_MS
 
         /** 타이머 병아리 걷기 갱신 간격(약 30fps). 남은 시간에서 위치를 계산해 그린다. */
@@ -123,6 +140,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var setupScreen: LinearLayout
     private lateinit var setupScroll: ScrollView
     private lateinit var gameScreen: LinearLayout
+    private lateinit var slimBanner: FrameLayout
     private lateinit var titleText: TextView
     private lateinit var scoreText: TextView
     private lateinit var langKo: TextView
@@ -133,7 +151,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timerBanner: FrameLayout
     private lateinit var timerChick: ImageView
     private lateinit var privacyLink: TextView
-    private lateinit var randomButton: Button
     private lateinit var categoryGrid: LinearLayout
     private lateinit var startButton: Button
     private lateinit var gameStatus: TextView
@@ -148,6 +165,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var particles: ParticleView
 
     private val categoryButtons = LinkedHashMap<Int, View>()
+
+    /** v2.7: 첫 화면에서 고른 카테고리들(여러 개). 이 안의 문제를 합쳐 출제한다. */
+    private val selectedCategoryIds = LinkedHashSet<Int>()
     private val tapCounter = TapCounter(TAP_WINDOW_MS)
     private val handler = Handler(Looper.getMainLooper())
     private val nextRunnable = Runnable { nextRound() }
@@ -184,11 +204,10 @@ class MainActivity : AppCompatActivity() {
     private var awaiting = false
     private var resumeNext = false
     private var lang = "ko"
-    private var categoryId = 0
     private var errorStreak = 0
     private var startFailures = 0
 
-    /** 이번 판의 한 문제 제한시간(ms) — 관리자 설정에서 읽는다(기본 9초). */
+    /** 이번 판의 한 문제 제한시간(ms) — 관리자 설정에서 읽는다(기본 10초). */
     private var roundLimitMs = ROUND_LIMIT_MS
 
     /** 지금 타이머 배너에 입혀진 상태 배경(테스트·캡처용). */
@@ -220,13 +239,8 @@ class MainActivity : AppCompatActivity() {
         bindViews()
 
         lang = if (prefs.lang == "en") "en" else "ko"
-        categoryId = prefs.categoryId
-        if (!isSelectableCategory(categoryId)) {
-            // 저장된 카테고리가 사라졌거나 문제가 0개면 전체 무작위로 돌아간다.
-            categoryId = 0
-            prefs.categoryId = 0
-        }
-        versionText.text = BuildConfig.VERSION_DISPLAY
+        loadCategorySelection()
+        versionText.text = BuildConfig.VERSION_SHORT
 
         buildCategoryButtons()
         updateLangToggle()
@@ -239,6 +253,8 @@ class MainActivity : AppCompatActivity() {
 
         speaker.init { ok ->
             if (!ok) {
+                // 긴 안내라 두 줄까지 보여 준다(배너 기본 문구는 한 줄).
+                bannerText.maxLines = 2
                 bannerText.text = getString(R.string.tts_missing)
                 bannerText.setTextColor(ContextCompat.getColor(this, R.color.bad))
             }
@@ -251,11 +267,8 @@ class MainActivity : AppCompatActivity() {
         if (!gameActive) {
             // 관리자 화면에서 문제를 고치고 돌아왔을 수 있으니 다시 읽는다.
             store.load()
-            // 고른 카테고리가 지워졌거나 문제가 0개가 되었으면 전체 무작위로 돌아간다.
-            if (!isSelectableCategory(categoryId)) {
-                categoryId = 0
-                prefs.categoryId = 0
-            }
+            // 사라졌거나 비어 버린 카테고리는 고른 목록에서 빼고, 하나도 남지 않으면 다시 모두 고른다.
+            loadCategorySelection()
             buildCategoryButtons()
             updateCategorySelection()
             startChickWobble()
@@ -296,6 +309,7 @@ class MainActivity : AppCompatActivity() {
         setupScreen = findViewById(R.id.setupScreen)
         setupScroll = findViewById(R.id.setupScroll)
         gameScreen = findViewById(R.id.gameScreen)
+        slimBanner = findViewById(R.id.slimBanner)
         titleText = findViewById(R.id.titleText)
         scoreText = findViewById(R.id.scoreText)
         langKo = findViewById(R.id.langKo)
@@ -305,7 +319,6 @@ class MainActivity : AppCompatActivity() {
         chickImage = findViewById(R.id.chickImage)
         timerBanner = findViewById(R.id.timerBanner)
         timerChick = findViewById(R.id.timerChick)
-        randomButton = findViewById(R.id.randomButton)
         categoryGrid = findViewById(R.id.categoryGrid)
         startButton = findViewById(R.id.startButton)
         gameStatus = findViewById(R.id.gameStatus)
@@ -331,7 +344,6 @@ class MainActivity : AppCompatActivity() {
         langKo.setOnClickListener { setLang("ko") }
         langEn.setOnClickListener { setLang("en") }
         startButton.setOnClickListener { startGame() }
-        randomButton.setOnClickListener { selectCategory(0) }
         hintButton.setOnClickListener { showHint() }
         skipButton.setOnClickListener { skipWord() }
         answerButton.setOnClickListener { handleCorrect() }
@@ -377,12 +389,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applySwayPose(progress: Float) {
-        chickImage.translationX = ChickWalk.swayX(progress, dp(CHICK_WOBBLE_DP).toFloat())
+        val room = chickSwayRoomPx()
+        // 여백의 가운데에서 시작해 좌우로 room/2 씩 — 양 끝에서도 글자와 겹치지 않는다.
+        chickImage.translationX = room / 2f + ChickWalk.swayX(progress, room / 2f)
         chickImage.scaleX = ChickWalk.swayScaleX()
         chickImage.translationY =
             ChickWalk.bounce(progress, ChickWalk.SWAY_STEPS, dp(CHICK_BOUNCE_DP).toFloat())
         chickImage.rotation =
             ChickWalk.tilt(progress, ChickWalk.SWAY_STEPS, ChickWalk.SWAY_TILT_MAX_DEG)
+    }
+
+    /**
+     * v2.7: 병아리가 움직일 수 있는 좌우 폭(px).
+     * 배너 안에서 글자가 오른쪽 정렬로 차지한 폭을 빼고, 남은 왼쪽 여백에서 병아리 몸통을 뺀 만큼만 움직인다.
+     * 아직 자리를 재지 못했으면(첫 레이아웃 전) 기존처럼 ±10dp 로 조용히 흔들린다.
+     */
+    private fun chickSwayRoomPx(): Float {
+        if (slimBanner.width <= 0 || chickImage.width <= 0) return dp(CHICK_WOBBLE_DP * 2).toFloat()
+        val textWidth = bannerText.paint.measureText(bannerText.text.toString())
+        val textLeft = slimBanner.width - slimBanner.paddingRight - textWidth
+        val freeStart = slimBanner.paddingLeft.toFloat()
+        val freeEnd = textLeft - dp(CHICK_TEXT_GAP_DP)
+        val room = freeEnd - freeStart - chickImage.width
+        // 긴 안내 문구로 글자가 왼쪽까지 차면 병아리는 움직이지 않고 왼쪽 끝에 머문다(겹치지 않게).
+        return if (room > 0f) room else 0f
     }
 
     private fun stopChickWobble() {
@@ -407,7 +437,6 @@ class MainActivity : AppCompatActivity() {
     private fun buildCategoryButtons() {
         categoryGrid.removeAllViews()
         categoryButtons.clear()
-        randomButton.text = getString(R.string.category_all_format, store.book.words.size)
 
         var row: LinearLayout? = null
         store.book.categories.forEachIndexed { index, category ->
@@ -430,11 +459,35 @@ class MainActivity : AppCompatActivity() {
             row?.addView(cell)
             categoryButtons[category.id] = cell
         }
+
+        // v2.7: 카테고리가 홀수개여도 마지막 버튼이 가로 2칸을 차지하지 않도록 빈 칸을 채운다.
+        if (store.book.categories.size % 2 == 1) {
+            row?.addView(View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(0, 0, 1f).apply {
+                    setMargins(dp(4), 0, dp(4), 0)
+                }
+            })
+        }
     }
 
-    /** 고를 수 있는 카테고리인지(전체 무작위=0, 실제로 문제가 있는 카테고리만). */
+    /**
+     * 첫 화면에 보여 줄 카테고리 선택을 정한다(v2.7).
+     * 처음(저장값 없음)에는 문제가 1개 이상 있는 모든 카테고리를 고른 상태로 둔다.
+     * 사라졌거나 비어 버린 카테고리는 빼고, 하나도 남지 않으면 다시 모두 고른다.
+     */
+    private fun loadCategorySelection() {
+        val selectable = store.book.categories
+            .filter { store.book.byCategory(it.id).isNotEmpty() }
+            .map { it.id }
+            .toSet()
+        val restored = prefs.savedCategoryIds?.filter { it in selectable }?.toSet().orEmpty()
+        selectedCategoryIds.clear()
+        selectedCategoryIds.addAll(if (restored.isNotEmpty()) restored else selectable)
+        prefs.savedCategoryIds = selectedCategoryIds
+    }
+
+    /** 고를 수 있는 카테고리인지(실제로 문제가 있는 카테고리만). */
     private fun isSelectableCategory(id: Int): Boolean {
-        if (id == 0) return true
         return store.book.categories.any { it.id == id } && store.book.byCategory(id).isNotEmpty()
     }
 
@@ -447,11 +500,15 @@ class MainActivity : AppCompatActivity() {
             setPadding(dp(10), 0, dp(8), 0)
             isClickable = true
             isFocusable = true
-            if (empty) alpha = 0.45f
+            if (empty) {
+                // 문제가 0개인 카테고리는 비활성(고를 수 없다).
+                isEnabled = false
+                alpha = 0.45f
+            }
             layoutParams = LinearLayout.LayoutParams(0, dp(TILE_HEIGHT_DP), 1f).apply {
                 setMargins(dp(4), dp(4), dp(4), dp(4))
             }
-            setOnClickListener { selectCategory(categoryId) }
+            setOnClickListener { toggleCategory(categoryId) }
         }
 
         val picture = representativeImage(categoryId)?.let { ImageStore.load(this, it, 2) }
@@ -473,13 +530,19 @@ class MainActivity : AppCompatActivity() {
             cell.addView(image)
         }
 
+        // v2.7: `동물\n(91)` 두 줄 가운데 정렬, 18sp(약 +10%).
+        // 8자까지 쓸 수 있는 긴 이름만 살짝 줄여 두 줄 안에 넣는다.
         val text = TextView(this)
         text.id = R.id.tileLabel
         text.text = getString(R.string.category_format, label, count)
         text.setTextColor(ContextCompat.getColor(this, R.color.ink))
-        text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+        text.setTextSize(
+            TypedValue.COMPLEX_UNIT_SP,
+            if (label.length >= TILE_TEXT_LONG_NAME) TILE_TEXT_LONG_SP else TILE_TEXT_SP
+        )
         text.typeface = Typeface.DEFAULT_BOLD
         text.maxLines = 2
+        text.gravity = Gravity.CENTER
         text.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
             marginStart = dp(6)
         }
@@ -516,23 +579,19 @@ class MainActivity : AppCompatActivity() {
         }
     )
 
-    private fun selectCategory(id: Int) {
-        if (!isSelectableCategory(id)) {
-            // 문제가 0개인 카테고리는 고를 수 없다(비활성 안내).
-            setupMessage(getString(R.string.need_questions))
-            return
-        }
-        categoryId = id
-        prefs.categoryId = id
+    /** v2.7: 카테고리를 탭하면 고르기/풀기(여러 개를 함께 고를 수 있다). */
+    private fun toggleCategory(id: Int) {
+        if (!isSelectableCategory(id)) return
+        if (!selectedCategoryIds.remove(id)) selectedCategoryIds.add(id)
+        prefs.savedCategoryIds = selectedCategoryIds
         updateCategorySelection()
     }
 
     private fun updateCategorySelection() {
-        randomButton.setBackgroundResource(
-            if (categoryId == 0) R.drawable.bg_choice_selected else R.drawable.bg_choice_random
-        )
         categoryButtons.forEach { (id, view) ->
-            view.background = categoryTileBackground(id, id == categoryId)
+            val selected = id in selectedCategoryIds
+            view.background = categoryTileBackground(id, selected)
+            view.isSelected = selected
         }
     }
 
@@ -546,11 +605,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBannerLine() {
+        bannerText.maxLines = 1
         bannerText.text = getString(R.string.banner_line)
         bannerText.setTextColor(ContextCompat.getColor(this, R.color.ink))
     }
 
     private fun setupMessage(text: String) {
+        // 잠깐 뜨는 안내는 길 수 있어 두 줄까지 보여 준다(기본 문구는 한 줄).
+        bannerText.maxLines = 2
         bannerText.text = text
         bannerText.setTextColor(ContextCompat.getColor(this, R.color.bad))
         handler.removeCallbacks(setupMessageReset)
@@ -705,6 +767,7 @@ class MainActivity : AppCompatActivity() {
         if (!gameActive) return
         overlayPause = false
         store.load()
+        loadCategorySelection()
         buildCategoryButtons()
         updateCategorySelection()
         // 관리자 화면에서 설정을 바꿨을 수 있으니 제한시간을 다시 읽는다.
@@ -721,9 +784,10 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------- 게임
 
     private fun startGame() {
-        val pool = store.book.byCategory(categoryId)
+        // v2.7: 고른 카테고리들의 문제를 합쳐서 낸다.
+        val pool = store.book.words.filter { it.categoryId in selectedCategoryIds }
         if (pool.isEmpty()) {
-            setupMessage(getString(R.string.need_questions))
+            setupMessage(getString(R.string.need_selection))
             return
         }
         session = GameSession().apply { setPool(pool, prefs.questionCount) }
@@ -1094,6 +1158,14 @@ class MainActivity : AppCompatActivity() {
 
     /** 첫 화면 병아리 자세를 특정 진행도로 맞춘다(애니메이션 프레임 대신). */
     internal fun applySwayPoseForTest(progress: Float) = applySwayPose(progress)
+
+    /** 병아리가 글자 왼쪽 여백 안에서 움직일 수 있는 좌우 폭(px). */
+    internal val chickSwayRoomForTest: Float
+        get() = chickSwayRoomPx()
+
+    /** 지금 고른 카테고리 id 들. */
+    internal val selectedCategoryIdsForTest: Set<Int>
+        get() = selectedCategoryIds.toSet()
 
     /** 지금 판의 한 문제 제한시간(ms). */
     internal val roundLimitForTest: Long

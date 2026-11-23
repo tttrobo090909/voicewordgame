@@ -1,14 +1,14 @@
 package com.pipi.voicewordgame
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.view.View
-import android.widget.ImageView
+import android.widget.HorizontalScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.core.app.ApplicationProvider
 import com.pipi.voicewordgame.admin.AdminActivity
+import com.pipi.voicewordgame.game.Word
 import com.pipi.voicewordgame.game.WordStore
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +19,10 @@ import org.robolectric.annotation.GraphicsMode
 import java.io.File
 import java.io.FileOutputStream
 
-/** 실제 화면을 비트맵으로 그려 PNG 로 남긴다(디자인 확인·보고용). v2.3: 첫 화면·통합 타이머 게임 화면·관리자 설정. */
+/**
+ * 실제 화면을 비트맵으로 그려 PNG 로 남긴다(디자인 확인·보고용).
+ * v2.7: 배너 한 줄·두 줄 카테고리·다중 선택·홀수개 타일 폭·관리자 통합 필터 줄(10초).
+ */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -28,15 +31,15 @@ class ScreenshotTest {
     @Test
     fun captureFirstGameAndAdminScreens() {
         val outDir = File("build/ui").apply { mkdirs() }
-        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.6_1123_HHmm
+        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.7_1124_HHmm
         val downloads = File("../../../downloads").apply { mkdirs() }
 
         WordStore(ApplicationProvider.getApplicationContext()).restoreDefaults()
 
-        // 01 첫 화면(한글) — 배너 글자가 커지고 오른쪽 정렬, 아래에 개인정보처리방침 링크.
+        // 01 첫 화면 — 배너 한 줄(오른쪽 정렬)·병아리는 글자 왼쪽 여백, 두 줄 카테고리, 모두 선택됨.
         val main = Robolectric.buildActivity(MainActivity::class.java).setup().get()
         layout(main)
-        main.applySwayPoseForTest(0.2f)
+        main.applySwayPoseForTest(0.25f)
         capture(main, File(outDir, "01_first.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-1-첫화면.png"))
 
@@ -49,30 +52,36 @@ class ScreenshotTest {
         capture(main, File(outDir, "02_game.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-2-게임화면.png"))
 
-        // 03 v2.6 신규 그림(참외 291)이 게임 카드에 놓인 모습.
-        val newArt = BitmapFactory.decodeStream(main.assets.open("words/291.webp"))
-        main.findViewById<ImageView>(R.id.wordImage).setImageBitmap(newArt)
-        capture(main, File(outDir, "03_new_art.png"))
-        capture(main, File(downloads, "malhaebwayo-v$stamp-3-새그림.png"))
-
-        // 04 관리자 화면 — 게임 설정(10~40)·카테고리 관리·설정 리셋/문제 리셋.
+        // 03 관리자 화면 — 카테고리 박스 없이 `+ 카테고리` + 문제 수가 필터 줄에, 제한시간 10초.
         val admin = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
-        capture(admin, File(outDir, "04_admin.png"))
-        capture(admin, File(downloads, "malhaebwayo-v$stamp-4-관리자설정.png"))
+        capture(admin, File(outDir, "03_admin.png"))
+        capture(admin, File(downloads, "malhaebwayo-v$stamp-3-관리자.png"))
 
-        // 05 관리자 화면 — 카테고리를 하나 추가한 모습(최대 10개).
+        // 04 첫 화면 — 카테고리를 하나 더해 7개(홀수)여도 타일은 모두 절반 너비.
         val store = WordStore(ApplicationProvider.getApplicationContext())
         store.load()
-        store.addCategory("우리 가족", "My Family", "👨‍👩‍👧")
-        val admin2 = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
-        capture(admin2, File(outDir, "05_admin_categories.png"))
-        capture(admin2, File(downloads, "malhaebwayo-v$stamp-5-카테고리추가.png"))
-
-        // 06 첫 화면 — 카테고리가 늘어도 `전체 무작위`는 그리드 아래·게임 시작 위.
+        val family = store.addCategory("우리 가족", "My Family", "👨‍👩‍👧")!!
+        store.add(Word(0, "엄마", "Mom", family.id, store.book.words.first().image))
         val main2 = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        main2.applySwayPoseForTest(0.2f)
-        capture(main2, File(outDir, "06_first_with_category.png"))
-        capture(main2, File(downloads, "malhaebwayo-v$stamp-6-카테고리추가_첫화면.png"))
+        layout(main2)
+        main2.applySwayPoseForTest(0.6f)
+        capture(main2, File(outDir, "04_first_odd.png"))
+        capture(main2, File(downloads, "malhaebwayo-v$stamp-4-카테고리추가_첫화면.png"))
+
+        // 05 관리자 — 필터 줄을 끝까지 밀면 추가한 카테고리가 문제 수와 함께 보인다.
+        val admin2 = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
+        capture(admin2, File(outDir, "05_admin_categories.png"), beforeDraw = {
+            admin2.findViewById<HorizontalScrollView>(R.id.adminFilterScroll)
+                .fullScroll(View.FOCUS_RIGHT)
+        })
+        capture(
+            admin2,
+            File(downloads, "malhaebwayo-v$stamp-5-관리자_카테고리.png"),
+            beforeDraw = {
+                admin2.findViewById<HorizontalScrollView>(R.id.adminFilterScroll)
+                    .fullScroll(View.FOCUS_RIGHT)
+            }
+        )
 
         // 원래대로 되돌려 둔다.
         store.restoreDefaults()
@@ -91,8 +100,9 @@ class ScreenshotTest {
         root.layout(0, 0, w, h)
     }
 
-    private fun capture(activity: AppCompatActivity, file: File) {
+    private fun capture(activity: AppCompatActivity, file: File, beforeDraw: (() -> Unit)? = null) {
         layout(activity)
+        beforeDraw?.invoke()
         val root = activity.window.decorView
         val w = if (root.width > 0) root.width else 1233
         val h = if (root.height > 0) root.height else 2673

@@ -32,11 +32,8 @@ class MainActivitySmokeTest {
         Robolectric.buildActivity(MainActivity::class.java).setup().get()
 
     @Test
-    fun firstScreenHasRandomButtonAndSixCategories() {
+    fun firstScreenHasSixCategoriesInTwoColumnsWithCounts() {
         val activity = launch()
-
-        val random = activity.findViewById<Button>(R.id.randomButton)
-        assertEquals("전체 무작위 (425)", random.text.toString())
 
         val grid = activity.findViewById<LinearLayout>(R.id.categoryGrid)
         assertEquals(3, grid.childCount)
@@ -55,12 +52,24 @@ class MainActivitySmokeTest {
             }
         }
         assertEquals(
-            listOf("동물 (91)", "음식·과일 (91)", "탈것 (40)", "사물·집 (119)", "자연 (42)", "사람·몸 (42)"),
+            listOf(
+                "동물\n(91)", "음식·과일\n(91)", "탈것\n(40)",
+                "사물·집\n(119)", "자연\n(42)", "사람·몸\n(42)"
+            ),
             labels
         )
 
+        // v2.7: `전체 무작위` 버튼은 없어졌다(카테고리를 여러 개 골라 쓴다).
+        val allTexts = HashSet<String>()
+        collectTexts(activity.window.decorView, allTexts)
+        assertTrue("전체 무작위 버튼 제거", allTexts.none { it.contains("전체 무작위") })
+        // 게임 시작 버튼은 카테고리 바로 아래에 있다.
+        val start = activity.findViewById<Button>(R.id.startButton)
+        val parent = grid.parent as LinearLayout
+        assertEquals(parent.indexOfChild(grid) + 1, parent.indexOfChild(start))
+
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.6_"))
+        assertEquals("v2.7", version.text.toString())
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()

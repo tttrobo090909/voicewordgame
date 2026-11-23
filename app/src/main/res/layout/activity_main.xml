@@ -118,39 +118,37 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="10dp">
 
-                    <!-- 슬림 배너: 작은 병아리 + 한 줄 안내 -->
-                    <LinearLayout
+                    <!-- v2.7 슬림 배너: 안내는 한 줄로 오른쪽 정렬, 병아리는 글자 왼쪽 빈 여백 안에서만 좌우로 움직인다. -->
+                    <FrameLayout
                         android:id="@+id/slimBanner"
                         android:layout_width="match_parent"
                         android:layout_height="116dp"
                         android:background="@drawable/bg_banner_slim"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:paddingStart="12dp"
                         android:paddingEnd="14dp">
+
+                        <TextView
+                            android:id="@+id/bannerText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:paddingStart="104dp"
+                            android:text="@string/banner_line"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/ink"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:id="@+id/chickImage"
                             android:layout_width="92dp"
                             android:layout_height="92dp"
+                            android:layout_gravity="center_vertical|start"
                             android:contentDescription="@string/app_name"
                             android:scaleType="fitCenter"
                             android:src="@drawable/chick_mascot" />
-
-                        <TextView
-                            android:id="@+id/bannerText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|end"
-                            android:lineSpacingExtra="3dp"
-                            android:text="@string/banner_line"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/ink"
-                            android:textSize="23sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    </FrameLayout>
 
                     <TextView
                         style="@style/TextSection"
@@ -159,7 +157,8 @@
                         android:layout_marginTop="18dp"
                         android:text="@string/choose_problems" />
 
-                    <!-- 6개 카테고리를 먼저 두고, 전체 무작위는 맨 아래에 둔다. -->
+                    <!-- 6개 카테고리(추가하면 최대 10개)를 항상 2열 절반 너비로 보여 준다.
+                         v2.7: `전체 무작위` 버튼 대신 카테고리를 여러 개 골라 쓸 수 있다. -->
                     <LinearLayout
                         android:id="@+id/categoryGrid"
                         android:layout_width="match_parent"
@@ -167,25 +166,14 @@
                         android:layout_marginTop="4dp"
                         android:orientation="vertical" />
 
-                    <Button
-                        android:id="@+id/randomButton"
-                        style="@style/Widget.CuteChoice"
-                        android:layout_width="match_parent"
-                        android:layout_height="62dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/category_all"
-                        android:textSize="18sp" />
-
-                    <!-- 게임 시작은 화면 맨 아래가 아니라 전체 무작위 바로 아래에 둔다(v2.2). -->
+                    <!-- 게임 시작은 카테고리 바로 아래에 둔다(v2.2). -->
                     <Button
                         android:id="@+id/startButton"
                         style="@style/Widget.CutePrimary"
                         android:layout_width="match_parent"
                         android:layout_height="62dp"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="4dp"
                         android:text="@string/start_game" />
 

@@ -250,7 +250,7 @@ class V24Test {
         val score = activity.findViewById<TextView>(R.id.scoreText)
         assertEquals("1번째 문제", 1, activity.servedQuestions)
 
-        idle(9100)
+        idle(10100)
         assertEquals("시간 초과! 정답은 ${word.ko}", reveal.text.toString())
         val spoken = activity.speechLogForTest.last()
         assertEquals("정답·건너뛰기와 같은 단어를 읽는다", word.ko, spoken.first)
@@ -287,7 +287,7 @@ class V24Test {
         activity.findViewById<Button>(R.id.startButton).performClick()
         val word = activity.currentWord!!
 
-        idle(9100)
+        idle(10100)
         assertEquals(word.en, activity.speechLogForTest.last().first)
         assertEquals("영어도 2번", 2, activity.speechLogForTest.last().second)
     }
@@ -362,7 +362,7 @@ class V24Test {
             labels.any { it == "문제 제한시간 (${Prefs.TIME_MIN}~${Prefs.TIME_MAX}초)" }
         )
         assertTrue("현재 값도 그대로", labels.any { it == "15문제" })
-        assertTrue("현재 값도 그대로", labels.any { it == "9초" })
+        assertTrue("현재 값도 그대로", labels.any { it == "10초" })
     }
 
     @Test

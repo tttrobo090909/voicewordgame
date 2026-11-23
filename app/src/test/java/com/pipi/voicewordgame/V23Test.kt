@@ -33,7 +33,7 @@ import java.time.Duration
 
 /**
  * v2.3(사용자 최종 확정) 검증:
- * 1. 관리자 설정 `한 판 문제 수`(10~50, 기본 15)·`문제 제한시간`(3~20초, 기본 9초)와 게임 연동·자동 결과창
+ * 1. 관리자 설정 `한 판 문제 수`(10~40, 기본 15)·`문제 제한시간`(3~20초, 기본 10초)와 게임 연동·자동 결과창
  * 2. 첫 화면 병아리 좌우 반전 제거·느린 왕복
  * 3. 게임 화면 가로줄 제거 + 통합 타이머·상태 바 + 위아래 여백 확대
  * 4. 첫 화면 하단 안내 문구 변경
@@ -89,11 +89,11 @@ class V23Test {
     // -------------------------------------------------- 1) 설정 값(문제 수·제한시간)
 
     @Test
-    fun settingsDefaultTo15QuestionsAnd9Seconds() {
+    fun settingsDefaultTo15QuestionsAnd10Seconds() {
         val activity = launch()
         val prefs = Prefs(activity)
         assertEquals("기본 한 판 문제 수 15", 15, prefs.questionCount)
-        assertEquals("기본 제한시간 9초", 9, prefs.timeLimitSeconds)
+        assertEquals("기본 제한시간 10초(v2.7)", 10, prefs.timeLimitSeconds)
         assertEquals(10, Prefs.COUNT_MIN)
         assertEquals(40, Prefs.COUNT_MAX)
         assertEquals(3, Prefs.TIME_MIN)
@@ -244,7 +244,7 @@ class V23Test {
     fun timeUpAlsoUsesTheSameIntegratedBarWithBadColor() {
         val activity = launch()
         activity.findViewById<Button>(R.id.startButton).performClick()
-        idle(9100)
+        idle(10100)
 
         assertEquals(
             "시간 초과예요",
@@ -388,7 +388,7 @@ class V23Test {
         val timeValue = activity.findViewById<TextView>(R.id.settingTimeValue)
 
         assertEquals("기본 15문제", "15문제", countValue.text.toString())
-        assertEquals("기본 9초", "9초", timeValue.text.toString())
+        assertEquals("기본 10초", "10초", timeValue.text.toString())
 
         val settingsCard = activity.findViewById<LinearLayout>(R.id.adminSettings)
         val search = activity.findViewById<EditText>(R.id.adminSearch)
@@ -400,13 +400,13 @@ class V23Test {
         assertEquals(20, Prefs(activity).questionCount)
 
         activity.findViewById<Button>(R.id.settingTimePlus).performClick()
-        assertEquals("제한시간 +", "10초", timeValue.text.toString())
-        assertEquals(10, Prefs(activity).timeLimitSeconds)
+        assertEquals("제한시간 +", "11초", timeValue.text.toString())
+        assertEquals(11, Prefs(activity).timeLimitSeconds)
 
         activity.findViewById<Button>(R.id.settingCountMinus).performClick()
         activity.findViewById<Button>(R.id.settingTimeMinus).performClick()
         assertEquals("15문제", countValue.text.toString())
-        assertEquals("9초", timeValue.text.toString())
+        assertEquals("10초", timeValue.text.toString())
     }
 
     @Test
