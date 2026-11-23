@@ -114,7 +114,7 @@ class V22Test {
         )
         assertTrue("배너 문구가 20sp 이상", banner.textSize >= twentySp - 0.5f)
         assertTrue("배너 문구는 굵게", banner.typeface.style and android.graphics.Typeface.BOLD != 0)
-        assertEquals("그림을 보고 단어를 맞혀요!", banner.text.toString())
+        assertEquals("그림을 보고\n단어를 맞혀요!", banner.text.toString())
     }
 
     // -------------------------------------------------- 2) 게임 시작 버튼 위치·하단 표기
@@ -135,7 +135,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.5_"))
+        assertTrue(version.text.toString().startsWith("v2.6_"))
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -361,9 +361,9 @@ class V22Test {
         val firstLabel = (grid.getChildAt(0) as LinearLayout)
             .getChildAt(0).findViewById<TextView>(R.id.tileLabel).text.toString()
         assertTrue("카테고리 타일은 영어: $firstLabel", firstLabel.startsWith("Animals"))
-        assertEquals("전체 무작위 (250)", activity.findViewById<Button>(R.id.randomButton).text.toString())
+        assertEquals("전체 무작위 (425)", activity.findViewById<Button>(R.id.randomButton).text.toString())
         assertEquals("게임 시작!", activity.findViewById<Button>(R.id.startButton).text.toString())
-        assertEquals("그림을 보고 단어를 맞혀요!", activity.findViewById<TextView>(R.id.bannerText).text.toString())
+        assertEquals("그림을 보고\n단어를 맞혀요!", activity.findViewById<TextView>(R.id.bannerText).text.toString())
 
         // 게임 화면: 버튼·안내 문구는 한국어, 정답 단어는 영어.
         activity.findViewById<Button>(R.id.startButton).performClick()
@@ -419,10 +419,10 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV25() {
+    fun versionIsV26() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertTrue("버전 표기 v2.5_...: $version", version.startsWith("v2.5_"))
-        assertTrue(version.length >= "v2.5_1123_0000".length)
+        assertTrue("버전 표기 v2.6_...: $version", version.startsWith("v2.6_"))
+        assertTrue(version.length >= "v2.6_1123_0000".length)
     }
 }

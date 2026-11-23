@@ -57,7 +57,7 @@ class V25Test {
 
     @Test
     fun assetBookIsVersion25() {
-        assertEquals("2.5", assetBook().appVersion)
+        assertEquals("2.6", assetBook().appVersion)
     }
 
     @Test

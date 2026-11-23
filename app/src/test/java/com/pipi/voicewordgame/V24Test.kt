@@ -369,7 +369,7 @@ class V24Test {
     fun adminRangeLabelsFollowThePrefsLimits() {
         // 범위 문구는 Prefs 의 상수와 어긋나면 안 된다.
         assertEquals(10, Prefs.COUNT_MIN)
-        assertEquals(50, Prefs.COUNT_MAX)
+        assertEquals(40, Prefs.COUNT_MAX)
         assertEquals(3, Prefs.TIME_MIN)
         assertEquals(20, Prefs.TIME_MAX)
     }

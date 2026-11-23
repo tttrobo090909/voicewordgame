@@ -1,7 +1,7 @@
 {
  "schema": 2,
- "appVersion": "2.5",
- "wordCount": 250,
+ "appVersion": "2.6",
+ "wordCount": 425,
  "categories": [
   {
    "id": 1,
@@ -2741,12 +2741,9 @@
    "category": 4,
    "image": "words/216.webp",
    "synKo": [
-    "레고",
-    "벽돌"
+    "레고"
    ],
-   "synEn": [
-    "brick"
-   ],
+   "synEn": [],
    "hint": ""
   },
   {
@@ -3169,6 +3166,1756 @@
    "synEn": [
     "t-rex"
    ],
+   "hint": ""
+  },
+  {
+   "id": 251,
+   "ko": "햄스터",
+   "en": "Hamster",
+   "category": 1,
+   "image": "words/251.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 252,
+   "ko": "염소",
+   "en": "Goat",
+   "category": 1,
+   "image": "words/252.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 253,
+   "ko": "당나귀",
+   "en": "Donkey",
+   "category": 1,
+   "image": "words/253.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 254,
+   "ko": "낙타",
+   "en": "Camel",
+   "category": 1,
+   "image": "words/254.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 255,
+   "ko": "하마",
+   "en": "Hippo",
+   "category": 1,
+   "image": "words/255.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 256,
+   "ko": "코뿔소",
+   "en": "Rhinoceros",
+   "category": 1,
+   "image": "words/256.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 257,
+   "ko": "캥거루",
+   "en": "Kangaroo",
+   "category": 1,
+   "image": "words/257.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 258,
+   "ko": "고릴라",
+   "en": "Gorilla",
+   "category": 1,
+   "image": "words/258.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 259,
+   "ko": "고슴도치",
+   "en": "Hedgehog",
+   "category": 1,
+   "image": "words/259.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 260,
+   "ko": "참새",
+   "en": "Sparrow",
+   "category": 1,
+   "image": "words/260.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 261,
+   "ko": "비둘기",
+   "en": "Pigeon",
+   "category": 1,
+   "image": "words/261.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 262,
+   "ko": "까치",
+   "en": "Magpie",
+   "category": 1,
+   "image": "words/262.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 263,
+   "ko": "까마귀",
+   "en": "Crow",
+   "category": 1,
+   "image": "words/263.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 264,
+   "ko": "앵무새",
+   "en": "Parrot",
+   "category": 1,
+   "image": "words/264.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 265,
+   "ko": "독수리",
+   "en": "Eagle",
+   "category": 1,
+   "image": "words/265.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 266,
+   "ko": "타조",
+   "en": "Ostrich",
+   "category": 1,
+   "image": "words/266.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 267,
+   "ko": "공작",
+   "en": "Peacock",
+   "category": 1,
+   "image": "words/267.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 268,
+   "ko": "거위",
+   "en": "Goose",
+   "category": 1,
+   "image": "words/268.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 269,
+   "ko": "병아리",
+   "en": "Chick",
+   "category": 1,
+   "image": "words/269.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 270,
+   "ko": "백조",
+   "en": "Swan",
+   "category": 1,
+   "image": "words/270.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 271,
+   "ko": "갈매기",
+   "en": "Seagull",
+   "category": 1,
+   "image": "words/271.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 272,
+   "ko": "플라밍고",
+   "en": "Flamingo",
+   "category": 1,
+   "image": "words/272.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 273,
+   "ko": "두루미",
+   "en": "Red-crowned crane",
+   "category": 1,
+   "image": "words/273.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 274,
+   "ko": "바다사자",
+   "en": "Sea lion",
+   "category": 1,
+   "image": "words/274.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 275,
+   "ko": "해마",
+   "en": "Seahorse",
+   "category": 1,
+   "image": "words/275.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 276,
+   "ko": "가오리",
+   "en": "Stingray",
+   "category": 1,
+   "image": "words/276.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 277,
+   "ko": "복어",
+   "en": "Pufferfish",
+   "category": 1,
+   "image": "words/277.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 278,
+   "ko": "잉어",
+   "en": "Carp",
+   "category": 1,
+   "image": "words/278.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 279,
+   "ko": "연어",
+   "en": "Salmon",
+   "category": 1,
+   "image": "words/279.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 280,
+   "ko": "사마귀",
+   "en": "Mantis",
+   "category": 1,
+   "image": "words/280.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 281,
+   "ko": "매미",
+   "en": "Cicada",
+   "category": 1,
+   "image": "words/281.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 282,
+   "ko": "모기",
+   "en": "Mosquito",
+   "category": 1,
+   "image": "words/282.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 283,
+   "ko": "파리",
+   "en": "Fly",
+   "category": 1,
+   "image": "words/283.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 284,
+   "ko": "바퀴벌레",
+   "en": "Cockroach",
+   "category": 1,
+   "image": "words/284.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 285,
+   "ko": "지렁이",
+   "en": "Earthworm",
+   "category": 1,
+   "image": "words/285.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 286,
+   "ko": "지네",
+   "en": "Centipede",
+   "category": 1,
+   "image": "words/286.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 287,
+   "ko": "전갈",
+   "en": "Scorpion",
+   "category": 1,
+   "image": "words/287.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 288,
+   "ko": "올챙이",
+   "en": "Tadpole",
+   "category": 1,
+   "image": "words/288.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 289,
+   "ko": "도마뱀",
+   "en": "Lizard",
+   "category": 1,
+   "image": "words/289.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 290,
+   "ko": "카멜레온",
+   "en": "Chameleon",
+   "category": 1,
+   "image": "words/290.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 291,
+   "ko": "참외",
+   "en": "Korean melon",
+   "category": 2,
+   "image": "words/291.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 292,
+   "ko": "자두",
+   "en": "Plum",
+   "category": 2,
+   "image": "words/292.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 293,
+   "ko": "오렌지",
+   "en": "Orange",
+   "category": 2,
+   "image": "words/293.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 294,
+   "ko": "감",
+   "en": "Persimmon",
+   "category": 2,
+   "image": "words/294.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 295,
+   "ko": "석류",
+   "en": "Pomegranate",
+   "category": 2,
+   "image": "words/295.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 296,
+   "ko": "무화과",
+   "en": "Fig",
+   "category": 2,
+   "image": "words/296.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 297,
+   "ko": "코코넛",
+   "en": "Coconut",
+   "category": 2,
+   "image": "words/297.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 298,
+   "ko": "두리안",
+   "en": "Durian",
+   "category": 2,
+   "image": "words/298.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 299,
+   "ko": "용과",
+   "en": "Dragon fruit",
+   "category": 2,
+   "image": "words/299.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 300,
+   "ko": "마늘",
+   "en": "Garlic",
+   "category": 2,
+   "image": "words/300.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 301,
+   "ko": "배추",
+   "en": "Napa cabbage",
+   "category": 2,
+   "image": "words/301.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 302,
+   "ko": "양배추",
+   "en": "Cabbage",
+   "category": 2,
+   "image": "words/302.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 303,
+   "ko": "상추",
+   "en": "Lettuce",
+   "category": 2,
+   "image": "words/303.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 304,
+   "ko": "콜리플라워",
+   "en": "Cauliflower",
+   "category": 2,
+   "image": "words/304.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 305,
+   "ko": "가지",
+   "en": "Eggplant",
+   "category": 2,
+   "image": "words/305.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 306,
+   "ko": "호박",
+   "en": "Pumpkin",
+   "category": 2,
+   "image": "words/306.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 307,
+   "ko": "단호박",
+   "en": "Sweet pumpkin",
+   "category": 2,
+   "image": "words/307.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 308,
+   "ko": "무",
+   "en": "Radish",
+   "category": 2,
+   "image": "words/308.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 309,
+   "ko": "파",
+   "en": "Green onion",
+   "category": 2,
+   "image": "words/309.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 310,
+   "ko": "국",
+   "en": "Soup",
+   "category": 2,
+   "image": "words/310.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 311,
+   "ko": "김치",
+   "en": "Kimchi",
+   "category": 2,
+   "image": "words/311.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 312,
+   "ko": "불고기",
+   "en": "Bulgogi",
+   "category": 2,
+   "image": "words/312.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 313,
+   "ko": "갈비",
+   "en": "Galbi",
+   "category": 2,
+   "image": "words/313.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 314,
+   "ko": "삼겹살",
+   "en": "Pork belly",
+   "category": 2,
+   "image": "words/314.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 315,
+   "ko": "계란말이",
+   "en": "Rolled omelette",
+   "category": 2,
+   "image": "words/315.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 316,
+   "ko": "김",
+   "en": "Seaweed",
+   "category": 2,
+   "image": "words/316.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 317,
+   "ko": "비빔밥",
+   "en": "Bibimbap",
+   "category": 2,
+   "image": "words/317.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 318,
+   "ko": "볶음밥",
+   "en": "Fried rice",
+   "category": 2,
+   "image": "words/318.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 319,
+   "ko": "국수",
+   "en": "Noodles",
+   "category": 2,
+   "image": "words/319.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 320,
+   "ko": "돈가스",
+   "en": "Pork cutlet",
+   "category": 2,
+   "image": "words/320.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 321,
+   "ko": "스테이크",
+   "en": "Steak",
+   "category": 2,
+   "image": "words/321.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 322,
+   "ko": "생선구이",
+   "en": "Grilled fish",
+   "category": 2,
+   "image": "words/322.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 323,
+   "ko": "초밥",
+   "en": "Sushi",
+   "category": 2,
+   "image": "words/323.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 324,
+   "ko": "머핀",
+   "en": "Muffin",
+   "category": 2,
+   "image": "words/324.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 325,
+   "ko": "와플",
+   "en": "Waffle",
+   "category": 2,
+   "image": "words/325.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 326,
+   "ko": "젤리",
+   "en": "Jelly",
+   "category": 2,
+   "image": "words/326.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 327,
+   "ko": "떡",
+   "en": "Rice cake",
+   "category": 2,
+   "image": "words/327.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 328,
+   "ko": "송편",
+   "en": "Songpyeon",
+   "category": 2,
+   "image": "words/328.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 329,
+   "ko": "호떡",
+   "en": "Hotteok",
+   "category": 2,
+   "image": "words/329.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 330,
+   "ko": "붕어빵",
+   "en": "Bungeoppang",
+   "category": 2,
+   "image": "words/330.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 331,
+   "ko": "요거트",
+   "en": "Yogurt",
+   "category": 2,
+   "image": "words/331.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 332,
+   "ko": "학교버스",
+   "en": "School bus",
+   "category": 3,
+   "image": "words/332.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 333,
+   "ko": "견인차",
+   "en": "Tow truck",
+   "category": 3,
+   "image": "words/333.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 334,
+   "ko": "쓰레기차",
+   "en": "Garbage truck",
+   "category": 3,
+   "image": "words/334.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 335,
+   "ko": "레미콘",
+   "en": "Concrete mixer",
+   "category": 3,
+   "image": "words/335.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 336,
+   "ko": "지게차",
+   "en": "Forklift",
+   "category": 3,
+   "image": "words/336.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 337,
+   "ko": "세발자전거",
+   "en": "Tricycle",
+   "category": 3,
+   "image": "words/337.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 338,
+   "ko": "스케이트보드",
+   "en": "Skateboard",
+   "category": 3,
+   "image": "words/338.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 339,
+   "ko": "모노레일",
+   "en": "Monorail",
+   "category": 3,
+   "image": "words/339.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 340,
+   "ko": "글라이더",
+   "en": "Glider",
+   "category": 3,
+   "image": "words/340.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 341,
+   "ko": "드론",
+   "en": "Drone",
+   "category": 3,
+   "image": "words/341.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 342,
+   "ko": "카누",
+   "en": "Canoe",
+   "category": 3,
+   "image": "words/342.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 343,
+   "ko": "제트스키",
+   "en": "Jet ski",
+   "category": 3,
+   "image": "words/343.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 344,
+   "ko": "썰매",
+   "en": "Sled",
+   "category": 3,
+   "image": "words/344.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 345,
+   "ko": "마차",
+   "en": "Carriage",
+   "category": 3,
+   "image": "words/345.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 346,
+   "ko": "전동휠체어",
+   "en": "Electric wheelchair",
+   "category": 3,
+   "image": "words/346.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 347,
+   "ko": "식탁",
+   "en": "Dining table",
+   "category": 4,
+   "image": "words/347.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 348,
+   "ko": "옷장",
+   "en": "Wardrobe",
+   "category": 4,
+   "image": "words/348.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 349,
+   "ko": "서랍장",
+   "en": "Dresser",
+   "category": 4,
+   "image": "words/349.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 350,
+   "ko": "책장",
+   "en": "Bookshelf",
+   "category": 4,
+   "image": "words/350.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 351,
+   "ko": "신발장",
+   "en": "Shoe rack",
+   "category": 4,
+   "image": "words/351.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 352,
+   "ko": "액자",
+   "en": "Picture frame",
+   "category": 4,
+   "image": "words/352.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 353,
+   "ko": "커튼",
+   "en": "Curtain",
+   "category": 4,
+   "image": "words/353.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 354,
+   "ko": "카펫",
+   "en": "Carpet",
+   "category": 4,
+   "image": "words/354.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 355,
+   "ko": "전등",
+   "en": "Ceiling light",
+   "category": 4,
+   "image": "words/355.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 356,
+   "ko": "전자레인지",
+   "en": "Microwave",
+   "category": 4,
+   "image": "words/356.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 357,
+   "ko": "가스레인지",
+   "en": "Gas stove",
+   "category": 4,
+   "image": "words/357.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 358,
+   "ko": "밥솥",
+   "en": "Rice cooker",
+   "category": 4,
+   "image": "words/358.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 359,
+   "ko": "토스터",
+   "en": "Toaster",
+   "category": 4,
+   "image": "words/359.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 360,
+   "ko": "믹서기",
+   "en": "Blender",
+   "category": 4,
+   "image": "words/360.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 361,
+   "ko": "주전자",
+   "en": "Kettle",
+   "category": 4,
+   "image": "words/361.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 362,
+   "ko": "냄비",
+   "en": "Pot",
+   "category": 4,
+   "image": "words/362.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 363,
+   "ko": "프라이팬",
+   "en": "Frying pan",
+   "category": 4,
+   "image": "words/363.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 364,
+   "ko": "도마",
+   "en": "Cutting board",
+   "category": 4,
+   "image": "words/364.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 365,
+   "ko": "칼",
+   "en": "Knife",
+   "category": 4,
+   "image": "words/365.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 366,
+   "ko": "포크",
+   "en": "Fork",
+   "category": 4,
+   "image": "words/366.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 367,
+   "ko": "국자",
+   "en": "Ladle",
+   "category": 4,
+   "image": "words/367.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 368,
+   "ko": "뒤집개",
+   "en": "Spatula",
+   "category": 4,
+   "image": "words/368.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 369,
+   "ko": "물병",
+   "en": "Water bottle",
+   "category": 4,
+   "image": "words/369.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 370,
+   "ko": "쟁반",
+   "en": "Tray",
+   "category": 4,
+   "image": "words/370.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 371,
+   "ko": "세면대",
+   "en": "Sink",
+   "category": 4,
+   "image": "words/371.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 372,
+   "ko": "욕조",
+   "en": "Bathtub",
+   "category": 4,
+   "image": "words/372.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 373,
+   "ko": "샤워기",
+   "en": "Shower head",
+   "category": 4,
+   "image": "words/373.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 374,
+   "ko": "변기",
+   "en": "Toilet",
+   "category": 4,
+   "image": "words/374.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 375,
+   "ko": "치약",
+   "en": "Toothpaste",
+   "category": 4,
+   "image": "words/375.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 376,
+   "ko": "샴푸",
+   "en": "Shampoo",
+   "category": 4,
+   "image": "words/376.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 377,
+   "ko": "수건",
+   "en": "Towel",
+   "category": 4,
+   "image": "words/377.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 378,
+   "ko": "빗",
+   "en": "Comb",
+   "category": 4,
+   "image": "words/378.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 379,
+   "ko": "휴지",
+   "en": "Toilet paper",
+   "category": 4,
+   "image": "words/379.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 380,
+   "ko": "휴지통",
+   "en": "Trash can",
+   "category": 4,
+   "image": "words/380.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 381,
+   "ko": "빗자루",
+   "en": "Broom",
+   "category": 4,
+   "image": "words/381.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 382,
+   "ko": "쓰레받기",
+   "en": "Dustpan",
+   "category": 4,
+   "image": "words/382.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 383,
+   "ko": "다리미",
+   "en": "Iron",
+   "category": 4,
+   "image": "words/383.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 384,
+   "ko": "빨래바구니",
+   "en": "Laundry basket",
+   "category": 4,
+   "image": "words/384.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 385,
+   "ko": "색연필",
+   "en": "Colored pencil",
+   "category": 4,
+   "image": "words/385.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 386,
+   "ko": "볼펜",
+   "en": "Ballpoint pen",
+   "category": 4,
+   "image": "words/386.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 387,
+   "ko": "연필깎이",
+   "en": "Pencil sharpener",
+   "category": 4,
+   "image": "words/387.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 388,
+   "ko": "필통",
+   "en": "Pencil case",
+   "category": 4,
+   "image": "words/388.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 389,
+   "ko": "테이프",
+   "en": "Tape",
+   "category": 4,
+   "image": "words/389.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 390,
+   "ko": "색종이",
+   "en": "Colored paper",
+   "category": 4,
+   "image": "words/390.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 391,
+   "ko": "스케치북",
+   "en": "Sketchbook",
+   "category": 4,
+   "image": "words/391.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 392,
+   "ko": "비눗방울",
+   "en": "Soap bubble",
+   "category": 4,
+   "image": "words/392.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 393,
+   "ko": "리모컨",
+   "en": "Remote control",
+   "category": 4,
+   "image": "words/393.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 394,
+   "ko": "태블릿",
+   "en": "Tablet",
+   "category": 4,
+   "image": "words/394.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 395,
+   "ko": "프린터",
+   "en": "Printer",
+   "category": 4,
+   "image": "words/395.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 396,
+   "ko": "열쇠",
+   "en": "Key",
+   "category": 4,
+   "image": "words/396.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 397,
+   "ko": "정글",
+   "en": "Jungle",
+   "category": 5,
+   "image": "words/397.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 398,
+   "ko": "사막",
+   "en": "Desert",
+   "category": 5,
+   "image": "words/398.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 399,
+   "ko": "폭포",
+   "en": "Waterfall",
+   "category": 5,
+   "image": "words/399.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 400,
+   "ko": "동굴",
+   "en": "Cave",
+   "category": 5,
+   "image": "words/400.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 401,
+   "ko": "해변",
+   "en": "Beach",
+   "category": 5,
+   "image": "words/401.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 402,
+   "ko": "빙하",
+   "en": "Glacier",
+   "category": 5,
+   "image": "words/402.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 403,
+   "ko": "뿌리",
+   "en": "Root",
+   "category": 5,
+   "image": "words/403.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 404,
+   "ko": "씨앗",
+   "en": "Seed",
+   "category": 5,
+   "image": "words/404.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 405,
+   "ko": "민들레",
+   "en": "Dandelion",
+   "category": 5,
+   "image": "words/405.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 406,
+   "ko": "해바라기",
+   "en": "Sunflower",
+   "category": 5,
+   "image": "words/406.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 407,
+   "ko": "장미",
+   "en": "Rose",
+   "category": 5,
+   "image": "words/407.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 408,
+   "ko": "튤립",
+   "en": "Tulip",
+   "category": 5,
+   "image": "words/408.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 409,
+   "ko": "소나무",
+   "en": "Pine tree",
+   "category": 5,
+   "image": "words/409.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 410,
+   "ko": "대나무",
+   "en": "Bamboo",
+   "category": 5,
+   "image": "words/410.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 411,
+   "ko": "선인장",
+   "en": "Cactus",
+   "category": 5,
+   "image": "words/411.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 412,
+   "ko": "도토리",
+   "en": "Acorn",
+   "category": 5,
+   "image": "words/412.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 413,
+   "ko": "솔방울",
+   "en": "Pine cone",
+   "category": 5,
+   "image": "words/413.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 414,
+   "ko": "조개껍데기",
+   "en": "Seashell",
+   "category": 5,
+   "image": "words/414.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 415,
+   "ko": "아기",
+   "en": "Baby",
+   "category": 6,
+   "image": "words/415.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 416,
+   "ko": "어린이",
+   "en": "Child",
+   "category": 6,
+   "image": "words/416.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 417,
+   "ko": "어른",
+   "en": "Adult",
+   "category": 6,
+   "image": "words/417.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 418,
+   "ko": "미용사",
+   "en": "Hairdresser",
+   "category": 6,
+   "image": "words/418.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 419,
+   "ko": "머리",
+   "en": "Head",
+   "category": 6,
+   "image": "words/419.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 420,
+   "ko": "얼굴",
+   "en": "Face",
+   "category": 6,
+   "image": "words/420.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 421,
+   "ko": "혀",
+   "en": "Tongue",
+   "category": 6,
+   "image": "words/421.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 422,
+   "ko": "팔",
+   "en": "Arm",
+   "category": 6,
+   "image": "words/422.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 423,
+   "ko": "다리",
+   "en": "Leg",
+   "category": 6,
+   "image": "words/423.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 424,
+   "ko": "발가락",
+   "en": "Toe",
+   "category": 6,
+   "image": "words/424.webp",
+   "synKo": [],
+   "synEn": [],
+   "hint": ""
+  },
+  {
+   "id": 425,
+   "ko": "뼈",
+   "en": "Bone",
+   "category": 6,
+   "image": "words/425.webp",
+   "synKo": [],
+   "synEn": [],
    "hint": ""
   }
  ]

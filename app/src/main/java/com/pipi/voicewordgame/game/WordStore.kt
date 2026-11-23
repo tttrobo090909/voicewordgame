@@ -6,7 +6,7 @@ import java.io.File
 /**
  * 문제 데이터 저장소.
  *
- * - 첫 실행: `assets/words.json`(기본 250문제)을 앱 내부 파일로 복사해 쓴다.
+ * - 첫 실행: `assets/words.json`(기본 425문제·기본 카테고리 6개)을 앱 내부 파일로 복사해 쓴다.
  * - 관리자 화면에서 고친 내용은 내부 `filesDir/words.json` 에 즉시 저장되어
  *   다음 게임에 바로 반영된다. (SharedPreferences 대신 JSON 파일 한 개)
  * - 앱 업데이트로 기본 데이터 버전이 바뀌면 새 기본값으로 다시 시작한다.
@@ -69,6 +69,47 @@ class WordStore(private val context: Context) {
         book = book.copyWithWords(book.words.filterNot { it.id == id })
         write(book)
     }
+
+    // ---------------------------------------------------------------- 카테고리
+
+    /** 카테고리를 더 만들 수 있는지(기본 6개 + 최대 4개 = 10개). */
+    fun canAddCategory(): Boolean = book.categories.size < WordCategory.MAX_TOTAL
+
+    /** 새 카테고리를 추가한다. 이미 10개면 null. */
+    fun addCategory(ko: String, en: String, emoji: String): WordCategory? {
+        if (!canAddCategory()) return null
+        val newId = (book.categories.maxOfOrNull { it.id } ?: 0) + 1
+        val created = WordCategory(newId, ko, en.ifBlank { ko }, emoji)
+        book = book.copy(categories = book.categories + created)
+        write(book)
+        return created
+    }
+
+    fun updateCategory(category: WordCategory) {
+        book = book.copy(
+            categories = book.categories.map { if (it.id == category.id) category else it }
+        )
+        write(book)
+    }
+
+    /**
+     * 추가한 카테고리를 지운다. 그 카테고리에 있던 문제도 함께 지운다.
+     * 기본 6개(id 1~6)는 지울 수 없다.
+     */
+    fun deleteCategory(id: Int): Boolean {
+        if (id <= WordCategory.BUILT_IN_COUNT) return false
+        if (book.categories.none { it.id == id }) return false
+        book = WordBook(
+            words = book.words.filterNot { it.categoryId == id },
+            categories = book.categories.filterNot { it.id == id },
+            appVersion = book.appVersion
+        )
+        write(book)
+        return true
+    }
+
+    /** 카테고리 안의 문제 수. */
+    fun countIn(categoryId: Int): Int = book.words.count { it.categoryId == categoryId }
 
     fun nextId(): Int = (book.words.maxOfOrNull { it.id } ?: 0) + 1
 

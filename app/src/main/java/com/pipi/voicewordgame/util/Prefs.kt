@@ -9,9 +9,9 @@ import android.content.Context
 class Prefs(context: Context) {
 
     companion object {
-        /** 한 판 문제 수: 10~50, 기본 15. */
+        /** 한 판 문제 수: 10~40, 기본 15. (v2.6: 상한 50 → 40) */
         const val COUNT_MIN = 10
-        const val COUNT_MAX = 50
+        const val COUNT_MAX = 40
         const val COUNT_DEFAULT = 15
 
         /** 문제 제한시간(초): 3~20, 기본 9. */
@@ -31,7 +31,7 @@ class Prefs(context: Context) {
         get() = sp.getInt("category", 0)
         set(value) = sp.edit().putInt("category", value).apply()
 
-    /** 한 판에 낼 문제 수(10~50, 기본 15). */
+    /** 한 판에 낼 문제 수(10~40, 기본 15). 저장값이 41 이상이면 40으로 맞춘다. */
     var questionCount: Int
         get() = sp.getInt("question_count", COUNT_DEFAULT).coerceIn(COUNT_MIN, COUNT_MAX)
         set(value) = sp.edit().putInt("question_count", value.coerceIn(COUNT_MIN, COUNT_MAX)).apply()

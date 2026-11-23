@@ -30,9 +30,26 @@ data class Word(
     }
 }
 
-/** v2.0 카테고리: 동물 / 음식·과일 / 탈것 / 사물·집 / 자연 / 사람·몸 */
-data class WordCategory(val id: Int, val ko: String, val en: String) {
+/**
+ * 카테고리: 기본 6개(동물 / 음식·과일 / 탈것 / 사물·집 / 자연 / 사람·몸) + 관리자가 추가한 카테고리.
+ * [emoji] 는 관리자가 고른 대표 이모지(추가 카테고리용, 없으면 빈 문자열).
+ */
+data class WordCategory(val id: Int, val ko: String, val en: String, val emoji: String = "") {
     fun label(lang: String): String = if (lang == "en") en else ko
+
+    /** 관리자가 추가한 카테고리인지(기본 6개는 id 1~6). */
+    val isCustom: Boolean get() = id > BUILT_IN_COUNT
+
+    companion object {
+        /** 앱에 기본으로 들어 있는 카테고리 수. */
+        const val BUILT_IN_COUNT = 6
+
+        /** 추가로 만들 수 있는 카테고리 수(총 최대 10개). */
+        const val MAX_CUSTOM = 4
+
+        /** 만들 수 있는 카테고리 총 개수. */
+        const val MAX_TOTAL = BUILT_IN_COUNT + MAX_CUSTOM
+    }
 }
 
 data class WordBook(
@@ -66,7 +83,8 @@ object WordJson {
                 WordCategory(
                     id = o.getInt("id"),
                     ko = o.getString("ko"),
-                    en = o.optString("en", o.getString("ko"))
+                    en = o.optString("en", o.getString("ko")),
+                    emoji = o.optString("emoji", "")
                 )
             )
         }
@@ -104,6 +122,7 @@ object WordJson {
                 put("id", c.id)
                 put("ko", c.ko)
                 put("en", c.en)
+                put("emoji", c.emoji)
             })
         }
         root.put("categories", cats)

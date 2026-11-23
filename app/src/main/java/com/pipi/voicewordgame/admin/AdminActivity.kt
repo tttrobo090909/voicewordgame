@@ -32,6 +32,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.pipi.voicewordgame.R
 import com.pipi.voicewordgame.game.Hints
 import com.pipi.voicewordgame.game.Word
+import com.pipi.voicewordgame.game.WordCategory
 import com.pipi.voicewordgame.game.WordStore
 import com.pipi.voicewordgame.util.ImageStore
 import com.pipi.voicewordgame.util.Prefs
@@ -51,6 +52,11 @@ class AdminActivity : AppCompatActivity() {
         /** 한 번에 조절되는 값(문제 수는 5문제씩, 제한시간은 1초씩). */
         const val COUNT_STEP = 5
         const val TIME_STEP = 1
+
+        /** 카테고리 대표 이모지 빠른 선택. */
+        val EMOJI_CHOICES = listOf(
+            "🙂", "🐶", "🍎", "🚗", "🏠", "🌳", "⭐", "🧸", "🎵", "👨‍👩‍👧", "🍀", "🐟"
+        )
     }
 
     private lateinit var store: WordStore
@@ -108,12 +114,13 @@ class AdminActivity : AppCompatActivity() {
         list.adapter = adapter
 
         buildFilters()
+        buildCategoryChips()
         refresh()
         setupGameSettings()
+        setupResets()
 
         findViewById<Button>(R.id.closeAdmin).setOnClickListener { finish() }
         findViewById<Button>(R.id.addProblem).setOnClickListener { openEditor(null) }
-        findViewById<Button>(R.id.restoreDefaults).setOnClickListener { confirmRestore() }
 
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -241,6 +248,42 @@ class AdminActivity : AppCompatActivity() {
         empty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
     }
 
+    // ---------------------------------------------------------------- 기본값 복원
+
+    /**
+     * v2.6: 기본값 복원을 둘로 나눴다.
+     *  - `설정 리셋`: 한 판 문제 수(15)·문제 제한시간(9초)만 되돌린다.
+     *  - `문제 리셋`: 문제 목록·추가한 카테고리만 기본 425문제·기본 카테고리 6개로 되돌린다.
+     * 두 버튼 모두 누를 때 최종 확인 경고창(AlertDialog)을 먼저 띄운다.
+     */
+    private fun setupResets() {
+        findViewById<Button>(R.id.resetSettings).setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.admin_reset_settings_confirm_title)
+                .setMessage(R.string.admin_reset_settings_confirm_body)
+                .setPositiveButton(R.string.confirm) { _, _ ->
+                    prefs.resetGameSettings()
+                    updateGameSettingLabels()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+        findViewById<Button>(R.id.resetProblems).setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.admin_reset_problems_confirm_title)
+                .setMessage(R.string.admin_reset_problems_confirm_body)
+                .setPositiveButton(R.string.confirm) { _, _ ->
+                    store.restoreDefaults()
+                    if (store.book.categories.none { it.id == filterCategory }) filterCategory = 0
+                    buildFilters()
+                    buildCategoryChips()
+                    refresh()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+    }
+
     // ---------------------------------------------------------------- 삭제·복원
 
     private fun confirmDelete(word: Word) {
@@ -249,20 +292,153 @@ class AdminActivity : AppCompatActivity() {
             .setMessage(getString(R.string.delete_confirm_body, word.ko))
             .setPositiveButton(R.string.delete) { _, _ ->
                 store.delete(word.id)
+                buildCategoryChips()
                 refresh()
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
-    private fun confirmRestore() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.admin_restore_confirm_title)
-            .setMessage(R.string.admin_restore_confirm_body)
-            .setPositiveButton(R.string.admin_restore) { _, _ ->
-                store.restoreDefaults()
+    // ---------------------------------------------------------------- 카테고리
+
+    /** 카테고리 칩 목록을 다시 그린다(기본 6개 + 추가한 카테고리, 이름을 누르면 수정). */
+    private fun buildCategoryChips() {
+        val row = findViewById<LinearLayout>(R.id.adminCategoryRow)
+        row.removeAllViews()
+        val add = findViewById<Button>(R.id.addCategory)
+        add.isEnabled = store.canAddCategory()
+        add.alpha = if (add.isEnabled) 1f else 0.45f
+        add.setOnClickListener {
+            if (store.canAddCategory()) {
+                openCategoryEditor(null)
+            } else {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.admin_categories_title)
+                    .setMessage(R.string.admin_category_full)
+                    .setPositiveButton(R.string.close, null)
+                    .show()
+            }
+        }
+
+        var line: LinearLayout? = null
+        store.book.categories.forEachIndexed { index, category ->
+            if (index % 3 == 0) {
+                line = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    row.addView(this)
+                }
+            }
+            val button = Button(this)
+            val emoji = category.emoji.ifBlank { "" }
+            button.text = getString(
+                if (emoji.isBlank()) R.string.admin_category_chip else R.string.admin_category_chip_emoji,
+                *if (emoji.isBlank()) {
+                    arrayOf<Any>(category.ko, store.countIn(category.id))
+                } else {
+                    arrayOf<Any>(emoji, category.ko, store.countIn(category.id))
+                }
+            )
+            button.setTextColor(ContextCompat.getColor(this, R.color.ink))
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            button.typeface = Typeface.DEFAULT_BOLD
+            button.isAllCaps = false
+            button.minHeight = dp(34)
+            button.setPadding(dp(2), 0, dp(2), 0)
+            val params = LinearLayout.LayoutParams(0, dp(34), 1f)
+            params.setMargins(dp(2), dp(2), dp(2), dp(2))
+            button.layoutParams = params
+            button.setBackgroundResource(R.drawable.bg_button_soft)
+            button.setOnClickListener { openCategoryEditor(category) }
+            line?.addView(button)
+        }
+    }
+
+    /** 카테고리 추가·수정 창(한글 이름·영문 이름·대표 이모지). 추가한 카테고리는 여기서 지울 수 있다. */
+    private fun openCategoryEditor(category: WordCategory?) {
+        val view = layoutInflater.inflate(R.layout.dialog_category_edit, null)
+        val ko = view.findViewById<EditText>(R.id.categoryKo)
+        val en = view.findViewById<EditText>(R.id.categoryEn)
+        val emoji = view.findViewById<EditText>(R.id.categoryEmoji)
+        val error = view.findViewById<TextView>(R.id.categoryError)
+        val emojiRow = view.findViewById<LinearLayout>(R.id.categoryEmojiRow)
+
+        ko.setText(category?.ko.orEmpty())
+        en.setText(category?.en.orEmpty())
+        emoji.setText(category?.emoji.orEmpty())
+        error.visibility = View.GONE
+
+        EMOJI_CHOICES.forEach { choice ->
+            val b = Button(this)
+            b.text = choice
+            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+            b.minWidth = 0
+            b.minHeight = dp(34)
+            b.setPadding(0, 0, 0, 0)
+            val params = LinearLayout.LayoutParams(0, dp(34), 1f)
+            params.setMargins(dp(1), 0, dp(1), 0)
+            b.layoutParams = params
+            b.setBackgroundResource(R.drawable.bg_button_soft)
+            b.setOnClickListener { emoji.setText(choice) }
+            emojiRow.addView(b)
+        }
+
+        val builder = MaterialAlertDialogBuilder(this)
+            .setTitle(if (category == null) R.string.category_title_new else R.string.category_title_edit)
+            .setView(view)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.save, null)
+        if (category != null && category.isCustom) {
+            builder.setNeutralButton(R.string.category_delete, null)
+        }
+        val dialog = builder.create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val koText = ko.text.toString().trim()
+                if (koText.isEmpty()) {
+                    error.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+                val enText = en.text.toString().trim().ifBlank { koText }
+                val emojiText = emoji.text.toString().trim()
+                if (category == null) {
+                    if (store.addCategory(koText, enText, emojiText) == null) {
+                        error.visibility = View.VISIBLE
+                        error.text = getString(R.string.admin_category_full)
+                        return@setOnClickListener
+                    }
+                } else {
+                    store.updateCategory(category.copy(ko = koText, en = enText, emoji = emojiText))
+                }
+                dialog.dismiss()
                 buildFilters()
+                buildCategoryChips()
                 refresh()
+            }
+            if (category != null && category.isCustom) {
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                    dialog.dismiss()
+                    confirmDeleteCategory(category)
+                }
+            }
+        }
+        dialog.show()
+    }
+
+    /** 추가한 카테고리 삭제 확인 — 그 안의 문제도 함께 지워진다고 알린다. */
+    private fun confirmDeleteCategory(category: WordCategory) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.category_delete_confirm_title)
+            .setMessage(
+                getString(R.string.category_delete_confirm_body, category.ko, store.countIn(category.id))
+            )
+            .setPositiveButton(R.string.delete) { _, _ ->
+                if (store.deleteCategory(category.id)) {
+                    if (filterCategory == category.id) filterCategory = 0
+                    buildFilters()
+                    buildCategoryChips()
+                    refresh()
+                }
             }
             .setNegativeButton(R.string.cancel, null)
             .show()

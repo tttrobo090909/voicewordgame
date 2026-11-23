@@ -14,7 +14,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.security.MessageDigest
 
-/** 기본 250문제가 6개 카테고리에 빠짐없이 들어갔는지, 그림·힌트가 준비됐는지 확인한다. */
+/** 기본 425문제(v2.6)가 6개 카테고리에 빠짐없이 들어갔는지, 그림·힌트가 준비됐는지 확인한다. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class WordDataTest {
@@ -37,20 +37,20 @@ class WordDataTest {
     }
 
     @Test
-    fun allTwoHundredFiftyWordsMappedToThoseSixCategories() {
+    fun allFourHundredTwentyFiveWordsMappedToThoseSixCategories() {
         val book = assetBook()
-        assertEquals(250, book.words.size)
-        assertEquals(250, book.words.map { it.id }.distinct().size)
+        assertEquals(425, book.words.size)
+        assertEquals(425, book.words.map { it.id }.distinct().size)
         assertTrue(book.words.all { it.categoryId in 1..6 })
 
         val counts = book.words.groupingBy { it.categoryId }.eachCount()
-        assertEquals(51, counts[1])
-        assertEquals(50, counts[2])
-        assertEquals(25, counts[3])
-        assertEquals(69, counts[4])
-        assertEquals(24, counts[5])
-        assertEquals(31, counts[6])
-        assertEquals(250, counts.values.sum())
+        assertEquals(91, counts[1])
+        assertEquals(91, counts[2])
+        assertEquals(40, counts[3])
+        assertEquals(119, counts[4])
+        assertEquals(42, counts[5])
+        assertEquals(42, counts[6])
+        assertEquals(425, counts.values.sum())
         // 비어 있는 카테고리가 없어야 한다.
         assertTrue(counts.values.all { it > 0 })
     }
@@ -160,11 +160,11 @@ class WordDataTest {
         MessageDigest.getInstance("MD5").digest(bytes).joinToString("") { "%02x".format(it) }
 
     @Test
-    fun koreanAndEnglishWordsAreAllUniqueAcrossTwoHundredFifty() {
+    fun koreanAndEnglishWordsAreAllUniqueAcrossTheWholeBook() {
         val words = assetBook().words
-        assertEquals(250, words.size)
-        assertEquals("한글 단어 중복 0건", 250, words.map { it.ko }.distinct().size)
-        assertEquals("영문 단어 중복 0건", 250, words.map { it.en.lowercase() }.distinct().size)
+        assertEquals(425, words.size)
+        assertEquals("한글 단어 중복 0건", 425, words.map { it.ko }.distinct().size)
+        assertEquals("영문 단어 중복 0건", 425, words.map { it.en.lowercase() }.distinct().size)
     }
 
     @Test
@@ -174,7 +174,7 @@ class WordDataTest {
             val bytes = context.assets.open(word.image).use { it.readBytes() }
             md5(bytes)
         }
-        assertEquals("그림 250장이 모두 다른 파일", 250, hashes.distinct().size)
+        assertEquals("그림 425장이 모두 다른 파일", 425, hashes.distinct().size)
     }
 
     @Test
@@ -194,7 +194,8 @@ class WordDataTest {
             assertEquals("$ko 의 영문", en, word!!.en)
         }
         // 옛 단어는 사라졌다.
-        listOf("카페", "베이커리", "약국", "동물원", "식당", "마트", "도서관", "매미", "오렌지", "국수", "호수", "놀이터", "유치원")
+        // (매미·오렌지·국수는 v2.6에서 새 그림과 함께 다시 들어왔다)
+        listOf("카페", "베이커리", "약국", "동물원", "식당", "마트", "도서관", "호수", "놀이터", "유치원")
             .forEach { old -> assertTrue("옛 단어 $old 는 없다", book.words.none { it.ko == old }) }
 
         // A. 3D 그림을 새로 만든 14개도 그대로 있다.

@@ -221,7 +221,11 @@ class MainActivity : AppCompatActivity() {
 
         lang = if (prefs.lang == "en") "en" else "ko"
         categoryId = prefs.categoryId
-        if (categoryId < 0 || categoryId > 6) categoryId = 0
+        if (!isSelectableCategory(categoryId)) {
+            // 저장된 카테고리가 사라졌거나 문제가 0개면 전체 무작위로 돌아간다.
+            categoryId = 0
+            prefs.categoryId = 0
+        }
         versionText.text = BuildConfig.VERSION_DISPLAY
 
         buildCategoryButtons()
@@ -247,6 +251,11 @@ class MainActivity : AppCompatActivity() {
         if (!gameActive) {
             // 관리자 화면에서 문제를 고치고 돌아왔을 수 있으니 다시 읽는다.
             store.load()
+            // 고른 카테고리가 지워졌거나 문제가 0개가 되었으면 전체 무작위로 돌아간다.
+            if (!isSelectableCategory(categoryId)) {
+                categoryId = 0
+                prefs.categoryId = 0
+            }
             buildCategoryButtons()
             updateCategorySelection()
             startChickWobble()
@@ -412,32 +421,57 @@ class MainActivity : AppCompatActivity() {
                     categoryGrid.addView(this)
                 }
             }
-            val cell = buildCategoryTile(category.id, category.label(lang), store.book.byCategory(category.id).size)
+            val cell = buildCategoryTile(
+                category.id,
+                category.label(lang),
+                store.book.byCategory(category.id).size,
+                category.emoji
+            )
             row?.addView(cell)
             categoryButtons[category.id] = cell
         }
     }
 
+    /** 고를 수 있는 카테고리인지(전체 무작위=0, 실제로 문제가 있는 카테고리만). */
+    private fun isSelectableCategory(id: Int): Boolean {
+        if (id == 0) return true
+        return store.book.categories.any { it.id == id } && store.book.byCategory(id).isNotEmpty()
+    }
+
     /** 그림 + 이름이 같이 있는 카테고리 타일(색은 카테고리마다 다르게). */
-    private fun buildCategoryTile(categoryId: Int, label: String, count: Int): View {
+    private fun buildCategoryTile(categoryId: Int, label: String, count: Int, emoji: String): View {
+        val empty = count == 0
         val cell = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(10), 0, dp(8), 0)
             isClickable = true
             isFocusable = true
+            if (empty) alpha = 0.45f
             layoutParams = LinearLayout.LayoutParams(0, dp(TILE_HEIGHT_DP), 1f).apply {
                 setMargins(dp(4), dp(4), dp(4), dp(4))
             }
             setOnClickListener { selectCategory(categoryId) }
         }
 
-        val image = ImageView(this)
-        image.layoutParams = LinearLayout.LayoutParams(dp(42), dp(42))
-        image.scaleType = ImageView.ScaleType.FIT_CENTER
-        image.contentDescription = label
         val picture = representativeImage(categoryId)?.let { ImageStore.load(this, it, 2) }
-        if (picture != null) image.setImageBitmap(picture) else image.setImageResource(R.mipmap.ic_launcher)
+        if (emoji.isNotBlank()) {
+            // 관리자가 고른 대표 이모지를 그대로 쓴다(추가한 카테고리).
+            val icon = TextView(this)
+            icon.layoutParams = LinearLayout.LayoutParams(dp(42), dp(42))
+            icon.gravity = Gravity.CENTER
+            icon.text = emoji
+            icon.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26f)
+            icon.contentDescription = label
+            cell.addView(icon)
+        } else {
+            val image = ImageView(this)
+            image.layoutParams = LinearLayout.LayoutParams(dp(42), dp(42))
+            image.scaleType = ImageView.ScaleType.FIT_CENTER
+            image.contentDescription = label
+            if (picture != null) image.setImageBitmap(picture) else image.setImageResource(R.mipmap.ic_launcher)
+            cell.addView(image)
+        }
 
         val text = TextView(this)
         text.id = R.id.tileLabel
@@ -450,7 +484,6 @@ class MainActivity : AppCompatActivity() {
             marginStart = dp(6)
         }
 
-        cell.addView(image)
         cell.addView(text)
         return cell
     }
@@ -484,6 +517,11 @@ class MainActivity : AppCompatActivity() {
     )
 
     private fun selectCategory(id: Int) {
+        if (!isSelectableCategory(id)) {
+            // 문제가 0개인 카테고리는 고를 수 없다(비활성 안내).
+            setupMessage(getString(R.string.need_questions))
+            return
+        }
         categoryId = id
         prefs.categoryId = id
         updateCategorySelection()

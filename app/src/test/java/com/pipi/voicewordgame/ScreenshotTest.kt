@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.test.core.app.ApplicationProvider
 import com.pipi.voicewordgame.admin.AdminActivity
+import com.pipi.voicewordgame.game.WordStore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -26,17 +28,19 @@ class ScreenshotTest {
     @Test
     fun captureFirstGameAndAdminScreens() {
         val outDir = File("build/ui").apply { mkdirs() }
-        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.3_1123_HHmm
+        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.6_1123_HHmm
         val downloads = File("../../../downloads").apply { mkdirs() }
 
-        // 01 첫 화면(한글) — 병아리는 오른쪽으로 걷는 중간 자세, 아래에 개인정보처리방침 링크.
+        WordStore(ApplicationProvider.getApplicationContext()).restoreDefaults()
+
+        // 01 첫 화면(한글) — 배너 글자가 커지고 오른쪽 정렬, 아래에 개인정보처리방침 링크.
         val main = Robolectric.buildActivity(MainActivity::class.java).setup().get()
         layout(main)
         main.applySwayPoseForTest(0.2f)
         capture(main, File(outDir, "01_first.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-1-첫화면.png"))
 
-        // 02 게임 화면 — 통합 타이머·상태 바(안내 문구가 바 안에) + 넓어진 위아래 여백.
+        // 02 게임 화면 — 그림 카드·타이머 바.
         main.findViewById<View>(R.id.startButton).performClick()
         main.findViewById<View>(R.id.wordImage).alpha = 1f
         main.findViewById<TextView>(R.id.micStatus).setText(R.string.mic_listening)
@@ -45,16 +49,33 @@ class ScreenshotTest {
         capture(main, File(outDir, "02_game.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-2-게임화면.png"))
 
-        // 03 v2.5에서 새로 그린 3D 그림(경찰서)이 게임 카드에 놓인 모습.
-        val newArt = BitmapFactory.decodeStream(main.assets.open("words/230.webp"))
+        // 03 v2.6 신규 그림(참외 291)이 게임 카드에 놓인 모습.
+        val newArt = BitmapFactory.decodeStream(main.assets.open("words/291.webp"))
         main.findViewById<ImageView>(R.id.wordImage).setImageBitmap(newArt)
         capture(main, File(outDir, "03_new_art.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-3-새그림.png"))
 
-        // 04 관리자 화면 — 맨 위 게임 설정(한 판 문제 수·문제 제한시간) 포함.
+        // 04 관리자 화면 — 게임 설정(10~40)·카테고리 관리·설정 리셋/문제 리셋.
         val admin = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
         capture(admin, File(outDir, "04_admin.png"))
         capture(admin, File(downloads, "malhaebwayo-v$stamp-4-관리자설정.png"))
+
+        // 05 관리자 화면 — 카테고리를 하나 추가한 모습(최대 10개).
+        val store = WordStore(ApplicationProvider.getApplicationContext())
+        store.load()
+        store.addCategory("우리 가족", "My Family", "👨‍👩‍👧")
+        val admin2 = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
+        capture(admin2, File(outDir, "05_admin_categories.png"))
+        capture(admin2, File(downloads, "malhaebwayo-v$stamp-5-카테고리추가.png"))
+
+        // 06 첫 화면 — 카테고리가 늘어도 `전체 무작위`는 그리드 아래·게임 시작 위.
+        val main2 = Robolectric.buildActivity(MainActivity::class.java).setup().get()
+        main2.applySwayPoseForTest(0.2f)
+        capture(main2, File(outDir, "06_first_with_category.png"))
+        capture(main2, File(downloads, "malhaebwayo-v$stamp-6-카테고리추가_첫화면.png"))
+
+        // 원래대로 되돌려 둔다.
+        store.restoreDefaults()
 
         println("screens: ${outDir.absolutePath} , ${downloads.absolutePath}")
     }

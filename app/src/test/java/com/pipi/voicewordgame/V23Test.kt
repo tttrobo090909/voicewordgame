@@ -95,7 +95,7 @@ class V23Test {
         assertEquals("기본 한 판 문제 수 15", 15, prefs.questionCount)
         assertEquals("기본 제한시간 9초", 9, prefs.timeLimitSeconds)
         assertEquals(10, Prefs.COUNT_MIN)
-        assertEquals(50, Prefs.COUNT_MAX)
+        assertEquals(40, Prefs.COUNT_MAX)
         assertEquals(3, Prefs.TIME_MIN)
         assertEquals(20, Prefs.TIME_MAX)
     }
@@ -108,7 +108,7 @@ class V23Test {
         prefs.questionCount = 3
         assertEquals("10문제 아래로는 못 내린다", 10, prefs.questionCount)
         prefs.questionCount = 99
-        assertEquals("50문제 위로는 못 올린다", 50, prefs.questionCount)
+        assertEquals("40문제 위로는 못 올린다", Prefs.COUNT_MAX, prefs.questionCount)
 
         prefs.timeLimitSeconds = 1
         assertEquals("3초 아래로는 못 내린다", 3, prefs.timeLimitSeconds)
@@ -419,22 +419,23 @@ class V23Test {
         val reopened = admin()
         val plus = reopened.findViewById<Button>(R.id.settingCountPlus)
         val minus = reopened.findViewById<Button>(R.id.settingTimeMinus)
-        assertFalse("50문제에서는 + 불가", plus.isEnabled)
+        assertFalse("40문제에서는 + 불가", plus.isEnabled)
         assertFalse("3초에서는 − 불가", minus.isEnabled)
 
         plus.performClick()
         minus.performClick()
-        assertEquals("범위를 넘지 않는다", 50, Prefs(reopened).questionCount)
+        assertEquals("범위를 넘지 않는다", Prefs.COUNT_MAX, Prefs(reopened).questionCount)
         assertEquals(3, Prefs(reopened).timeLimitSeconds)
     }
 
+    /** v2.6: `기본값 복원` 하나가 `문제 리셋`으로 바뀌었고, 확인창에서 먼저 묻는다. */
     @Test
     fun restoreDefaultsKeepsGameSettingsAndSaysSo() {
         val activity = admin()
         Prefs(activity).questionCount = 40
         Prefs(activity).timeLimitSeconds = 15
 
-        activity.findViewById<Button>(R.id.restoreDefaults).performClick()
+        activity.findViewById<Button>(R.id.resetProblems).performClick()
         idle(0)
         val dialog = ShadowDialog.getLatestDialog()
         assertNotNull(dialog)

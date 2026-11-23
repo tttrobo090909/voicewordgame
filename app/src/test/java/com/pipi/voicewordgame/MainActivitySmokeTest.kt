@@ -36,7 +36,7 @@ class MainActivitySmokeTest {
         val activity = launch()
 
         val random = activity.findViewById<Button>(R.id.randomButton)
-        assertEquals("전체 무작위 (250)", random.text.toString())
+        assertEquals("전체 무작위 (425)", random.text.toString())
 
         val grid = activity.findViewById<LinearLayout>(R.id.categoryGrid)
         assertEquals(3, grid.childCount)
@@ -55,12 +55,12 @@ class MainActivitySmokeTest {
             }
         }
         assertEquals(
-            listOf("동물 (51)", "음식·과일 (50)", "탈것 (25)", "사물·집 (69)", "자연 (24)", "사람·몸 (31)"),
+            listOf("동물 (91)", "음식·과일 (91)", "탈것 (40)", "사물·집 (119)", "자연 (42)", "사람·몸 (42)"),
             labels
         )
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.5_"))
+        assertTrue(version.text.toString().startsWith("v2.6_"))
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()

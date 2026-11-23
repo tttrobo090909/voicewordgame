@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">말해봐요 by 피피</string>
     <string name="app_title">말해봐요!</string>
-    <string name="banner_line">그림을 보고 단어를 맞혀요!</string>
+    <string name="banner_line">그림을 보고\n단어를 맞혀요!</string>
 
     <string name="choose_problems">무엇을 맞출까요?</string>
     <string name="category_all">전체 무작위</string>
@@ -62,7 +62,7 @@
     <string name="admin_add">＋ 새 문제</string>
     <string name="admin_restore">기본값 복원</string>
     <string name="admin_restore_confirm_title">기본값으로 되돌릴까요?</string>
-    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 250문제로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
+    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 425문제로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
     <string name="admin_empty">조건에 맞는 문제가 없어요</string>
     <string name="admin_count">문제 %1$d개</string>
     <string name="admin_filter_all">전체</string>
@@ -101,7 +101,7 @@
 
     <!-- v2.3: 관리자 게임 설정 -->
     <string name="admin_settings_title">게임 설정</string>
-    <string name="admin_setting_questions">한 판 문제 수 (10~50)</string>
+    <string name="admin_setting_questions">한 판 문제 수 (10~40)</string>
     <string name="admin_setting_questions_value">%1$d문제</string>
     <string name="admin_setting_time">문제 제한시간 (3~20초)</string>
     <string name="admin_setting_time_value">%1$d초</string>
@@ -109,6 +109,35 @@
     <string name="admin_setting_plus">＋</string>
     <string name="admin_setting_minus_desc">줄이기</string>
     <string name="admin_setting_plus_desc">늘리기</string>
-    <string name="admin_setting_range_questions">10~50문제</string>
+    <string name="admin_setting_range_questions">10~40문제</string>
     <string name="admin_setting_range_time">3~20초</string>
+
+    <!-- v2.6: 카테고리 관리(기본 6개 + 최대 4개 추가) -->
+    <string name="admin_categories_title">카테고리</string>
+    <string name="admin_category_add">＋ 카테고리</string>
+    <string name="admin_category_hint">기본 6개에 최대 4개까지 더 만들 수 있어요 (이름을 눌러 수정)</string>
+    <string name="admin_category_full">카테고리는 최대 10개까지 만들 수 있어요</string>
+    <string name="admin_category_chip">%1$s (%2$d)</string>
+    <string name="admin_category_chip_emoji">%1$s %2$s (%3$d)</string>
+    <string name="category_title_new">새 카테고리</string>
+    <string name="category_title_edit">카테고리 수정</string>
+    <string name="category_ko">한글 이름</string>
+    <string name="category_ko_hint">예: 우리 가족</string>
+    <string name="category_en">영문 이름</string>
+    <string name="category_en_hint">예: My Family</string>
+    <string name="category_emoji">대표 이모지</string>
+    <string name="category_emoji_hint">🙂</string>
+    <string name="category_need_name">한글 이름을 적어 주세요</string>
+    <string name="category_delete_confirm_title">카테고리를 지울까요?</string>
+    <string name="category_delete_confirm_body">\'%1$s\' 카테고리와 그 안의 문제 %2$d개가 함께 지워져요.</string>
+    <string name="category_delete">카테고리 삭제</string>
+    <string name="category_builtin_no_delete">기본 카테고리는 지울 수 없어요</string>
+
+    <!-- v2.6: 기본값 복원을 둘로 나눔(둘 다 최종 확인창을 먼저 띄운다) -->
+    <string name="admin_reset_settings">설정 리셋</string>
+    <string name="admin_reset_settings_confirm_title">설정을 기본값으로 되돌릴까요?</string>
+    <string name="admin_reset_settings_confirm_body">한 판 문제 수 15문제, 문제 제한시간 9초로 돌아가요. 문제 목록·카테고리는 그대로 남아요.</string>
+    <string name="admin_reset_problems">문제 리셋</string>
+    <string name="admin_reset_problems_confirm_title">문제를 기본값으로 되돌릴까요?</string>
+    <string name="admin_reset_problems_confirm_body">직접 추가·수정한 문제와 추가한 카테고리는 모두 지워지고 기본 425문제·기본 카테고리 6개로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
 </resources>

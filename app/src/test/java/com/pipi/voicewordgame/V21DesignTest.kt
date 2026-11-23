@@ -69,7 +69,7 @@ class V21DesignTest {
             assertEquals(2, (grid.getChildAt(row) as LinearLayout).childCount)
         }
         assertEquals(
-            listOf("동물 (51)", "음식·과일 (50)", "탈것 (25)", "사물·집 (69)", "자연 (24)", "사람·몸 (31)"),
+            listOf("동물 (91)", "음식·과일 (91)", "탈것 (40)", "사물·집 (119)", "자연 (42)", "사람·몸 (42)"),
             (0 until 3).flatMap { row ->
                 (0 until 2).map { column ->
                     tile(activity, row, column).findViewById<TextView>(R.id.tileLabel).text.toString()
