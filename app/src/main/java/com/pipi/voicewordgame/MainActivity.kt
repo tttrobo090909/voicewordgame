@@ -55,7 +55,15 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.3 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ * 말해봐요! v2.4 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ *
+ * v2.4 (사용자 피드백 반영):
+ * - 게임 화면 통합 바의 병아리를 v2.2만큼 크게(44dp) 되돌려 바 높이를 채우고,
+ *   안내 문구는 바 한가운데에 배경처럼 둔 뒤 병아리가 글자 앞을 지나간다.
+ *   (상태별 배경색·가로줄 없음·위아래 여백 등 v2.3 기능은 그대로)
+ * - 시간 초과 때도 정답을 2번(천천히 → 보통) 읽고 두 번째 발음이 끝난 뒤 다음 문제로 넘어간다.
+ * - 상단 진행 표시를 `문제 3/15 · 정답 2`(현재 문제/이번 판 총 문제 · 맞힌 개수)로 바꾸고,
+ *   결과창에도 총 문제 수와 맞힌 개수를 함께 보여 준다.
  *
  * v2.3 (사용자 최종 확정 수정본):
  * - 관리자 설정의 `한 판 문제 수`(10~50, 기본 15)·`문제 제한시간`(3~20초, 기본 9초)을 게임에 반영한다.
@@ -89,9 +97,10 @@ class MainActivity : AppCompatActivity() {
         /** 첫 화면 병아리 바운스(위로 3dp)·기울기(±2.5도) — 과하지 않게. */
         const val CHICK_BOUNCE_DP = 3
 
-        /** 게임 화면 통합 타이머·상태 배너 높이(52~56dp 사이)와 병아리 크기(문구 줄 위 32dp). */
+        /** 게임 화면 통합 타이머·상태 배너 높이(52~56dp 사이)와 병아리 크기:
+         *  v2.4는 문구를 바 가운데에 깔고 병아리가 앞을 지나가도록 v2.2와 같은 큰 크기(44dp)를 쓴다. */
         const val TIMER_BANNER_DP = 54
-        const val TIMER_CHICK_DP = 32
+        const val TIMER_CHICK_DP = 44
 
         /** 타이머 병아리가 걷는 거리를 잴 수 없을 때(레이아웃 전) 쓰는 폴백. */
         const val TIMER_FALLBACK_TRAVEL_DP = 260
@@ -807,7 +816,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 제한시간이 지났다: 타이머·마이크를 즉시 멈추고 정답을 **한 번만** 읽어 준 뒤 다음 문제로 넘어간다.
+     * 제한시간이 지났다: 타이머·마이크를 즉시 멈추고, 정답을 **두 번**(천천히 → 보통) 읽어 준 뒤
+     * 두 번째 발음이 끝나면 다음 문제로 넘어간다(v2.4 — 정답·건너뛰기와 같은 방식).
      */
     private fun handleTimeUp() {
         if (!gameActive || !awaiting) return
@@ -821,7 +831,7 @@ class MainActivity : AppCompatActivity() {
         answerReveal.text = getString(R.string.time_up_line, word.text(lang))
         answerReveal.setTextColor(ContextCompat.getColor(this, R.color.bad))
         gameStatus(getString(R.string.time_up_banner), BannerKind.BAD)
-        speakOnceThenNext(word)
+        speakThenNext(word)
     }
 
     private fun startListening() {
@@ -961,17 +971,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** 시간 초과: 정답을 한 번만 읽고 다음 문제로 넘어간다. */
-    private fun speakOnceThenNext(word: Word) {
-        handler.removeCallbacks(nextRunnable)
-        micStatus.text = ""
-        speechLog.add(word.text(lang) to 1)
-        speaker.speakOnce(word.text(lang), langTag()) {
-            if (!gameActive) return@speakOnce
-            handler.postDelayed(nextRunnable, NEXT_DELAY_MS)
-        }
-    }
-
     private fun showHint() {
         if (!gameActive) return
         val word = session?.current ?: return
@@ -984,6 +983,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun finishGame(showSummary: Boolean) {
         val correct = session?.correctCount ?: 0
+        val served = session?.servedCount ?: 0
+        val planned = session?.plannedCount() ?: 0
         gameActive = false
         awaiting = false
         resumeNext = false
@@ -1002,24 +1003,37 @@ class MainActivity : AppCompatActivity() {
         hintBadge.visibility = View.GONE
         micStatus.text = ""
         particles.clear()
-        if (showSummary) showSummary(correct)
+        if (showSummary) showSummary(planned, served, correct)
     }
 
-    private fun showSummary(correct: Int) {
+    /** 결과창: 이번 판 총 문제 수와 맞힌 개수를 함께 보여 준다(중간에 그만두면 푼 문제 수도). */
+    private fun showSummary(planned: Int, served: Int, correct: Int) {
+        val body = if (served < planned) {
+            getString(R.string.summary_body_partial, planned, served, correct)
+        } else {
+            getString(R.string.summary_body, planned, correct)
+        }
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.summary_title)
-            .setMessage(getString(R.string.summary_body, correct))
+            .setMessage(body)
             .setPositiveButton(R.string.play_again) { _, _ -> startGame() }
             .setNegativeButton(R.string.close, null)
             .show()
     }
 
+    /** 상단 진행 표시: `문제 3/15 · 정답 2` (현재 문제 번호 / 이번 판 총 문제 수 · 맞힌 개수). */
     private fun updateScore() {
-        scoreText.text = getString(R.string.score_format, session?.correctCount ?: 0)
+        scoreText.text = getString(
+            R.string.score_format,
+            session?.servedCount ?: 0,
+            session?.plannedCount() ?: 0,
+            session?.correctCount ?: 0
+        )
     }
 
     private fun gameStatus(text: String, kind: BannerKind) {
         // v2.3: 별도 상태 바 대신 병아리가 걷는 타이머 배너 하나에 문구와 배경색을 입힌다.
+        // v2.4: 문구는 같은 배너 한가운데 그대로 두고, 병아리가 그 앞을 지나간다(레이어 순서는 레이아웃).
         gameStatus.text = text
         val background = when (kind) {
             BannerKind.INFO -> R.drawable.bg_banner_info

@@ -10,8 +10,9 @@
     <string name="category_format">%1$s (%2$d)</string>
 
     <string name="start_game">게임 시작!</string>
-    <string name="score_zero">맞힌 문제 0개</string>
-    <string name="score_format">맞힌 문제 %1$d개</string>
+    <string name="score_zero">문제 0/0 · 정답 0</string>
+    <!-- v2.4: 문제 번호 / 이번 판 총 문제 수 · 맞힌 개수 -->
+    <string name="score_format">문제 %1$d/%2$d · 정답 %3$d</string>
 
     <string name="lang_ko">한글</string>
     <string name="lang_en">ENG</string>
@@ -42,7 +43,9 @@
     <string name="stop_confirm_title">그만할까요?</string>
     <string name="stop_confirm_body">지금까지 맞힌 문제를 알려 줄게요.</string>
     <string name="summary_title">여기까지!</string>
-    <string name="summary_body">맞힌 문제 %1$d개예요</string>
+    <string name="summary_body">총 %1$d문제 중 %2$d개 맞혔어요</string>
+    <!-- 중간에 그만두었을 때: 총 문제 수 · 푼 문제 수 · 맞힌 개수 -->
+    <string name="summary_body_partial">총 %1$d문제 중 %2$d문제를 풀어 %3$d개 맞혔어요</string>
     <string name="play_again">한 번 더</string>
     <string name="continue_game">계속하기</string>
     <string name="need_questions">이 카테고리에 문제가 없어요. 다른 카테고리를 골라 주세요</string>
@@ -98,9 +101,9 @@
 
     <!-- v2.3: 관리자 게임 설정 -->
     <string name="admin_settings_title">게임 설정</string>
-    <string name="admin_setting_questions">한 판 문제 수</string>
+    <string name="admin_setting_questions">한 판 문제 수 (10~50)</string>
     <string name="admin_setting_questions_value">%1$d문제</string>
-    <string name="admin_setting_time">문제 제한시간</string>
+    <string name="admin_setting_time">문제 제한시간 (3~20초)</string>
     <string name="admin_setting_time_value">%1$d초</string>
     <string name="admin_setting_minus">−</string>
     <string name="admin_setting_plus">＋</string>

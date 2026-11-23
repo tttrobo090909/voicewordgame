@@ -12,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.security.MessageDigest
 
 /** 기본 250문제가 6개 카테고리에 빠짐없이 들어갔는지, 그림·힌트가 준비됐는지 확인한다. */
 @RunWith(RobolectricTestRunner::class)
@@ -151,5 +152,76 @@ class WordDataTest {
         val word = Word(1, "손", "Hand", 6, "words/1.webp", hint = "다섯 손가락")
         assertEquals("다섯 손가락", Hints.hint(word, "ko"))
         assertEquals("힌트: 다섯 손가락 (1글자)", Hints.badge(word, "ko"))
+    }
+
+    // ------------------------------------------------ v2.4: 250단어·그림 전면 정리
+
+    private fun md5(bytes: ByteArray): String =
+        MessageDigest.getInstance("MD5").digest(bytes).joinToString("") { "%02x".format(it) }
+
+    @Test
+    fun koreanAndEnglishWordsAreAllUniqueAcrossTwoHundredFifty() {
+        val words = assetBook().words
+        assertEquals(250, words.size)
+        assertEquals("한글 단어 중복 0건", 250, words.map { it.ko }.distinct().size)
+        assertEquals("영문 단어 중복 0건", 250, words.map { it.en.lowercase() }.distinct().size)
+    }
+
+    @Test
+    fun everyPictureFileIsActuallyDifferent() {
+        val words = assetBook().words
+        val hashes = words.map { word ->
+            val bytes = context.assets.open(word.image).use { it.readBytes() }
+            md5(bytes)
+        }
+        assertEquals("그림 250장이 모두 다른 파일", 250, hashes.distinct().size)
+    }
+
+    @Test
+    fun v24WordsMatchTheirPictures() {
+        val book = assetBook()
+        // B. 그림에 맞춰 단어 교체(13)
+        val renamed = mapOf(
+            "커피" to "Coffee", "크루아상" to "Croissant", "약" to "Medicine",
+            "서커스" to "Circus", "도시락" to "Lunchbox", "선물" to "Gift",
+            "돋보기" to "Magnifying glass", "코알라" to "Koala", "아보카도" to "Avocado",
+            "카레" to "Curry", "화산" to "Volcano", "회전목마" to "Carousel",
+            "성" to "Castle"
+        )
+        renamed.forEach { (ko, en) ->
+            val word = book.words.firstOrNull { it.ko == ko }
+            assertTrue("$ko 단어가 있어야 함", word != null)
+            assertEquals("$ko 의 영문", en, word!!.en)
+        }
+        // 옛 단어는 사라졌다.
+        listOf("카페", "베이커리", "약국", "동물원", "식당", "마트", "도서관", "매미", "오렌지", "국수", "호수", "놀이터", "유치원")
+            .forEach { old -> assertTrue("옛 단어 $old 는 없다", book.words.none { it.ko == old }) }
+
+        // A. 3D 그림을 새로 만든 14개도 그대로 있다.
+        listOf("선풍기", "냉장고", "세탁기", "청소기", "불도저", "포크레인", "열기구",
+            "치마", "이불", "책상", "그네", "경찰서", "소방서", "강")
+            .forEach { ko -> assertTrue("$ko 단어가 있어야 함", book.words.any { it.ko == ko }) }
+    }
+
+    @Test
+    fun duplicatePairsFromBeforeAreGoneWithoutLosingTheirPictures() {
+        val book = assetBook()
+        // 배(과일) / 배(배) → 배 · 보트, 눈(눈) → 눈송이, 풀(풀처럼 보이던 로션 병) → 로션
+        assertEquals("Pear", book.words.first { it.ko == "배" }.en)
+        assertEquals("Boat", book.words.first { it.ko == "보트" }.en)
+        assertEquals("Snowflake", book.words.first { it.ko == "눈송이" }.en)
+        assertEquals("Eye", book.words.first { it.ko == "눈" }.en)
+        assertEquals("Grass", book.words.first { it.ko == "풀" }.en)
+        assertEquals("Lotion", book.words.first { it.ko == "로션" }.en)
+    }
+
+    @Test
+    fun newSingleLetterWordsStillHideBehindChoseong() {
+        val book = assetBook()
+        listOf("약" to "ㅇ", "성" to "ㅅ", "강" to "ㄱ").forEach { (ko, choseong) ->
+            val word = book.words.first { it.ko == ko }
+            assertEquals("$ko 힌트", choseong, Hints.hint(word, "ko"))
+            assertEquals("힌트: $choseong (1글자)", Hints.badge(word, "ko"))
+        }
     }
 }

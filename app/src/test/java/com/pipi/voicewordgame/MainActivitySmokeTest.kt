@@ -60,7 +60,7 @@ class MainActivitySmokeTest {
         )
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.3_"))
+        assertTrue(version.text.toString().startsWith("v2.4_"))
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()
@@ -82,12 +82,12 @@ class MainActivitySmokeTest {
 
         assertEquals(View.VISIBLE, activity.findViewById<LinearLayout>(R.id.gameScreen).visibility)
         assertNotNull(activity.findViewById<ImageView>(R.id.wordImage).drawable)
-        assertEquals("맞힌 문제 0개", activity.findViewById<TextView>(R.id.scoreText).text.toString())
+        assertEquals("문제 1/15 · 정답 0", activity.findViewById<TextView>(R.id.scoreText).text.toString())
 
         activity.findViewById<Button>(R.id.answerButton).performClick()
         val reveal = activity.findViewById<TextView>(R.id.answerReveal).text.toString()
         assertTrue(reveal.startsWith("정답!"))
-        assertEquals("맞힌 문제 1개", activity.findViewById<TextView>(R.id.scoreText).text.toString())
+        assertEquals("문제 1/15 · 정답 1", activity.findViewById<TextView>(R.id.scoreText).text.toString())
     }
 
     @Test

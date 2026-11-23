@@ -235,7 +235,8 @@
             android:paddingBottom="4dp"
             android:visibility="gone">
 
-            <!-- v2.3: 병아리 타이머 바 하나에 상태 안내 문구·배경색을 합쳤다(54dp). -->
+            <!-- v2.3: 병아리 타이머 바 하나에 상태 안내 문구·배경색을 합쳤다(54dp).
+                 v2.4: 병아리를 v2.2만큼 크게 되돌리고, 문구는 바 한가운데 배경처럼 둔다. -->
             <FrameLayout
                 android:id="@+id/timerBanner"
                 android:layout_width="match_parent"
@@ -248,29 +249,27 @@
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp">
 
-                <!-- 상태 안내 문구: 병아리가 걷는 같은 바 아래쪽에 또렷하게 뜬다. -->
+                <!-- v2.4: 상태 안내 문구는 바 정중앙에 배경처럼 깔린다(병아리가 글자 앞을 지나간다). -->
                 <TextView
                     android:id="@+id/gameStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:layout_gravity="bottom"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:maxLines="1"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:paddingBottom="2dp"
                     android:text="@string/game_hint_line"
                     android:textColor="@color/ink"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- 병아리가 바 위쪽을 따라 왼쪽 끝에서 오른쪽 끝으로 걸어간다. -->
+                <!-- v2.4: 병아리는 v2.2만큼 크게(44dp) 바 높이를 채우고, 문구보다 앞 레이어에서
+                     왼쪽 끝에서 오른쪽 끝으로 걸어간다. (자식 순서상 문구 다음 = 위에 그려짐) -->
                 <ImageView
                     android:id="@+id/timerChick"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="top|start"
-                    android:layout_marginTop="1dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical|start"
                     android:contentDescription="@string/app_name"
                     android:scaleType="fitCenter"
                     android:src="@drawable/chick_mascot" />

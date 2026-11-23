@@ -1,8 +1,10 @@
 package com.pipi.voicewordgame
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.pipi.voicewordgame.admin.AdminActivity
@@ -43,10 +45,16 @@ class ScreenshotTest {
         capture(main, File(outDir, "02_game.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-2-게임화면.png"))
 
-        // 03 관리자 화면 — 맨 위 게임 설정(한 판 문제 수·문제 제한시간) 포함.
+        // 03 v2.4에서 새로 그린 3D 그림(선풍기)이 게임 카드에 놓인 모습.
+        val fan = BitmapFactory.decodeStream(main.assets.open("words/190.webp"))
+        main.findViewById<ImageView>(R.id.wordImage).setImageBitmap(fan)
+        capture(main, File(outDir, "03_new_art.png"))
+        capture(main, File(downloads, "malhaebwayo-v$stamp-3-새그림.png"))
+
+        // 04 관리자 화면 — 맨 위 게임 설정(한 판 문제 수·문제 제한시간) 포함.
         val admin = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
-        capture(admin, File(outDir, "03_admin.png"))
-        capture(admin, File(downloads, "malhaebwayo-v$stamp-3-관리자설정.png"))
+        capture(admin, File(outDir, "04_admin.png"))
+        capture(admin, File(downloads, "malhaebwayo-v$stamp-4-관리자설정.png"))
 
         println("screens: ${outDir.absolutePath} , ${downloads.absolutePath}")
     }

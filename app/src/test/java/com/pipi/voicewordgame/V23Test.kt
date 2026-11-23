@@ -136,7 +136,7 @@ class V23Test {
         assertTrue("6초 전에는 계속 진행", activity.isRoundTimerRunning)
         idle(200)
         assertFalse("6초가 지나면 시간 초과", activity.isRoundTimerRunning)
-        assertEquals(1, activity.speechLogForTest.last().second)
+        assertEquals("v2.4: 시간 초과도 2번 발음", 2, activity.speechLogForTest.last().second)
     }
 
     @Test
@@ -169,7 +169,7 @@ class V23Test {
         assertTrue(dialog.isShowing)
         val labels = texts(dialog.window!!.decorView)
         assertTrue("결과창 제목: $labels", labels.contains("여기까지!"))
-        assertTrue("맞힌 문제 수: $labels", labels.any { it == "맞힌 문제 15개예요" })
+        assertTrue("결과창의 총 문제 수·맞힌 개수: $labels", labels.any { it == "총 15문제 중 15개 맞혔어요" })
         assertTrue(labels.contains("닫기"))
         assertTrue(labels.contains("한 번 더"))
         assertEquals(
@@ -181,7 +181,7 @@ class V23Test {
             View.VISIBLE,
             activity.findViewById<LinearLayout>(R.id.setupScreen).visibility
         )
-        assertEquals("점수도 15개", "맞힌 문제 15개", activity.findViewById<TextView>(R.id.scoreText).text.toString())
+        assertEquals("진행 표시도 15/15·정답 15", "문제 15/15 · 정답 15", activity.findViewById<TextView>(R.id.scoreText).text.toString())
     }
 
     // -------------------------------------------------- 2) 첫 화면 병아리

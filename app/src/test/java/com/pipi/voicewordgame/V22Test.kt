@@ -135,7 +135,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.3_"))
+        assertTrue(version.text.toString().startsWith("v2.4_"))
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -188,7 +188,7 @@ class V22Test {
     }
 
     @Test
-    fun roundStartsTheTimerAndNineSecondsReadsAnswerOnceThenMovesOn() {
+    fun roundStartsTheTimerAndNineSecondsReadsAnswerTwiceThenMovesOn() {
         val activity = launch()
         activity.findViewById<Button>(R.id.startButton).performClick()
         val reveal = activity.findViewById<TextView>(R.id.answerReveal)
@@ -210,10 +210,10 @@ class V22Test {
         assertFalse("9초가 지나면 정답 대기 종료", activity.isAwaiting)
         assertFalse("타이머 병아리도 멈춘다", activity.isTimerWalking)
         assertEquals("시간 초과! 정답은 ${word.ko}", reveal.text.toString())
-        assertEquals("시간 초과는 정답을 1번만 읽는다", 1, activity.speechLogForTest.last().second)
-        assertEquals("시간 초과는 점수에 들어가지 않는다", "맞힌 문제 0개", score.text.toString())
+        assertEquals("v2.4: 시간 초과에도 정답을 2번 읽는다", 2, activity.speechLogForTest.last().second)
+        assertEquals("시간 초과는 점수에 들어가지 않는다", "문제 1/15 · 정답 0", score.text.toString())
 
-        // 한 번 읽고 나면 다음 문제로 넘어간다.
+        // 두 번 다 읽고 나면 다음 문제로 넘어간다.
         idle(600)
         assertEquals("무엇일까요?", reveal.text.toString())
         assertTrue("다음 문제는 타이머를 다시 건다", activity.isRoundTimerRunning)
@@ -245,7 +245,7 @@ class V22Test {
         // 원래 8초 타이머가 살아 있었다면 이 사이에 시간 초과 발음이 남았을 것이다.
         idle(8000)
         assertTrue("시간 초과는 일어나지 않는다", activity.speechLogForTest.none { it.second == 1 })
-        assertEquals("맞힌 문제 1개", activity.findViewById<TextView>(R.id.scoreText).text.toString())
+        assertEquals("다음 문제로 넘어간 뒤에도 정답 1", "문제 2/15 · 정답 1", activity.findViewById<TextView>(R.id.scoreText).text.toString())
     }
 
     @Test
@@ -276,7 +276,7 @@ class V22Test {
         assertTrue(dialog.isShowing)
         val labels = texts(dialog.window!!.decorView)
         assertTrue("결과창 제목: $labels", labels.contains("여기까지!"))
-        assertTrue("맞힌 문제 수: $labels", labels.any { it.startsWith("맞힌 문제 1개") })
+        assertTrue("결과창의 총 문제 수·맞힌 개수: $labels", labels.any { it == "총 15문제 중 2문제를 풀어 1개 맞혔어요" })
         assertTrue("닫기 버튼", labels.contains("닫기"))
         assertTrue("한 번 더 버튼", labels.contains("한 번 더"))
         assertFalse("확인창(그만할까요?)은 없다", labels.any { it.contains("그만할까요") })
@@ -324,7 +324,7 @@ class V22Test {
         assertTrue("남은 시간 전에는 시간 초과 없음", activity.isRoundTimerRunning)
         idle(600)
         assertFalse("남은 시간이 지나면 시간 초과", activity.isRoundTimerRunning)
-        assertEquals(1, activity.speechLogForTest.last().second)
+        assertEquals("v2.4: 시간 초과도 2번 발음", 2, activity.speechLogForTest.last().second)
     }
 
     @Test
@@ -374,7 +374,7 @@ class V22Test {
         assertEquals("건너뛰기", activity.findViewById<Button>(R.id.skipButton).text.toString())
         assertEquals("정답 처리", activity.findViewById<Button>(R.id.answerButton).text.toString())
         assertEquals("그만하기", activity.findViewById<Button>(R.id.stopButton).text.toString())
-        assertEquals("맞힌 문제 0개", activity.findViewById<TextView>(R.id.scoreText).text.toString())
+        assertEquals("문제 1/15 · 정답 0", activity.findViewById<TextView>(R.id.scoreText).text.toString())
 
         activity.findViewById<Button>(R.id.answerButton).performClick()
         assertEquals("정답! ${word.en}", reveal.text.toString())
@@ -419,10 +419,10 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV23() {
+    fun versionIsV24() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertTrue("버전 표기 v2.3_...: $version", version.startsWith("v2.3_"))
-        assertTrue(version.length >= "v2.3_1123_0000".length)
+        assertTrue("버전 표기 v2.4_...: $version", version.startsWith("v2.4_"))
+        assertTrue(version.length >= "v2.4_1123_0000".length)
     }
 }

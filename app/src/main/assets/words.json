@@ -1,6 +1,6 @@
 {
  "schema": 2,
- "appVersion": "2.0",
+ "appVersion": "2.4",
  "wordCount": 250,
  "categories": [
   {
@@ -566,8 +566,8 @@
   },
   {
    "id": 44,
-   "ko": "매미",
-   "en": "Cicada",
+   "ko": "코알라",
+   "en": "Koala",
    "category": 1,
    "image": "words/044.webp",
    "synKo": [],
@@ -702,8 +702,8 @@
   },
   {
    "id": 56,
-   "ko": "오렌지",
-   "en": "Orange",
+   "ko": "아보카도",
+   "en": "Avocado",
    "category": 2,
    "image": "words/056.webp",
    "synKo": [],
@@ -1016,16 +1016,15 @@
   },
   {
    "id": 83,
-   "ko": "국수",
-   "en": "Noodles",
+   "ko": "카레",
+   "en": "Curry",
    "category": 2,
    "image": "words/083.webp",
    "synKo": [
-    "칼국수",
-    "잔치국수"
+    "카레라이스"
    ],
    "synEn": [
-    "noodle"
+    "curry rice"
    ],
    "hint": ""
   },
@@ -1370,13 +1369,13 @@
   },
   {
    "id": 110,
-   "ko": "배",
+   "ko": "보트",
    "en": "Boat",
    "category": 3,
    "image": "words/110.webp",
    "synKo": [
-    "보트",
-    "선박"
+    "배",
+    "여객선"
    ],
    "synEn": [
     "ship"
@@ -1646,16 +1645,16 @@
   },
   {
    "id": 131,
-   "ko": "눈",
-   "en": "Snow",
+   "ko": "눈송이",
+   "en": "Snowflake",
    "category": 5,
    "image": "words/131.webp",
    "synKo": [
-    "함박눈",
-    "눈송이"
+    "눈",
+    "함박눈"
    ],
    "synEn": [
-    "snowflake"
+    "snow"
    ],
    "hint": ""
   },
@@ -1754,13 +1753,11 @@
   },
   {
    "id": 139,
-   "ko": "호수",
-   "en": "Lake",
+   "ko": "화산",
+   "en": "Volcano",
    "category": 5,
    "image": "words/139.webp",
-   "synKo": [
-    "못"
-   ],
+   "synKo": [],
    "synEn": [],
    "hint": ""
   },
@@ -1822,10 +1819,11 @@
    "category": 5,
    "image": "words/144.webp",
    "synKo": [
-    "잔디"
+    "잔디",
+    "풀잎"
    ],
    "synEn": [
-    "plant"
+    "lawn"
    ],
    "hint": ""
   },
@@ -1935,9 +1933,7 @@
    "en": "Glasses",
    "category": 6,
    "image": "words/152.webp",
-   "synKo": [
-    "돋보기"
-   ],
+   "synKo": [],
    "synEn": [
     "spectacles"
    ],
@@ -2615,16 +2611,15 @@
   },
   {
    "id": 206,
-   "ko": "풀",
-   "en": "Glue",
+   "ko": "로션",
+   "en": "Lotion",
    "category": 4,
    "image": "words/206.webp",
    "synKo": [
-    "접착제",
-    "본드"
+    "핸드크림"
    ],
    "synEn": [
-    "paste"
+    "moisturizer"
    ],
    "hint": ""
   },
@@ -2870,15 +2865,15 @@
   },
   {
    "id": 227,
-   "ko": "유치원",
-   "en": "Kindergarten",
+   "ko": "성",
+   "en": "Castle",
    "category": 4,
    "image": "words/227.webp",
    "synKo": [
-    "어린이집"
+    "성곽"
    ],
    "synEn": [
-    "preschool"
+    "fortress"
    ],
    "hint": ""
   },
@@ -2896,16 +2891,15 @@
   },
   {
    "id": 229,
-   "ko": "약국",
-   "en": "Pharmacy",
+   "ko": "약",
+   "en": "Medicine",
    "category": 4,
    "image": "words/229.webp",
    "synKo": [
-    "약",
     "알약"
    ],
    "synEn": [
-    "medicine"
+    "pill"
    ],
    "hint": ""
   },
@@ -2947,24 +2941,27 @@
   },
   {
    "id": 233,
-   "ko": "놀이터",
-   "en": "Playground",
+   "ko": "회전목마",
+   "en": "Carousel",
    "category": 4,
    "image": "words/233.webp",
    "synKo": [
-    "놀이동산"
+    "목마"
    ],
-   "synEn": [],
+   "synEn": [
+    "merry-go-round"
+   ],
    "hint": ""
   },
   {
    "id": 234,
-   "ko": "동물원",
-   "en": "Zoo",
+   "ko": "서커스",
+   "en": "Circus",
    "category": 4,
    "image": "words/234.webp",
    "synKo": [
-    "사파리"
+    "곡예",
+    "써커스"
    ],
    "synEn": [],
    "hint": ""
@@ -2983,72 +2980,66 @@
   },
   {
    "id": 236,
-   "ko": "도서관",
-   "en": "Library",
+   "ko": "돋보기",
+   "en": "Magnifying glass",
    "category": 4,
    "image": "words/236.webp",
    "synKo": [
-    "책방"
+    "확대경"
    ],
-   "synEn": [],
+   "synEn": [
+    "magnifier"
+   ],
    "hint": ""
   },
   {
    "id": 237,
-   "ko": "마트",
-   "en": "Mart",
+   "ko": "선물",
+   "en": "Gift",
    "category": 4,
    "image": "words/237.webp",
-   "synKo": [
-    "슈퍼",
-    "편의점"
-   ],
+   "synKo": [],
    "synEn": [
-    "supermarket"
+    "present"
    ],
    "hint": ""
   },
   {
    "id": 238,
-   "ko": "식당",
-   "en": "Restaurant",
+   "ko": "도시락",
+   "en": "Lunchbox",
    "category": 4,
    "image": "words/238.webp",
    "synKo": [
-    "음식점",
-    "레스토랑"
+    "도시락통",
+    "런치박스"
    ],
    "synEn": [
-    "diner"
+    "lunch box",
+    "bento"
    ],
    "hint": ""
   },
   {
    "id": 239,
-   "ko": "카페",
-   "en": "Cafe",
+   "ko": "커피",
+   "en": "Coffee",
    "category": 4,
    "image": "words/239.webp",
    "synKo": [
-    "커피숍"
+    "커피잔"
    ],
-   "synEn": [
-    "coffee shop"
-   ],
+   "synEn": [],
    "hint": ""
   },
   {
    "id": 240,
-   "ko": "베이커리",
-   "en": "Bakery",
+   "ko": "크루아상",
+   "en": "Croissant",
    "category": 4,
    "image": "words/240.webp",
-   "synKo": [
-    "빵집"
-   ],
-   "synEn": [
-    "bread shop"
-   ],
+   "synKo": [],
+   "synEn": [],
    "hint": ""
   },
   {
