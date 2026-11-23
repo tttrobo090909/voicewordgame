@@ -45,9 +45,9 @@ class ScreenshotTest {
         capture(main, File(outDir, "02_game.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-2-게임화면.png"))
 
-        // 03 v2.4에서 새로 그린 3D 그림(선풍기)이 게임 카드에 놓인 모습.
-        val fan = BitmapFactory.decodeStream(main.assets.open("words/190.webp"))
-        main.findViewById<ImageView>(R.id.wordImage).setImageBitmap(fan)
+        // 03 v2.5에서 새로 그린 3D 그림(경찰서)이 게임 카드에 놓인 모습.
+        val newArt = BitmapFactory.decodeStream(main.assets.open("words/230.webp"))
+        main.findViewById<ImageView>(R.id.wordImage).setImageBitmap(newArt)
         capture(main, File(outDir, "03_new_art.png"))
         capture(main, File(downloads, "malhaebwayo-v$stamp-3-새그림.png"))
 

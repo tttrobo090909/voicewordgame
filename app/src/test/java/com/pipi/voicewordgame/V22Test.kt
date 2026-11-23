@@ -135,7 +135,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.4_"))
+        assertTrue(version.text.toString().startsWith("v2.5_"))
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -419,10 +419,10 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV24() {
+    fun versionIsV25() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertTrue("버전 표기 v2.4_...: $version", version.startsWith("v2.4_"))
-        assertTrue(version.length >= "v2.4_1123_0000".length)
+        assertTrue("버전 표기 v2.5_...: $version", version.startsWith("v2.5_"))
+        assertTrue(version.length >= "v2.5_1123_0000".length)
     }
 }

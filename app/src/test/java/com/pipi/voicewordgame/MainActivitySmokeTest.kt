@@ -60,7 +60,7 @@ class MainActivitySmokeTest {
         )
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.4_"))
+        assertTrue(version.text.toString().startsWith("v2.5_"))
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()

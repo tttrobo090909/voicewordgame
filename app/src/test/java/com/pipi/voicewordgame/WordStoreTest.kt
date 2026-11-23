@@ -33,7 +33,7 @@ class WordStoreTest {
         val store = WordStore(context)
         store.load()
         assertEquals(250, store.book.words.size)
-        assertEquals("2.4", store.book.appVersion)
+        assertEquals("2.5", store.book.appVersion)
     }
 
     @Test
