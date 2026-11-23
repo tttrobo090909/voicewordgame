@@ -248,26 +248,29 @@
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp">
 
-                <!-- 상태 안내 문구: 병아리가 걸어가는 같은 바 가운데에 뜬다. -->
+                <!-- 상태 안내 문구: 병아리가 걷는 같은 바 아래쪽에 또렷하게 뜬다. -->
                 <TextView
                     android:id="@+id/gameStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="22dp"
+                    android:layout_gravity="bottom"
                     android:gravity="center"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:paddingBottom="2dp"
                     android:text="@string/game_hint_line"
                     android:textColor="@color/ink"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- 병아리가 왼쪽 끝에서 오른쪽 끝으로 걸어간다. -->
+                <!-- 병아리가 바 위쪽을 따라 왼쪽 끝에서 오른쪽 끝으로 걸어간다. -->
                 <ImageView
                     android:id="@+id/timerChick"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical|start"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="top|start"
+                    android:layout_marginTop="1dp"
                     android:contentDescription="@string/app_name"
                     android:scaleType="fitCenter"
                     android:src="@drawable/chick_mascot" />

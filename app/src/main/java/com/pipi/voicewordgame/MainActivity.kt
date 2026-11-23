@@ -89,9 +89,9 @@ class MainActivity : AppCompatActivity() {
         /** 첫 화면 병아리 바운스(위로 3dp)·기울기(±2.5도) — 과하지 않게. */
         const val CHICK_BOUNCE_DP = 3
 
-        /** 게임 화면 통합 타이머·상태 배너 높이(52~56dp 사이)와 병아리 크기(문구 가독성을 위해 36dp). */
+        /** 게임 화면 통합 타이머·상태 배너 높이(52~56dp 사이)와 병아리 크기(문구 줄 위 32dp). */
         const val TIMER_BANNER_DP = 54
-        const val TIMER_CHICK_DP = 36
+        const val TIMER_CHICK_DP = 32
 
         /** 타이머 병아리가 걷는 거리를 잴 수 없을 때(레이아웃 전) 쓰는 폴백. */
         const val TIMER_FALLBACK_TRAVEL_DP = 260
@@ -733,7 +733,7 @@ class MainActivity : AppCompatActivity() {
         startListening()
     }
 
-    // ---------------------------------------------------------------- 8초 타이머
+    // ---------------------------------------------------------------- 제한시간 타이머
 
     /** 문제를 시작할 때: 설정한 제한시간을 걸고 타이머 병아리를 왼쪽 끝에서 걷게 한다. */
     private fun startRoundTimer() {
@@ -1070,7 +1070,7 @@ class MainActivity : AppCompatActivity() {
     internal val isAwaiting: Boolean
         get() = awaiting
 
-    /** 8초 제한 타이머가 돌고 있는지. */
+    /** 제한시간 타이머가 돌고 있는지. */
     internal val isRoundTimerRunning: Boolean
         get() = roundTimerOn
 
