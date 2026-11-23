@@ -42,7 +42,7 @@ import org.robolectric.shadows.ShadowDialog
  * 5) `전체 무작위` 제거 → 카테고리 다중 선택
  * 6) 문제 제한시간 기본 10초
  * 7) 관리자: 카테고리 박스 삭제 + 필터 줄에 `+ 카테고리`·문제 수·롱클릭 수정
- * 8) 첫 화면 하단 `v2.7` 만 표시
+ * 8) 첫 화면 하단 `v2.8` 만 표시
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
@@ -104,7 +104,7 @@ class V27Test {
     // -------------------------------------------------- 1) 배너 한 줄 + 병아리 왼쪽 여백
 
     @Test
-    fun bannerIsOneLineEighteenSpRightAlignedWithoutLineBreak() {
+    fun bannerIsOneLineExpandedSizeRightAlignedWithoutLineBreak() {
         val main = mainActivity()
         val banner = main.findViewById<TextView>(R.id.bannerText)
         assertEquals("줄바꿈 없는 한 줄", "그림을 보고 단어를 맞혀요!", banner.text.toString())
@@ -114,13 +114,16 @@ class V27Test {
             Gravity.RIGHT,
             banner.gravity and Gravity.HORIZONTAL_GRAVITY_MASK
         )
-        val sp18 = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP, 18f, main.resources.displayMetrics
+        val sp205 = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, 20.5f, main.resources.displayMetrics
         )
-        val sp19 = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP, 19f, main.resources.displayMetrics
+        val sp21 = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, 21f, main.resources.displayMetrics
         )
-        assertTrue("18~19sp 사이", banner.textSize >= sp18 - 0.5f && banner.textSize <= sp19 + 0.5f)
+        assertTrue(
+            "v2.8: 20.5~21sp(18sp 대비 약 +15%)",
+            banner.textSize >= sp205 - 0.5f && banner.textSize <= sp21 + 0.5f
+        )
         assertTrue("배너 문구는 굵게", banner.typeface.style and android.graphics.Typeface.BOLD != 0)
     }
 
@@ -459,11 +462,11 @@ class V27Test {
     // -------------------------------------------------- 8) 하단 버전 표기
 
     @Test
-    fun footerShowsOnlyV27() {
+    fun footerShowsOnlyV28() {
         val main = mainActivity()
-        assertEquals("v2.7", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.7", BuildConfig.VERSION_SHORT)
-        assertTrue("빌드 이름은 2.7_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.7_"))
+        assertEquals("v2.8", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.8", BuildConfig.VERSION_SHORT)
+        assertTrue("빌드 이름은 2.8_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.8_"))
         assertTrue(
             "versionCode 는 기존 11232258 보다 커야 덮어쓰기 설치된다",
             BuildConfig.VERSION_CODE > 11232258

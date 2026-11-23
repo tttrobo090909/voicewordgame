@@ -115,7 +115,7 @@ class V22Test {
         val sp18 = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP, 18f, activity.resources.displayMetrics
         )
-        assertTrue("v2.7 배너 문구는 18sp", banner.textSize >= sp18 - 0.5f)
+        assertTrue("v2.8 배너 문구는 18sp 이상", banner.textSize >= sp18 - 0.5f)
         assertTrue("배너 문구는 굵게", banner.typeface.style and android.graphics.Typeface.BOLD != 0)
         assertEquals("한 줄(줄바꿈 없음)", "그림을 보고 단어를 맞혀요!", banner.text.toString())
         assertEquals("한 줄만 보여 준다", 1, banner.maxLines)
@@ -139,7 +139,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertEquals("v2.7", version.text.toString())
+        assertEquals("v2.8", version.text.toString())
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -422,11 +422,11 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV27Only() {
+    fun versionIsV28Only() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertEquals("날짜·시간 없이 v2.7", "v2.7", version)
-        assertTrue("빌드 버전은 2.7_...", BuildConfig.VERSION_NAME.startsWith("2.7_"))
+        assertEquals("날짜·시간 없이 v2.8", "v2.8", version)
+        assertTrue("빌드 버전은 2.8_...", BuildConfig.VERSION_NAME.startsWith("2.8_"))
         assertTrue("versionCode 는 기존 11232258 보다 크다", BuildConfig.VERSION_CODE > 11232258)
     }
 }

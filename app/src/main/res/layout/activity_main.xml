@@ -137,7 +137,7 @@
                             android:text="@string/banner_line"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/ink"
-                            android:textSize="18sp"
+                            android:textSize="20.7sp"
                             android:textStyle="bold" />
 
                         <ImageView
