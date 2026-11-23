@@ -118,7 +118,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="10dp">
 
-                    <!-- 슬림 배너: 작은 병아리 + 한 줄 안내 (v2.1: 높이 96→116dp, 병아리 92dp) -->
+                    <!-- 슬림 배너: 작은 병아리 + 한 줄 안내 -->
                     <LinearLayout
                         android:id="@+id/slimBanner"
                         android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                         android:layout_marginTop="18dp"
                         android:text="@string/choose_problems" />
 
-                    <!-- v2.1: 6개 카테고리를 먼저 두고, 전체 무작위는 맨 아래에 둔다. -->
+                    <!-- 6개 카테고리를 먼저 두고, 전체 무작위는 맨 아래에 둔다. -->
                     <LinearLayout
                         android:id="@+id/categoryGrid"
                         android:layout_width="match_parent"
@@ -176,7 +176,7 @@
                         android:text="@string/category_all"
                         android:textSize="18sp" />
 
-                    <!-- v2.2: 게임 시작은 화면 맨 아래가 아니라 전체 무작위 바로 아래에 둔다. -->
+                    <!-- 게임 시작은 화면 맨 아래가 아니라 전체 무작위 바로 아래에 둔다(v2.2). -->
                     <Button
                         android:id="@+id/startButton"
                         style="@style/Widget.CutePrimary"
@@ -203,6 +203,23 @@
                         android:layout_marginTop="2dp"
                         android:text="@string/footer_note"
                         android:textSize="10sp" />
+
+                    <!-- v2.3: 개인정보처리방침(작은 글씨) — 구구단 부모 확인 잠금 뒤에 열린다 -->
+                    <TextView
+                        android:id="@+id/privacyLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="6dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/privacy_link"
+                        android:textColor="@color/coral_deep"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
@@ -214,62 +231,53 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:visibility="gone">
 
-            <!-- v2.2: 8초 시간 제한을 병아리 걷기로 보여 주는 슬림 배너(50dp, 첫 화면 116dp 의 절반보다 작다) -->
+            <!-- v2.3: 병아리 타이머 바 하나에 상태 안내 문구·배경색을 합쳤다(54dp). -->
             <FrameLayout
                 android:id="@+id/timerBanner"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="54dp"
                 android:layout_marginStart="14dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="14dp"
-                android:background="@drawable/bg_banner_slim"
+                android:background="@drawable/bg_banner_info"
                 android:clipToPadding="false"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp">
 
-                <!-- 병아리가 걸어가는 길: 남은 시간이 줄어드는 것을 한 줄로 보여 준다 -->
-                <View
+                <!-- 상태 안내 문구: 병아리가 걸어가는 같은 바 가운데에 뜬다. -->
+                <TextView
+                    android:id="@+id/gameStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/bg_timer_track" />
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/game_hint_line"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
+                <!-- 병아리가 왼쪽 끝에서 오른쪽 끝으로 걸어간다. -->
                 <ImageView
                     android:id="@+id/timerChick"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center_vertical|start"
                     android:contentDescription="@string/app_name"
                     android:scaleType="fitCenter"
                     android:src="@drawable/chick_mascot" />
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/gameStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="14dp"
-                android:background="@drawable/bg_banner_info"
-                android:gravity="center"
-                android:minHeight="40dp"
-                android:paddingStart="12dp"
-                android:paddingTop="6dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="6dp"
-                android:text="@string/game_hint_line"
-                android:textColor="@color/ink"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="14dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="14dp"
                 android:layout_weight="1">
 
@@ -311,7 +319,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginEnd="14dp"
                 android:gravity="center"
                 android:minHeight="34dp"
@@ -324,7 +332,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="12dp"
                 android:orientation="horizontal">
 
@@ -370,8 +378,8 @@
                 android:id="@+id/micStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
                 android:textColor="@color/ink_soft"
                 android:textSize="11sp"

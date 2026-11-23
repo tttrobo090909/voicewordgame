@@ -1,6 +1,7 @@
 package com.pipi.voicewordgame
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Typeface
 import android.animation.ValueAnimator
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,6 +22,7 @@ import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -52,16 +55,16 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.2 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금.
+ * 말해봐요! v2.3 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
  *
- * v2.2 (대중 공개용 수정본):
- * - 첫 화면 병아리가 이동 방향에 맞춰 몸을 돌리고(scaleX ±1), 바운스·기울기와 함께 아장아장 걷는다.
- * - 배너 문구를 20sp 굵게 키우고, `게임 시작!` 버튼을 `전체 무작위` 바로 아래로 옮겼다(하단 표기는 그대로).
- * - 게임 화면 상단에 50dp 타이머 배너를 두고, 병아리가 7.7초 동안 왼쪽 끝 → 오른쪽 끝으로 걷는다.
- *   문제 시작 후 8초가 지나면 시간 초과: 타이머·마이크를 멈추고 정답을 **1번** 읽은 뒤 다음 문제로 간다.
- * - `그만하기`는 확인창 없이 바로 끝내고 결과창만 한 번 띄운다.
- * - 게임 중에도 제목 3연속 탭으로 관리자에 들어갈 수 있고, 그동안 타이머·마이크·TTS 를 멈췄다가 돌아오면 잇는다.
- * - ENG 모드는 문제 단어·카테고리 타일·음성인식·정답 발음만 영어이고 화면 문구는 한국어 그대로다.
+ * v2.3 (사용자 최종 확정 수정본):
+ * - 관리자 설정의 `한 판 문제 수`(10~50, 기본 15)·`문제 제한시간`(3~20초, 기본 9초)을 게임에 반영한다.
+ *   한 판에 설정한 문제 수만큼만 내고(남은 단어가 적으면 있는 만큼만), 다 풀면 결과창을 띄운다.
+ * - 첫 화면 병아리는 좌우 반전 없이(scaleX = 1) 3.6초에 한 왕복으로 잔잔하게 흔들린다.
+ * - 게임 화면: 병아리 뒤 가로선을 없애고, 상태 안내 바를 타이머 배너 하나로 합쳤다.
+ *   병아리가 걸어가는 그 바에 상태별 배경색과 안내 문구가 함께 뜬다. 그림 카드는 그대로, 위아래 여백은 넓혔다.
+ * - 첫 화면 맨 아래 `개인정보처리방침` 링크(구구단 부모 확인 잠금)와 앱 내 요약 다이얼로그 폴백.
+ * - v2.2 기능(ENG 2번 정책, `그만하기` 1회 팝업, 게임 중 제목 3탭 관리자, INTERNET 권한 없음)은 그대로.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -79,16 +82,16 @@ class MainActivity : AppCompatActivity() {
         /** 카테고리 타일 높이(v2.1: 68dp → 78dp, 약 +15%). */
         const val TILE_HEIGHT_DP = 78
 
-        /** 첫 화면 병아리: 좌우 ±10dp, 1.4초에 한 왕복(그 사이 4걸음). */
+        /** 첫 화면 병아리: 좌우 ±10dp, 3.6초에 한 왕복(그 사이 4걸음) — 잔잔하게. */
         const val CHICK_WOBBLE_DP = 10
-        const val CHICK_WOBBLE_CYCLE_MS = 1400L
+        const val CHICK_WOBBLE_CYCLE_MS = 3600L
 
-        /** 첫 화면 병아리 바운스(위로 4dp) — 걷는 느낌. */
-        const val CHICK_BOUNCE_DP = 4
+        /** 첫 화면 병아리 바운스(위로 3dp)·기울기(±2.5도) — 과하지 않게. */
+        const val CHICK_BOUNCE_DP = 3
 
-        /** 게임 화면 타이머 배너 높이(첫 화면 116dp 의 절반보다 작다)와 병아리 크기. */
-        const val TIMER_BANNER_DP = 50
-        const val TIMER_CHICK_DP = 40
+        /** 게임 화면 통합 타이머·상태 배너 높이(52~56dp 사이)와 병아리 크기(문구 가독성을 위해 36dp). */
+        const val TIMER_BANNER_DP = 54
+        const val TIMER_CHICK_DP = 36
 
         /** 타이머 병아리가 걷는 거리를 잴 수 없을 때(레이아웃 전) 쓰는 폴백. */
         const val TIMER_FALLBACK_TRAVEL_DP = 260
@@ -96,8 +99,8 @@ class MainActivity : AppCompatActivity() {
         /** 타이머 병아리 바운스(위로 3dp). */
         const val TIMER_BOUNCE_DP = 3
 
-        /** 한 문제의 제한 시간(8초) — 타이머 병아리는 7.7초에 오른쪽 끝에 닿는다. */
-        const val ROUND_LIMIT_MS = ChickWalk.LIMIT_MS
+        /** 제한시간 설정이 없을 때 쓰는 기본값(9초). 실제 값은 관리자 설정에서 온다. */
+        const val ROUND_LIMIT_MS = ChickWalk.DEFAULT_LIMIT_MS
 
         /** 타이머 병아리 걷기 갱신 간격(약 30fps). 남은 시간에서 위치를 계산해 그린다. */
         const val TIMER_TICK_MS = 32L
@@ -118,8 +121,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var versionText: TextView
     private lateinit var bannerText: TextView
     private lateinit var chickImage: ImageView
-    private lateinit var timerBanner: View
+    private lateinit var timerBanner: FrameLayout
     private lateinit var timerChick: ImageView
+    private lateinit var privacyLink: TextView
     private lateinit var randomButton: Button
     private lateinit var categoryGrid: LinearLayout
     private lateinit var startButton: Button
@@ -152,8 +156,8 @@ class MainActivity : AppCompatActivity() {
                 stopTimerWalk()
                 return
             }
-            val elapsed = ROUND_LIMIT_MS - (roundDeadline - SystemClock.elapsedRealtime())
-            applyTimerWalk(ChickWalk.timerProgress(elapsed.coerceAtLeast(0L)))
+            val elapsed = roundLimitMs - (roundDeadline - SystemClock.elapsedRealtime())
+            applyTimerWalk(ChickWalk.timerProgress(elapsed.coerceAtLeast(0L), roundLimitMs))
             handler.postDelayed(this, TIMER_TICK_MS)
         }
     }
@@ -174,6 +178,12 @@ class MainActivity : AppCompatActivity() {
     private var categoryId = 0
     private var errorStreak = 0
     private var startFailures = 0
+
+    /** 이번 판의 한 문제 제한시간(ms) — 관리자 설정에서 읽는다(기본 9초). */
+    private var roundLimitMs = ROUND_LIMIT_MS
+
+    /** 지금 타이머 배너에 입혀진 상태 배경(테스트·캡처용). */
+    private var bannerBackgroundRes = R.drawable.bg_banner_info
 
     // ---------------------------------------------------------------- lifecycle
 
@@ -289,6 +299,7 @@ class MainActivity : AppCompatActivity() {
         answerButton = findViewById(R.id.answerButton)
         stopButton = findViewById(R.id.stopButton)
         micStatus = findViewById(R.id.micStatus)
+        privacyLink = findViewById(R.id.privacyLink)
         particles = findViewById(R.id.particles)
 
         // 제목 3번 탭은 숨은 관리자 입구다 — 리플·포커스·소리 같은 시각·청각 반응을 남기지 않는다.
@@ -309,6 +320,7 @@ class MainActivity : AppCompatActivity() {
         // v2.2: 확인창 없이 바로 끝내고 결과창만 한 번 띄운다.
         stopButton.setOnClickListener { finishGame(true) }
         titleText.setOnClickListener { onTitleTapped() }
+        privacyLink.setOnClickListener { onPrivacyTapped() }
         setupScroll.setOnScrollChangeListener { _, _, _, _, _ ->
             handler.removeCallbacks(setupMessageReset)
         }
@@ -329,8 +341,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 첫 화면 병아리가 아장아장 걷는다(v2.2): 좌우 ±10dp 이동하면서
-     * 이동 방향에 맞춰 몸을 돌리고(scaleX ±1), 걸음마다 바운스(위로 4dp)와 기울기(±5도)를 준다.
+     * 첫 화면 병아리가 잔잔하게 흔들린다(v2.3): 좌우 ±10dp 이동, 3.6초에 한 왕복.
+     * 몸은 항상 정방향(scaleX = 1)이라 명암이 좌우로 뒤집히지 않고, 바운스(3dp)·기울기(±2.5도)도 부드럽다.
      */
     private fun startChickWobble() {
         if (wobbleActive) return
@@ -348,11 +360,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun applySwayPose(progress: Float) {
         chickImage.translationX = ChickWalk.swayX(progress, dp(CHICK_WOBBLE_DP).toFloat())
-        chickImage.scaleX = ChickWalk.facingForSway(progress)
+        chickImage.scaleX = ChickWalk.swayScaleX()
         chickImage.translationY =
             ChickWalk.bounce(progress, ChickWalk.SWAY_STEPS, dp(CHICK_BOUNCE_DP).toFloat())
         chickImage.rotation =
-            ChickWalk.tilt(progress, ChickWalk.SWAY_STEPS, ChickWalk.TILT_MAX_DEG)
+            ChickWalk.tilt(progress, ChickWalk.SWAY_STEPS, ChickWalk.SWAY_TILT_MAX_DEG)
     }
 
     private fun stopChickWobble() {
@@ -541,10 +553,24 @@ class MainActivity : AppCompatActivity() {
 
     /** 게임 중에도 제목 3연속 탭으로 관리자 잠금을 열 수 있다(v2.2). */
     private fun onTitleTapped() {
-        if (tapCounter.tap(SystemClock.elapsedRealtime())) showGuguLock()
+        if (tapCounter.tap(SystemClock.elapsedRealtime())) {
+            showGuguLock {
+                adminOpening = true
+                startActivity(Intent(this, AdminActivity::class.java))
+            }
+        }
     }
 
-    private fun showGuguLock() {
+    /** 첫 화면 맨 아래 `개인정보처리방침`: 부모 확인 잠금을 통과하면 웹 문서를 연다. */
+    private fun onPrivacyTapped() {
+        showGuguLock { openPrivacyPolicy() }
+    }
+
+    /**
+     * 부모 확인(구구단) 잠금. 맞히면 [onUnlocked] 를 실행한다.
+     * 관리자 진입과 개인정보처리방침 열기가 같은 잠금을 쓴다.
+     */
+    private fun showGuguLock(onUnlocked: () -> Unit) {
         val question = Gugu.next(Random())
         val view = layoutInflater.inflate(R.layout.dialog_gugu, null)
         val questionText = view.findViewById<TextView>(R.id.guguQuestion)
@@ -553,7 +579,7 @@ class MainActivity : AppCompatActivity() {
         questionText.text = question.text
         error.visibility = View.GONE
 
-        // 잠금창이 떠 있는 동안에는 8초 타이머·마이크·TTS 를 멈춘다.
+        // 잠금창이 떠 있는 동안에는 제한시간 타이머·마이크·TTS 를 멈춘다.
         pauseForAdmin()
 
         val dialog = MaterialAlertDialogBuilder(this)
@@ -567,9 +593,8 @@ class MainActivity : AppCompatActivity() {
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (Gugu.isCorrect(question, input.text.toString())) {
-                    adminOpening = true
                     dialog.dismiss()
-                    startActivity(Intent(this, AdminActivity::class.java))
+                    onUnlocked()
                 } else {
                     error.visibility = View.VISIBLE
                     error.text = getString(R.string.gugu_wrong)
@@ -586,6 +611,32 @@ class MainActivity : AppCompatActivity() {
         }
         dialog.show()
         input.requestFocus()
+    }
+
+    /**
+     * 개인정보처리방침 웹 문서를 브라우저로 연다.
+     * 브라우저가 없거나 열기 실패하면 앱 안의 요약 다이얼로그로 대신 보여 준다.
+     */
+    private fun openPrivacyPolicy() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_url)))
+        val opened = try {
+            startActivity(intent)
+            true
+        } catch (e: ActivityNotFoundException) {
+            false
+        } catch (e: SecurityException) {
+            false
+        }
+        if (!opened) showPrivacyFallback()
+    }
+
+    /** 브라우저를 열 수 없을 때 보여 주는 앱 내 개인정보처리방침 요약. */
+    internal fun showPrivacyFallback() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.privacy_title)
+            .setMessage(R.string.privacy_summary)
+            .setPositiveButton(R.string.close, null)
+            .show()
     }
 
     /** 관리자 잠금창·관리자 화면에 들어가는 동안 게임을 멈춰 둔다. */
@@ -609,6 +660,8 @@ class MainActivity : AppCompatActivity() {
         store.load()
         buildCategoryButtons()
         updateCategorySelection()
+        // 관리자 화면에서 설정을 바꿨을 수 있으니 제한시간을 다시 읽는다.
+        roundLimitMs = prefs.timeLimitSeconds * 1000L
         if (awaiting) {
             resumeRoundTimer()
             scheduleRestart(300)
@@ -626,7 +679,8 @@ class MainActivity : AppCompatActivity() {
             setupMessage(getString(R.string.need_questions))
             return
         }
-        session = GameSession().apply { setPool(pool) }
+        session = GameSession().apply { setPool(pool, prefs.questionCount) }
+        roundLimitMs = prefs.timeLimitSeconds * 1000L
         gameActive = true
         awaiting = false
         resumeNext = false
@@ -654,7 +708,8 @@ class MainActivity : AppCompatActivity() {
         val active = session ?: return
         val word = active.next()
         if (word == null) {
-            finishGame(false)
+            // 설정한 문제 수를 다 풀었다 — 자동으로 끝내고 결과창을 띄운다(v2.3).
+            finishGame(true)
             return
         }
         awaiting = true
@@ -680,13 +735,13 @@ class MainActivity : AppCompatActivity() {
 
     // ---------------------------------------------------------------- 8초 타이머
 
-    /** 문제를 시작할 때: 8초 제한을 걸고 타이머 병아리를 왼쪽 끝에서 걷게 한다. */
+    /** 문제를 시작할 때: 설정한 제한시간을 걸고 타이머 병아리를 왼쪽 끝에서 걷게 한다. */
     private fun startRoundTimer() {
         handler.removeCallbacks(roundTimeout)
         roundRemainingMs = -1L
         roundTimerOn = true
-        roundDeadline = SystemClock.elapsedRealtime() + ROUND_LIMIT_MS
-        handler.postDelayed(roundTimeout, ROUND_LIMIT_MS)
+        roundDeadline = SystemClock.elapsedRealtime() + roundLimitMs
+        handler.postDelayed(roundTimeout, roundLimitMs)
         beginTimerWalk(0f)
     }
 
@@ -694,7 +749,7 @@ class MainActivity : AppCompatActivity() {
     private fun pauseRoundTimer() {
         if (!roundTimerOn) return
         roundTimerOn = false
-        roundRemainingMs = (roundDeadline - SystemClock.elapsedRealtime()).coerceIn(0L, ROUND_LIMIT_MS)
+        roundRemainingMs = (roundDeadline - SystemClock.elapsedRealtime()).coerceIn(0L, roundLimitMs)
         handler.removeCallbacks(roundTimeout)
         stopTimerWalk()
     }
@@ -702,13 +757,13 @@ class MainActivity : AppCompatActivity() {
     /** 멈춰 둔 남은 시간부터 타이머를 다시 잇는다. */
     private fun resumeRoundTimer() {
         if (!gameActive || !awaiting || roundTimerOn) return
-        val remaining = if (roundRemainingMs in 1..ROUND_LIMIT_MS) roundRemainingMs else ROUND_LIMIT_MS
+        val remaining = if (roundRemainingMs in 1..roundLimitMs) roundRemainingMs else roundLimitMs
         roundRemainingMs = -1L
         roundTimerOn = true
         roundDeadline = SystemClock.elapsedRealtime() + remaining
         handler.removeCallbacks(roundTimeout)
         handler.postDelayed(roundTimeout, remaining)
-        beginTimerWalk(ChickWalk.timerProgress(ROUND_LIMIT_MS - remaining))
+        beginTimerWalk(ChickWalk.timerProgress(roundLimitMs - remaining, roundLimitMs))
     }
 
     /** 타이머를 완전히 내린다(정답·건너뛰기·시간 초과·게임 종료). */
@@ -752,7 +807,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 8초가 지났다: 타이머·마이크를 즉시 멈추고 정답을 **한 번만** 읽어 준 뒤 다음 문제로 넘어간다.
+     * 제한시간이 지났다: 타이머·마이크를 즉시 멈추고 정답을 **한 번만** 읽어 준 뒤 다음 문제로 넘어간다.
      */
     private fun handleTimeUp() {
         if (!gameActive || !awaiting) return
@@ -964,15 +1019,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun gameStatus(text: String, kind: BannerKind) {
+        // v2.3: 별도 상태 바 대신 병아리가 걷는 타이머 배너 하나에 문구와 배경색을 입힌다.
         gameStatus.text = text
-        gameStatus.setBackgroundResource(
-            when (kind) {
-                BannerKind.INFO -> R.drawable.bg_banner_info
-                BannerKind.GOOD -> R.drawable.bg_banner_good
-                BannerKind.BAD -> R.drawable.bg_banner_bad
-                BannerKind.WAIT -> R.drawable.bg_banner_wait
-            }
-        )
+        val background = when (kind) {
+            BannerKind.INFO -> R.drawable.bg_banner_info
+            BannerKind.GOOD -> R.drawable.bg_banner_good
+            BannerKind.BAD -> R.drawable.bg_banner_bad
+            BannerKind.WAIT -> R.drawable.bg_banner_wait
+        }
+        bannerBackgroundRes = background
+        timerBanner.setBackgroundResource(background)
         gameStatus.visibility = View.VISIBLE
     }
 
@@ -986,6 +1042,22 @@ class MainActivity : AppCompatActivity() {
 
     /** 첫 화면 병아리 자세를 특정 진행도로 맞춘다(애니메이션 프레임 대신). */
     internal fun applySwayPoseForTest(progress: Float) = applySwayPose(progress)
+
+    /** 지금 판의 한 문제 제한시간(ms). */
+    internal val roundLimitForTest: Long
+        get() = roundLimitMs
+
+    /** 지금 타이머 배너에 입혀진 상태 배경 리소스. */
+    internal val bannerBackgroundForTest: Int
+        get() = bannerBackgroundRes
+
+    /** 이번 판에 낼 문제 수(설정값, 남은 단어가 적으면 그 만큼). */
+    internal val plannedQuestions: Int
+        get() = session?.plannedCount() ?: 0
+
+    /** 지금까지 낸 문제 수. */
+    internal val servedQuestions: Int
+        get() = session?.servedCount ?: 0
 
     /** 타이머 병아리 자세를 특정 진행도로 맞춘다. */
     internal fun applyTimerPoseForTest(progress: Float) = applyTimerWalk(progress)

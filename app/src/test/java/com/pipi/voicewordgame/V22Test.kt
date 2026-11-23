@@ -30,7 +30,7 @@ import java.time.Duration
 /**
  * v2.2 대중 공개용 수정본 검증:
  * 아장아장 걷는 병아리(방향 반전·바운스·기울기), 배너 글씨 확대, `게임 시작!` 위치,
- * 게임 화면 슬림 병아리 타이머(8초 제한·시간 초과 1회 발음), 그만하기 팝업 1회,
+ * 게임 화면 통합 병아리 타이머(기본 9초 제한·시간 초과 1회 발음), 그만하기 팝업 1회,
  * 게임 중 제목 3탭 관리자(타이머 일시정지·재개), ENG 2번 정책, INTERNET 권한 제거.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -56,36 +56,53 @@ class V22Test {
         return out
     }
 
+    /** 게임 화면에서 상태 안내(문구+배경)를 담는 바의 개수 — v2.3은 타이머 배너 하나뿐이다. */
+    private fun countStatusBars(root: View): Int {
+        var count = 0
+        fun walk(view: View) {
+            if (view.id == R.id.gameStatus) count++
+            if (view is ViewGroup) for (i in 0 until view.childCount) walk(view.getChildAt(i))
+        }
+        walk(root)
+        return count
+    }
+
     // -------------------------------------------------- 1) 첫 화면 병아리 아장아장
 
     @Test
-    fun firstScreenChickTurnsWithDirectionAndBouncesAndTilts() {
+    fun firstScreenChickStaysUprightAndSwaysGently() {
         val activity = launch()
         val chick = activity.findViewById<ImageView>(R.id.chickImage)
         val swayPx = px(activity, MainActivity.CHICK_WOBBLE_DP).toFloat()
 
-        // 오른쪽으로 가는 구간: 진행 방향(+), 오른쪽(+10dp) 이동, 바운스·기울기 있음.
+        // 오른쪽으로 가는 구간: 정방향(scaleX = 1), 오른쪽(+10dp) 이동, 바운스·기울기는 잔잔하게.
         activity.applySwayPoseForTest(0.20f)
-        assertEquals("오른쪽으로 갈 때는 scaleX = 1", 1f, chick.scaleX, 0.001f)
+        assertEquals("오른쪽으로 갈 때도 scaleX = 1", 1f, chick.scaleX, 0.001f)
         assertTrue("오른쪽으로 이동", chick.translationX > swayPx * 0.9f)
 
         activity.applySwayPoseForTest(0.05f)
         assertTrue("걷는 동안 위아래 바운스가 들어간다", chick.translationY < -0.5f)
+        assertTrue(
+            "바운스는 4dp보다 잔잔하다: ${chick.translationY}",
+            chick.translationY >= -px(activity, 4).toFloat()
+        )
         assertNotEquals("걸음마다 기울기가 들어간다", 0f, chick.rotation, 0.01f)
+        assertTrue("기울기도 과하지 않다(±3도 이하): ${chick.rotation}", kotlin.math.abs(chick.rotation) <= 3f)
 
-        // 왼쪽으로 돌아오는 구간: 몸이 반대로 뒤집히고(-1) 왼쪽(-)으로 이동한다.
+        // 왼쪽으로 돌아오는 구간에도 몸은 뒤집히지 않고(명암이 좌우로 바뀌지 않음) 왼쪽(-)으로 이동한다.
         activity.applySwayPoseForTest(0.70f)
-        assertEquals("왼쪽으로 갈 때는 scaleX = -1", -1f, chick.scaleX, 0.001f)
+        assertEquals("왼쪽으로 갈 때도 scaleX = 1", 1f, chick.scaleX, 0.001f)
         assertTrue("왼쪽으로 이동", chick.translationX < -swayPx * 0.9f)
 
         // 왕복 중간(0.5)에서는 가운데.
         activity.applySwayPoseForTest(0.5f)
         assertEquals(0f, chick.translationX, 0.01f)
-        assertEquals(-1f, chick.scaleX, 0.001f)
+        assertEquals(1f, chick.scaleX, 0.001f)
 
-        // 애니메이션 자체는 계속 살아 있다.
+        // 애니메이션 자체는 계속 살아 있고, 한 왕복은 3.6초로 느긋하다.
         assertTrue(activity.isChickWobbling)
         assertEquals(4, com.pipi.voicewordgame.ui.ChickWalk.SWAY_STEPS.toInt())
+        assertEquals(3600L, MainActivity.CHICK_WOBBLE_CYCLE_MS)
     }
 
     @Test
@@ -118,32 +135,31 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertTrue(version.text.toString().startsWith("v2.2_"))
+        assertTrue(version.text.toString().startsWith("v2.3_"))
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
-            notes.any { it.contains("Noto Emoji(CC-BY 4.0)") && it.contains("소리는 기기 밖으로 보내지 않아요") }
+            notes.any { it.contains("Noto Emoji(CC-BY 4.0)") && it.contains("음성은 녹음·저장하지 않아요") }
         )
     }
 
     // -------------------------------------------------- 3) 게임 화면 슬림 병아리 타이머
 
     @Test
-    fun gameScreenHasSlimChickTimerBannerRightUnderTheTopBar() {
+    fun gameScreenHasOneIntegratedTimerAndStatusBannerRightUnderTheTopBar() {
         val activity = launch()
         val gameScreen = activity.findViewById<LinearLayout>(R.id.gameScreen)
         val banner = activity.findViewById<FrameLayout>(R.id.timerBanner)
         val chick = activity.findViewById<ImageView>(R.id.timerChick)
+        val status = activity.findViewById<TextView>(R.id.gameStatus)
 
         assertEquals("타이머 배너가 게임 화면 맨 위", 0, gameScreen.indexOfChild(banner))
         val heightDp = banner.layoutParams.height / activity.resources.displayMetrics.density
-        assertTrue("배너 높이 48~52dp (첫 화면 116dp 의 절반보다 작다): $heightDp", heightDp in 48f..52f)
-        assertTrue(
-            "안내 배너보다 위",
-            gameScreen.indexOfChild(banner) < gameScreen.indexOfChild(activity.findViewById(R.id.gameStatus))
-        )
+        assertTrue("배너 높이 52~56dp: $heightDp", heightDp in 52f..56f)
         assertNotNull("배너 안에 병아리가 있다", chick.parent)
         assertEquals(banner, chick.parent)
+        assertEquals("상태 안내 문구도 같은 배너 안에 있다(v2.3 통합)", banner, status.parent)
+        assertEquals("상태 바는 하나만", 1, countStatusBars(activity.window.decorView))
     }
 
     @Test
@@ -165,29 +181,33 @@ class V22Test {
 
         activity.applyTimerPoseForTest(1f)
         assertEquals("끝은 오른쪽 끝", travel, chick.translationX, 1f)
-        assertTrue("8초 안에 걷는 시간은 7.7초", com.pipi.voicewordgame.ui.ChickWalk.WALK_MS < 8000L)
+        assertTrue(
+            "9초 제한 안에 걷는 시간은 8.7초",
+            com.pipi.voicewordgame.ui.ChickWalk.walkMs(9000L).let { it > 0 && it < 9000L }
+        )
     }
 
     @Test
-    fun roundStartsTheTimerAndEightSecondsReadsAnswerOnceThenMovesOn() {
+    fun roundStartsTheTimerAndNineSecondsReadsAnswerOnceThenMovesOn() {
         val activity = launch()
         activity.findViewById<Button>(R.id.startButton).performClick()
         val reveal = activity.findViewById<TextView>(R.id.answerReveal)
         val score = activity.findViewById<TextView>(R.id.scoreText)
 
-        assertTrue("문제가 시작되면 8초 타이머가 돈다", activity.isRoundTimerRunning)
+        assertEquals("기본 제한시간은 9초", 9000L, activity.roundLimitForTest)
+        assertTrue("문제가 시작되면 제한시간 타이머가 돈다", activity.isRoundTimerRunning)
         assertTrue(activity.isTimerWalking)
         assertTrue(activity.isAwaiting)
         val word = activity.currentWord!!
         assertEquals("무엇일까요?", reveal.text.toString())
 
-        idle(7900)
-        assertTrue("8초 전에는 시간 초과가 아니다", activity.isRoundTimerRunning)
+        idle(8900)
+        assertTrue("9초 전에는 시간 초과가 아니다", activity.isRoundTimerRunning)
         assertEquals("무엇일까요?", reveal.text.toString())
 
         idle(200)
-        assertFalse("8초가 지나면 타이머 정지", activity.isRoundTimerRunning)
-        assertFalse("8초가 지나면 정답 대기 종료", activity.isAwaiting)
+        assertFalse("9초가 지나면 타이머 정지", activity.isRoundTimerRunning)
+        assertFalse("9초가 지나면 정답 대기 종료", activity.isAwaiting)
         assertFalse("타이머 병아리도 멈춘다", activity.isTimerWalking)
         assertEquals("시간 초과! 정답은 ${word.ko}", reveal.text.toString())
         assertEquals("시간 초과는 정답을 1번만 읽는다", 1, activity.speechLogForTest.last().second)
@@ -206,7 +226,7 @@ class V22Test {
         activity.findViewById<Button>(R.id.startButton).performClick()
         activity.findViewById<TextView>(R.id.micStatus).text = "듣고 있어요"
 
-        idle(8100)
+        idle(9000)
         assertEquals("시간 초과 시 마이크 안내도 지운다", "", activity.findViewById<TextView>(R.id.micStatus).text.toString())
     }
 
@@ -286,7 +306,7 @@ class V22Test {
         assertFalse("잠금창이 떠 있는 동안 타이머 정지", activity.isRoundTimerRunning)
         assertTrue(
             "남은 시간을 기억한다: ${activity.pausedRoundRemainingMs}",
-            activity.pausedRoundRemainingMs in 6000L..6800L
+            activity.pausedRoundRemainingMs in 7000L..7800L
         )
 
         // 잠금창이 떠 있는 동안에는 8초가 지나도 시간 초과가 나지 않는다.
@@ -372,7 +392,7 @@ class V22Test {
         activity.findViewById<Button>(R.id.startButton).performClick()
         val word = activity.currentWord!!
 
-        idle(8100)
+        idle(9100)
         assertEquals(
             "시간 초과! 정답은 ${word.en}",
             activity.findViewById<TextView>(R.id.answerReveal).text.toString()
@@ -399,10 +419,10 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV22() {
+    fun versionIsV23() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertTrue("버전 표기 v2.2_...: $version", version.startsWith("v2.2_"))
-        assertTrue(version.length >= "v2.2_1123_0000".length)
+        assertTrue("버전 표기 v2.3_...: $version", version.startsWith("v2.3_"))
+        assertTrue(version.length >= "v2.3_1123_0000".length)
     }
 }

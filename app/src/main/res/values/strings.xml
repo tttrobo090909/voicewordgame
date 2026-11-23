@@ -59,7 +59,7 @@
     <string name="admin_add">＋ 새 문제</string>
     <string name="admin_restore">기본값 복원</string>
     <string name="admin_restore_confirm_title">기본값으로 되돌릴까요?</string>
-    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 250문제로 돌아가요.</string>
+    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 250문제로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
     <string name="admin_empty">조건에 맞는 문제가 없어요</string>
     <string name="admin_count">문제 %1$d개</string>
     <string name="admin_filter_all">전체</string>
@@ -80,8 +80,7 @@
     <string name="save">저장</string>
     <string name="cancel">취소</string>
     <string name="close">닫기</string>
-    <string name="back">뒤로</string>
-    <string name="edit">수정</string>
+    <string name="back">뒤로</string>    <string name="edit">수정</string>
     <string name="delete">삭제</string>
     <string name="delete_confirm_title">문제를 지울까요?</string>
     <string name="delete_confirm_body">\'%1$s\' 문제를 목록에서 지워요.</string>
@@ -89,5 +88,24 @@
     <string name="syn_label">유사어: %1$s</string>
     <string name="no_hint_meta">힌트: 첫 글자 자동</string>
 
-    <string name="footer_note">그림은 Noto Emoji(CC-BY 4.0) 일러스트를 씁니다 · 소리는 기기 밖으로 보내지 않아요(음성인식 제외)</string>
+    <string name="footer_note">그림은 Noto Emoji(CC-BY 4.0) 일러스트를 씁니다 · 음성은 녹음·저장하지 않아요 (기기 음성인식만 사용)</string>
+
+    <!-- v2.3: 개인정보처리방침 링크·폴백 -->
+    <string name="privacy_link">개인정보처리방침</string>
+    <string name="privacy_title">개인정보처리방침</string>
+    <string name="privacy_url">https://tttrobo090909.github.io/voicewordgame/privacy.html</string>
+    <string name="privacy_summary">말해봐요! (Say It!)\n시행일 2026-11-23\n\n· 회원가입·로그인·추적이 없고, 수집하거나 전송하는 개인정보가 없어요.\n· 마이크(RECORD_AUDIO)는 게임 중 정답 확인에만 잠깐 쓰고, 앱 자체로는 녹음·저장하지 않아요. 음성인식은 Android 기기의 Google 음성인식 서비스가 맡고, 그 처리는 기기 설정에 따른 그 서비스 정책을 따라요.\n· 관리자 화면에서 고친 단어·사진과 게임 설정(언어·문제 수·제한시간)만 기기 안에 저장해요.\n· 광고도, 제3자 제공도 없어요.\n· 만 13세 미만 어린이의 개인정보는 수집하지 않으며, 관리자 화면과 외부 링크는 보호자 확인(구구단 잠금) 뒤에 열려요.\n\n문의: pppmaker09@gmail.com</string>
+
+    <!-- v2.3: 관리자 게임 설정 -->
+    <string name="admin_settings_title">게임 설정</string>
+    <string name="admin_setting_questions">한 판 문제 수</string>
+    <string name="admin_setting_questions_value">%1$d문제</string>
+    <string name="admin_setting_time">문제 제한시간</string>
+    <string name="admin_setting_time_value">%1$d초</string>
+    <string name="admin_setting_minus">−</string>
+    <string name="admin_setting_plus">＋</string>
+    <string name="admin_setting_minus_desc">줄이기</string>
+    <string name="admin_setting_plus_desc">늘리기</string>
+    <string name="admin_setting_range_questions">10~50문제</string>
+    <string name="admin_setting_range_time">3~20초</string>
 </resources>

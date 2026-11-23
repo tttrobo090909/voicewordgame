@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 게임 화면 타이머 배너에서 병아리가 걸어가는 길(가는 선) -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#F0DCAA" />
-    <corners android:radius="2dp" />
-</shape>

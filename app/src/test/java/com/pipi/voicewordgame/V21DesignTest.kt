@@ -178,9 +178,9 @@ class V21DesignTest {
         val chick = activity.findViewById<ImageView>(R.id.chickImage)
 
         assertTrue("첫 화면에서 병아리가 흔들린다", activity.isChickWobbling)
-        // 흔들림 폭과 한 왕복 시간은 코드 상수로 고정한다(±10dp, 1.4초).
+        // 흔들림 폭과 한 왕복 시간은 코드 상수로 고정한다(v2.3: ±10dp, 3.6초에 한 왕복).
         assertEquals(10, MainActivity.CHICK_WOBBLE_DP)
-        assertEquals(1400L, MainActivity.CHICK_WOBBLE_CYCLE_MS)
+        assertEquals(3600L, MainActivity.CHICK_WOBBLE_CYCLE_MS)
         assertEquals("가운데에서 시작", 0f, chick.translationX, 0.01f)
     }
 

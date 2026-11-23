@@ -34,11 +34,12 @@ import com.pipi.voicewordgame.game.Hints
 import com.pipi.voicewordgame.game.Word
 import com.pipi.voicewordgame.game.WordStore
 import com.pipi.voicewordgame.util.ImageStore
+import com.pipi.voicewordgame.util.Prefs
 import java.io.ByteArrayOutputStream
 import kotlin.math.max
 
 /**
- * 숨은 관리자 화면: 문제 검색·카테고리 필터·추가·수정(그림/정답/힌트/유사어)·삭제·기본값 복원.
+ * 숨은 관리자 화면: 게임 설정(문제 수·제한시간)·문제 검색·카테고리 필터·추가·수정(그림/정답/힌트/유사어)·삭제·기본값 복원.
  * 모든 변경은 [WordStore] 가 앱 내부 JSON 파일에 즉시 저장하고, 게임 화면에 바로 반영된다.
  */
 class AdminActivity : AppCompatActivity() {
@@ -46,9 +47,14 @@ class AdminActivity : AppCompatActivity() {
     private companion object {
         /** 시스템 바 인셋 위에 더하는 상·하단 여유. */
         const val EXTRA_VERTICAL_DP = 14
+
+        /** 한 번에 조절되는 값(문제 수는 5문제씩, 제한시간은 1초씩). */
+        const val COUNT_STEP = 5
+        const val TIME_STEP = 1
     }
 
     private lateinit var store: WordStore
+    private lateinit var prefs: Prefs
     private lateinit var adapter: ProblemAdapter
     private lateinit var list: RecyclerView
     private lateinit var empty: TextView
@@ -85,6 +91,7 @@ class AdminActivity : AppCompatActivity() {
 
         store = WordStore(this)
         store.load()
+        prefs = Prefs(this)
 
         list = findViewById(R.id.problemList)
         empty = findViewById(R.id.adminEmpty)
@@ -102,6 +109,7 @@ class AdminActivity : AppCompatActivity() {
 
         buildFilters()
         refresh()
+        setupGameSettings()
 
         findViewById<Button>(R.id.closeAdmin).setOnClickListener { finish() }
         findViewById<Button>(R.id.addProblem).setOnClickListener { openEditor(null) }
@@ -115,6 +123,62 @@ class AdminActivity : AppCompatActivity() {
                 refresh()
             }
         })
+    }
+
+    // ---------------------------------------------------------------- 게임 설정
+
+    /** 한 판 문제 수(10~50, 기본 15)·문제 제한시간(3~20초, 기본 9초)을 조절해 바로 저장한다. */
+    private fun setupGameSettings() {
+        val countMinus = findViewById<Button>(R.id.settingCountMinus)
+        val countPlus = findViewById<Button>(R.id.settingCountPlus)
+        val timeMinus = findViewById<Button>(R.id.settingTimeMinus)
+        val timePlus = findViewById<Button>(R.id.settingTimePlus)
+
+        countMinus.setOnClickListener {
+            prefs.questionCount = prefs.questionCount - COUNT_STEP
+            updateGameSettingLabels()
+        }
+        countPlus.setOnClickListener {
+            prefs.questionCount = prefs.questionCount + COUNT_STEP
+            updateGameSettingLabels()
+        }
+        timeMinus.setOnClickListener {
+            prefs.timeLimitSeconds = prefs.timeLimitSeconds - TIME_STEP
+            updateGameSettingLabels()
+        }
+        timePlus.setOnClickListener {
+            prefs.timeLimitSeconds = prefs.timeLimitSeconds + TIME_STEP
+            updateGameSettingLabels()
+        }
+        updateGameSettingLabels()
+    }
+
+    /** 설정 값을 화면에 보여 주고, 범위 끝에서는 −/＋ 를 흐리게 해 더 못 누르게 한다. */
+    private fun updateGameSettingLabels() {
+        val count = prefs.questionCount
+        val seconds = prefs.timeLimitSeconds
+        findViewById<TextView>(R.id.settingCountValue).text =
+            getString(R.string.admin_setting_questions_value, count)
+        findViewById<TextView>(R.id.settingTimeValue).text =
+            getString(R.string.admin_setting_time_value, seconds)
+        val enabled = ContextCompat.getColor(this, R.color.ink)
+        val disabled = ContextCompat.getColor(this, R.color.ink_soft)
+        findViewById<Button>(R.id.settingCountMinus).apply {
+            isEnabled = count > Prefs.COUNT_MIN
+            setTextColor(if (isEnabled) enabled else disabled)
+        }
+        findViewById<Button>(R.id.settingCountPlus).apply {
+            isEnabled = count < Prefs.COUNT_MAX
+            setTextColor(if (isEnabled) enabled else disabled)
+        }
+        findViewById<Button>(R.id.settingTimeMinus).apply {
+            isEnabled = seconds > Prefs.TIME_MIN
+            setTextColor(if (isEnabled) enabled else disabled)
+        }
+        findViewById<Button>(R.id.settingTimePlus).apply {
+            isEnabled = seconds < Prefs.TIME_MAX
+            setTextColor(if (isEnabled) enabled else disabled)
+        }
     }
 
     // ---------------------------------------------------------------- 목록

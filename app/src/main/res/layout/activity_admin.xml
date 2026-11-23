@@ -45,6 +45,137 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- v2.3: 한 판 문제 수·문제 제한시간 설정(검색·새 문제 위쪽) -->
+        <LinearLayout
+            android:id="@+id/adminSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                style="@style/TextSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/admin_settings_title"
+                android:textSize="14sp" />
+
+            <!-- 한 판 문제 수: 10~50, 기본 15 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextBody"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/admin_setting_questions"
+                    android:textColor="@color/ink"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/settingCountMinus"
+                    style="@style/Widget.CuteButton"
+                    android:layout_width="40dp"
+                    android:layout_height="38dp"
+                    android:contentDescription="@string/admin_setting_minus_desc"
+                    android:minWidth="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/admin_setting_minus"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/settingCountValue"
+                    style="@style/TextBody"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/admin_setting_questions_value"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/settingCountPlus"
+                    style="@style/Widget.CuteButton"
+                    android:layout_width="40dp"
+                    android:layout_height="38dp"
+                    android:contentDescription="@string/admin_setting_plus_desc"
+                    android:minWidth="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/admin_setting_plus"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 문제 제한시간: 3~20초, 기본 9초 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextBody"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/admin_setting_time"
+                    android:textColor="@color/ink"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/settingTimeMinus"
+                    style="@style/Widget.CuteButton"
+                    android:layout_width="40dp"
+                    android:layout_height="38dp"
+                    android:contentDescription="@string/admin_setting_minus_desc"
+                    android:minWidth="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/admin_setting_minus"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/settingTimeValue"
+                    style="@style/TextBody"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/admin_setting_time_value"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/settingTimePlus"
+                    style="@style/Widget.CuteButton"
+                    android:layout_width="40dp"
+                    android:layout_height="38dp"
+                    android:contentDescription="@string/admin_setting_plus_desc"
+                    android:minWidth="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/admin_setting_plus"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
