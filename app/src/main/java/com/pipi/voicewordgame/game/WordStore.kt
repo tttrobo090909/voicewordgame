@@ -6,7 +6,7 @@ import java.io.File
 /**
  * 문제 데이터 저장소.
  *
- * - 첫 실행: `assets/words.json`(기본 425문제·기본 카테고리 6개)을 앱 내부 파일로 복사해 쓴다.
+ * - 첫 실행: `assets/words.json`(기본 420문제·기본 카테고리 6개)을 앱 내부 파일로 복사해 쓴다.
  * - 관리자 화면에서 고친 내용은 내부 `filesDir/words.json` 에 즉시 저장되어
  *   다음 게임에 바로 반영된다. (SharedPreferences 대신 JSON 파일 한 개)
  * - 앱 업데이트로 기본 데이터 버전이 바뀌면 새 기본값으로 다시 시작한다.

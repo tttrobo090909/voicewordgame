@@ -43,8 +43,8 @@ class AdminScreenTest {
 
     @Test
     fun listsAllProblemsAndShowsCount() {
-        assertEquals(425, list().adapter?.itemCount)
-        assertEquals("문제 425개", activity.findViewById<android.widget.TextView>(R.id.adminCount).text.toString())
+        assertEquals(420, list().adapter?.itemCount)
+        assertEquals("문제 420개", activity.findViewById<android.widget.TextView>(R.id.adminCount).text.toString())
     }
 
     @Test
@@ -67,7 +67,7 @@ class AdminScreenTest {
 
         (filters.getChildAt(4) as Button).performClick() // 탈것
         shadowOf(Looper.getMainLooper()).idle()
-        assertEquals(40, list().adapter?.itemCount)
+        assertEquals(37, list().adapter?.itemCount)
     }
 
     @Test
@@ -84,7 +84,7 @@ class AdminScreenTest {
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         shadowOf(Looper.getMainLooper()).idle()
 
-        assertEquals(426, list().adapter?.itemCount)
+        assertEquals(421, list().adapter?.itemCount)
 
         val store = WordStore(activity)
         store.load()
@@ -105,7 +105,7 @@ class AdminScreenTest {
 
         assertTrue(dialog.isShowing)
         assertEquals(android.view.View.VISIBLE, dialog.findViewById<android.view.View>(R.id.editError)!!.visibility)
-        assertEquals(425, list().adapter?.itemCount)
+        assertEquals(420, list().adapter?.itemCount)
     }
 
     @Test
@@ -120,7 +120,7 @@ class AdminScreenTest {
         val picker = ShadowDialog.getLatestDialog()
         assertNotNull(picker)
         val grid = findRecycler(picker!!)
-        assertEquals(425, grid.adapter?.itemCount)
+        assertEquals(420, grid.adapter?.itemCount)
     }
 
     private fun findRecycler(root: android.app.Dialog): RecyclerView {

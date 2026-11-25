@@ -21,7 +21,7 @@ import java.io.FileOutputStream
 
 /**
  * 실제 화면을 비트맵으로 그려 PNG 로 남긴다(디자인 확인·보고용).
- * v2.7: 배너 한 줄·두 줄 카테고리·다중 선택·홀수개 타일 폭·관리자 통합 필터 줄(10초).
+ * v2.9: 420단어(들어봐요! v1.1과 일치)·새 그림·`문제 420개`·카테고리 수 90/94/37/116/41/42.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
@@ -31,7 +31,7 @@ class ScreenshotTest {
     @Test
     fun captureFirstGameAndAdminScreens() {
         val outDir = File("build/ui").apply { mkdirs() }
-        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.7_1124_HHmm
+        val stamp = BuildConfig.VERSION_DISPLAY.removePrefix("v") // 2.9_1125_HHmm
         val downloads = File("../../../downloads").apply { mkdirs() }
 
         WordStore(ApplicationProvider.getApplicationContext()).restoreDefaults()
@@ -82,6 +82,14 @@ class ScreenshotTest {
                     .fullScroll(View.FOCUS_RIGHT)
             }
         )
+
+        // 06 관리자 — v2.9 새 그림(갈비찜 313)을 검색해 보여 준다(기본 6개 카테고리 상태).
+        store.restoreDefaults()
+        val admin3 = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
+        admin3.findViewById<android.widget.EditText>(R.id.adminSearch).setText("갈비찜")
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
+        capture(admin3, File(outDir, "06_admin_newword.png"))
+        capture(admin3, File(downloads, "malhaebwayo-v$stamp-6-관리자_새그림.png"))
 
         // 원래대로 되돌려 둔다.
         store.restoreDefaults()

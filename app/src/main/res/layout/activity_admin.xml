@@ -214,7 +214,7 @@
         </LinearLayout>
 
         <!-- v2.7: 카테고리 관리는 문제 목록 필터 줄로 합쳤다.
-             맨 왼쪽 `+ 카테고리` → `전체 (425)` → 카테고리별 `동물 (91)` 순서. -->
+             맨 왼쪽 `+ 카테고리` → `전체 (420)` → 카테고리별 `동물 (90)` 순서. -->
         <HorizontalScrollView
             android:id="@+id/adminFilterScroll"
             android:layout_width="match_parent"

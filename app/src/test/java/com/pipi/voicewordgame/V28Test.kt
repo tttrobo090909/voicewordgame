@@ -23,7 +23,7 @@ import org.robolectric.annotation.GraphicsMode
  * 1) 배너 문구는 18sp → 20.7sp(20.5~21sp)로 커지고 배너 폭의 약 60~62%를 차지한다.
  * 2) 여전히 한 줄이고 줄바꿈·말줄임(…) 없이 들어간다(글자 영역을 넘지 않는다).
  * 3) 좁아진 왼쪽 여백 안에서 병아리가 움직이며 글자와 겹치지 않는다.
- * 4) 하단 표기는 `v2.8`, versionName 은 `2.8_1124_HHmm`, versionCode 는 1124HHMM(기존 11240610 보다 큼).
+ * 4) 하단 표기는 현재 `v2.9`, versionName 은 `2.9_1125_HHmm`, versionCode 는 1125HHMM(기존보다 큼). v2.9에서 기대값만 갱신.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
@@ -136,19 +136,19 @@ class V28Test {
     // -------------------------------------------------- 5) 버전 표기·코드
 
     @Test
-    fun versionShowsV28WithTodayStamp() {
+    fun versionShowsV29WithTodayStamp() {
         val main = mainActivity()
-        assertEquals("v2.8", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.8", BuildConfig.VERSION_SHORT)
+        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.9", BuildConfig.VERSION_SHORT)
         assertTrue(
-            "versionName 은 2.8_1124_HHmm: ${BuildConfig.VERSION_NAME}",
-            Regex("""2\.8_1124_\d{4}""").matches(BuildConfig.VERSION_NAME)
+            "versionName 은 2.9_1125_HHmm: ${BuildConfig.VERSION_NAME}",
+            Regex("""2\.9_1125_\d{4}""").matches(BuildConfig.VERSION_NAME)
         )
         assertEquals(
             "versionCode = 1124HHMM: ${BuildConfig.VERSION_CODE}",
             BuildConfig.VERSION_NAME.substringAfter('_').replace("_", "").toInt(),
             BuildConfig.VERSION_CODE
         )
-        assertTrue("기존 11240610 보다 커야 덮어쓰기 설치된다", BuildConfig.VERSION_CODE > 11240610)
+        assertTrue("기존 11240641(v2.8) 보다 커야 덮어쓰기 설치된다", BuildConfig.VERSION_CODE > 11240641)
     }
 }

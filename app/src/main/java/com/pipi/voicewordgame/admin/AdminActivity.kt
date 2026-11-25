@@ -274,7 +274,7 @@ class AdminActivity : AppCompatActivity() {
         filterButtons[id] = button
     }
 
-    /** `전체 (425)` · `동물 (91)` 처럼 제목 옆에 문제 수를 붙인다. */
+    /** `전체 (420)` · `동물 (90)` 처럼 제목 옆에 문제 수를 붙인다. */
     private fun setFilterLabel(button: Button, label: String, count: Int, category: WordCategory?) {
         val emoji = category?.emoji.orEmpty()
         button.text = if (emoji.isBlank()) {
@@ -326,7 +326,7 @@ class AdminActivity : AppCompatActivity() {
     /**
      * v2.6: 기본값 복원을 둘로 나눴다.
      *  - `설정 리셋`: 한 판 문제 수(15)·문제 제한시간(9초)만 되돌린다.
-     *  - `문제 리셋`: 문제 목록·추가한 카테고리만 기본 425문제·기본 카테고리 6개로 되돌린다.
+     *  - `문제 리셋`: 문제 목록·추가한 카테고리만 기본 420문제·기본 카테고리 6개로 되돌린다.
      * 두 버튼 모두 누를 때 최종 확인 경고창(AlertDialog)을 먼저 띄운다.
      */
     private fun setupResets() {

@@ -14,7 +14,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.security.MessageDigest
 
-/** 기본 425문제(v2.6)가 6개 카테고리에 빠짐없이 들어갔는지, 그림·힌트가 준비됐는지 확인한다. */
+/** 기본 420문제(v2.9, 들어봐요! v1.1과 동일)가 6개 카테고리에 빠짐없이 들어갔는지, 그림·힌트가 준비됐는지 확인한다. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class WordDataTest {
@@ -37,20 +37,20 @@ class WordDataTest {
     }
 
     @Test
-    fun allFourHundredTwentyFiveWordsMappedToThoseSixCategories() {
+    fun allFourHundredTwentyWordsMappedToThoseSixCategories() {
         val book = assetBook()
-        assertEquals(425, book.words.size)
-        assertEquals(425, book.words.map { it.id }.distinct().size)
+        assertEquals(420, book.words.size)
+        assertEquals(420, book.words.map { it.id }.distinct().size)
         assertTrue(book.words.all { it.categoryId in 1..6 })
 
         val counts = book.words.groupingBy { it.categoryId }.eachCount()
-        assertEquals(91, counts[1])
-        assertEquals(91, counts[2])
-        assertEquals(40, counts[3])
-        assertEquals(119, counts[4])
-        assertEquals(42, counts[5])
+        assertEquals(90, counts[1])
+        assertEquals(94, counts[2])
+        assertEquals(37, counts[3])
+        assertEquals(116, counts[4])
+        assertEquals(41, counts[5])
         assertEquals(42, counts[6])
-        assertEquals(425, counts.values.sum())
+        assertEquals(420, counts.values.sum())
         // 비어 있는 카테고리가 없어야 한다.
         assertTrue(counts.values.all { it > 0 })
     }
@@ -162,9 +162,11 @@ class WordDataTest {
     @Test
     fun koreanAndEnglishWordsAreAllUniqueAcrossTheWholeBook() {
         val words = assetBook().words
-        assertEquals(425, words.size)
-        assertEquals("한글 단어 중복 0건", 425, words.map { it.ko }.distinct().size)
-        assertEquals("영문 단어 중복 0건", 425, words.map { it.en.lowercase() }.distinct().size)
+        assertEquals(420, words.size)
+        // v2.9: `배`는 과일(Pear, 59)과 배(Ship, 110) 두 가지 — 그림이 달라 둘 다 둔다.
+        assertEquals("한글 단어 중복은 배 하나뿐", 419, words.map { it.ko }.distinct().size)
+        assertEquals("배 두 개", listOf("Pear", "Ship"), words.filter { it.ko == "배" }.map { it.en }.sorted())
+        assertEquals("영문 단어 중복 0건", 420, words.map { it.en.lowercase() }.distinct().size)
     }
 
     @Test
@@ -174,7 +176,7 @@ class WordDataTest {
             val bytes = context.assets.open(word.image).use { it.readBytes() }
             md5(bytes)
         }
-        assertEquals("그림 425장이 모두 다른 파일", 425, hashes.distinct().size)
+        assertEquals("그림 420장이 모두 다른 파일", 420, hashes.distinct().size)
     }
 
     @Test
@@ -205,15 +207,41 @@ class WordDataTest {
     }
 
     @Test
-    fun duplicatePairsFromBeforeAreGoneWithoutLosingTheirPictures() {
+    fun v29NamesAndCategoriesMatchListeningGame() {
         val book = assetBook()
-        // 배(과일) / 배(배) → 배 · 보트, 눈(눈) → 눈송이, 풀(풀처럼 보이던 로션 병) → 로션
+        // v2.9(들어봐요! v1.1): 배(과일 Pear)는 그대로, 보트는 배(Ship)로 이름을 바꿔 둘 다 둔다.
         assertEquals("Pear", book.words.first { it.ko == "배" }.en)
-        assertEquals("Boat", book.words.first { it.ko == "보트" }.en)
+        assertEquals("Ship", book.words.first { it.ko == "배" && it.en == "Ship" }.en)
+        assertEquals("3", book.words.first { it.ko == "배" && it.en == "Ship" }.categoryId.toString())
+        // 바다 → 파도, 갈비 → 갈비찜.
+        assertEquals("Wave", book.words.first { it.ko == "파도" }.en)
+        assertEquals("Galbijjim", book.words.first { it.ko == "갈비찜" }.en)
+        // 눈(신체)과 눈송이는 그대로 구분된다.
         assertEquals("Snowflake", book.words.first { it.ko == "눈송이" }.en)
         assertEquals("Eye", book.words.first { it.ko == "눈" }.en)
-        assertEquals("Grass", book.words.first { it.ko == "풀" }.en)
         assertEquals("Lotion", book.words.first { it.ko == "로션" }.en)
+    }
+
+    @Test
+    fun v29DeletedWordsAreGone() {
+        val book = assetBook()
+        listOf("잉어", "모노레일", "글라이더", "전동휠체어", "풀", "보트", "바다", "갈비")
+            .forEach { gone -> assertTrue("삭제·개명된 단어 $gone 는 없다", book.words.none { it.ko == gone }) }
+        // 삭제된 그림 파일도 앱에 남아 있지 않다.
+        listOf("words/144.webp", "words/278.webp", "words/339.webp", "words/340.webp", "words/346.webp")
+            .forEach { img ->
+                val stream = runCatching { context.assets.open(img) }.getOrNull()
+                assertTrue("삭제된 그림 $img 가 남아 있다", stream == null)
+                stream?.close()
+            }
+    }
+
+    @Test
+    fun v29MovedWordsAreInFoodAndFruit() {
+        val book = assetBook()
+        listOf("도시락", "커피", "크루아상").forEach { ko ->
+            assertEquals("$ko 는 음식·과일", 2, book.words.first { it.ko == ko }.categoryId)
+        }
     }
 
     @Test

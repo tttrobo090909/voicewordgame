@@ -29,11 +29,11 @@ class WordStoreTest {
     }
 
     @Test
-    fun startsFromDefault425() {
+    fun startsFromDefault420() {
         val store = WordStore(context)
         store.load()
-        assertEquals(425, store.book.words.size)
-        assertEquals("2.6", store.book.appVersion)
+        assertEquals(420, store.book.words.size)
+        assertEquals("2.9", store.book.appVersion)
     }
 
     @Test
@@ -46,7 +46,7 @@ class WordStoreTest {
                 image = "words/001.webp", synKo = listOf("청소기"), hint = ""
             )
         )
-        assertTrue(created.id > 425)
+        assertTrue("새 문제 id 는 마지막 id(425) 다음", created.id > 425)
 
         val reloaded = WordStore(context)
         reloaded.load()
@@ -54,7 +54,7 @@ class WordStoreTest {
         assertNotNull(found)
         assertEquals("로봇청소기", found!!.ko)
         assertTrue(reloaded.book.byCategory(4).any { it.id == created.id })
-        assertEquals(426, reloaded.book.words.size)
+        assertEquals(421, reloaded.book.words.size)
     }
 
     @Test
@@ -91,7 +91,7 @@ class WordStoreTest {
         val reloaded = WordStore(context)
         reloaded.load()
         assertNull(reloaded.book.find(target.id))
-        assertEquals(424, reloaded.book.words.size)
+        assertEquals(419, reloaded.book.words.size)
     }
 
     @Test
@@ -108,7 +108,7 @@ class WordStoreTest {
 
         val reloaded = WordStore(context)
         reloaded.load()
-        assertEquals(425, reloaded.book.words.size)
+        assertEquals(420, reloaded.book.words.size)
         assertNotNull(reloaded.book.find(target.id))
         assertTrue(reloaded.book.words.none { it.ko == "테스트" })
     }

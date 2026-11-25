@@ -33,7 +33,7 @@ import org.robolectric.shadows.ShadowDialog
 import java.security.MessageDigest
 
 /**
- * v2.6 확인: 신규 175단어(총 425)·한 판 문제 수 10~40·관리자 카테고리 추가(최대 4개)·
+ * v2.6 확인: 신규 175단어·한 판 문제 수 10~40·관리자 카테고리 추가(최대 4개)·
  * 리셋 버튼 둘(설정/문제, 둘 다 확인창)·첫 화면 `전체 무작위` 맨 아래·배너 글자 크게 오른쪽 정렬.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -73,24 +73,28 @@ class V26Test {
         return out
     }
 
-    // -------------------------------------------------- 1. 425단어 데이터
+    // -------------------------------------------------- 1. 단어 데이터(v2.9: 420단어)
 
     @Test
-    fun assetBookHasFourHundredTwentyFiveWordsInVersion26() {
+    fun assetBookHasFourHundredTwentyWordsInVersion29() {
         val book = assetBook()
-        assertEquals(425, book.words.size)
-        assertEquals("2.6", book.appVersion)
+        assertEquals(420, book.words.size)
+        assertEquals("2.9", book.appVersion)
         assertEquals(6, book.categories.size)
-        assertTrue("id 는 1~425", book.words.map { it.id }.sorted() == (1..425).toList())
+        // v2.9: 삭제된 5개(잉어·모노레일·글라이더·전동휠체어·풀)만큼 id 가 비어 있다.
+        assertEquals(420, book.words.map { it.id }.distinct().size)
+        assertEquals(425, book.words.maxOf { it.id })
+        assertEquals(listOf(144, 278, 339, 340, 346), (1..425).filter { id -> book.words.none { it.id == id } })
     }
 
     @Test
     fun new175WordsAreAllThereWithUniqueNames() {
         val words = assetBook().words
         val new = words.filter { it.id in 251..425 }
-        assertEquals(175, new.size)
-        assertEquals(175, new.map { it.ko }.distinct().size)
-        assertEquals(175, new.map { it.en.lowercase() }.distinct().size)
+        // v2.9: 이 구간에서 잉어(278)·모노레일(339)·글라이더(340)·전동휠체어(346) 4개가 빠져 171개.
+        assertEquals(171, new.size)
+        assertEquals(171, new.map { it.ko }.distinct().size)
+        assertEquals(171, new.map { it.en.lowercase() }.distinct().size)
         // 기존 250개와도 겹치지 않는다.
         val old = words.filter { it.id <= 250 }
         assertTrue(old.none { o -> new.any { it.ko == o.ko } })
@@ -100,7 +104,7 @@ class V26Test {
     }
 
     @Test
-    fun everyNewPictureExistsAndAll425PicturesDiffer() {
+    fun everyPictureExistsAndAll420PicturesDiffer() {
         val words = assetBook().words
         val hashes = ArrayList<String>()
         words.forEach { word ->
@@ -108,7 +112,7 @@ class V26Test {
             assertTrue("그림이 비어 있음: ${word.image}", bytes.size > 500)
             hashes.add(MessageDigest.getInstance("MD5").digest(bytes).joinToString("") { "%02x".format(it) })
         }
-        assertEquals("그림 425장이 모두 다른 파일", 425, hashes.distinct().size)
+        assertEquals("그림 420장이 모두 다른 파일", 420, hashes.distinct().size)
     }
 
     @Test
@@ -288,7 +292,7 @@ class V26Test {
         val store = WordStore(context).apply { load() }
         store.addCategory("지워질 카테고리", "Gone", "🙂")
         store.add(Word(0, "지워질 단어", "Gone word", 1, store.book.words.first().image))
-        assertEquals(426, store.book.words.size)
+        assertEquals(421, store.book.words.size)
 
         val prefs = Prefs(context)
         prefs.questionCount = 30
@@ -301,14 +305,14 @@ class V26Test {
         assertNotNull("확인창이 먼저 뜬다", dialog)
         assertTrue(
             "확인창 안내: ${texts(dialog.window!!.decorView)}",
-            texts(dialog.window!!.decorView).any { it.contains("기본 425문제") }
+            texts(dialog.window!!.decorView).any { it.contains("기본 420문제") }
         )
-        assertEquals("확인 전에는 그대로", 426, WordStore(admin).apply { load() }.book.words.size)
+        assertEquals("확인 전에는 그대로", 421, WordStore(admin).apply { load() }.book.words.size)
 
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         idle()
         val restored = WordStore(admin).apply { load() }
-        assertEquals(425, restored.book.words.size)
+        assertEquals(420, restored.book.words.size)
         assertEquals(6, restored.book.categories.size)
         assertEquals("게임 설정은 그대로", 30, Prefs(admin).questionCount)
         assertEquals(12, Prefs(admin).timeLimitSeconds)
@@ -344,7 +348,7 @@ class V26Test {
         // v2.7: 전체 무작위 버튼은 없다.
         val all = texts(main.window.decorView)
         assertTrue(all.none { it.contains("전체 무작위") })
-        assertEquals("v2.8", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
     }
 
     @Test

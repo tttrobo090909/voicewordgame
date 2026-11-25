@@ -42,7 +42,7 @@ import org.robolectric.shadows.ShadowDialog
  * 5) `전체 무작위` 제거 → 카테고리 다중 선택
  * 6) 문제 제한시간 기본 10초
  * 7) 관리자: 카테고리 박스 삭제 + 필터 줄에 `+ 카테고리`·문제 수·롱클릭 수정
- * 8) 첫 화면 하단 `v2.8` 만 표시
+ * 8) 첫 화면 하단 버전만 표시(현재 `v2.9`)
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
@@ -121,7 +121,7 @@ class V27Test {
             TypedValue.COMPLEX_UNIT_SP, 21f, main.resources.displayMetrics
         )
         assertTrue(
-            "v2.8: 20.5~21sp(18sp 대비 약 +15%)",
+            "v2.8부터: 20.5~21sp(18sp 대비 약 +15%)",
             banner.textSize >= sp205 - 0.5f && banner.textSize <= sp21 + 0.5f
         )
         assertTrue("배너 문구는 굵게", banner.typeface.style and android.graphics.Typeface.BOLD != 0)
@@ -175,7 +175,7 @@ class V27Test {
     fun categoryLabelsAreTwoLinesCenteredAtEighteenSp() {
         val main = mainActivity()
         val label = tileLabel(main, 0, 0)
-        assertEquals("이름 아래 문제 수를 두 줄로", "동물\n(91)", label.text.toString())
+        assertEquals("이름 아래 문제 수를 두 줄로", "동물\n(90)", label.text.toString())
         assertEquals("두 줄까지", 2, label.maxLines)
         assertEquals("가운데 정렬", Gravity.CENTER, label.gravity)
         val sp18 = TypedValue.applyDimension(
@@ -183,8 +183,8 @@ class V27Test {
         )
         assertEquals("18sp(약 +10%)", sp18, label.textSize, 1f)
         // 나머지 타일도 같은 두 줄 규칙.
-        assertEquals("음식·과일\n(91)", tileLabel(main, 0, 1).text.toString())
-        assertEquals("탈것\n(40)", tileLabel(main, 1, 0).text.toString())
+        assertEquals("음식·과일\n(94)", tileLabel(main, 0, 1).text.toString())
+        assertEquals("탈것\n(37)", tileLabel(main, 1, 0).text.toString())
     }
 
     // -------------------------------------------------- 3) 카테고리 이름 8자 제한
@@ -273,7 +273,7 @@ class V27Test {
     @Test
     fun gameUsesOnlyTheSelectedCategoriesMerged() {
         val main = mainActivity()
-        // 탈것(40) + 자연(42) 만 남긴다.
+        // 탈것(37) + 자연(41) 만 남긴다.
         listOf(0 to 0, 0 to 1, 1 to 1, 2 to 1).forEach { (r, c) -> tile(main, r, c).performClick() }
         idle()
         assertEquals(setOf(3, 5), main.selectedCategoryIdsForTest)
@@ -282,7 +282,7 @@ class V27Test {
         main.findViewById<Button>(R.id.startButton).performClick()
         idle()
 
-        assertEquals("합친 문제 수(40+42)만큼 낼 수 있다", 40, main.plannedQuestions)
+        assertEquals("합친 문제 수(37+41)만큼 낼 수 있다", 40, main.plannedQuestions)
         val word = main.currentWord!!
         assertTrue("고른 카테고리에서만 출제: ${word.ko}", word.categoryId == 3 || word.categoryId == 5)
     }
@@ -369,8 +369,8 @@ class V27Test {
         val row = admin.findViewById<LinearLayout>(R.id.adminFilterRow)
         assertEquals("+ 카테고리 + 전체 + 6개", 8, row.childCount)
         assertEquals("맨 왼쪽", admin.getString(R.string.admin_category_add), (row.getChildAt(0) as Button).text.toString())
-        assertEquals("전체 (425)", (row.getChildAt(1) as Button).text.toString())
-        assertEquals("동물 (91)", (row.getChildAt(2) as Button).text.toString())
+        assertEquals("전체 (420)", (row.getChildAt(1) as Button).text.toString())
+        assertEquals("동물 (90)", (row.getChildAt(2) as Button).text.toString())
         assertEquals("사람·몸 (42)", (row.getChildAt(7) as Button).text.toString())
     }
 
@@ -388,8 +388,8 @@ class V27Test {
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         idle()
 
-        assertEquals("전체 (426)", (row.getChildAt(1) as Button).text.toString())
-        assertEquals("동물 (92)", (row.getChildAt(2) as Button).text.toString())
+        assertEquals("전체 (421)", (row.getChildAt(1) as Button).text.toString())
+        assertEquals("동물 (91)", (row.getChildAt(2) as Button).text.toString())
 
         // 새 카테고리를 만들어 그 안에 문제를 하나 넣고, 카테고리를 지우면 숫자가 함께 줄어든다.
         admin.findViewById<Button>(R.id.addCategory).performClick()
@@ -415,7 +415,7 @@ class V27Test {
 
         val after = admin.findViewById<LinearLayout>(R.id.adminFilterRow)
         assertEquals("다시 8개 버튼", 8, after.childCount)
-        assertEquals("전체 (426)", (after.getChildAt(1) as Button).text.toString())
+        assertEquals("전체 (421)", (after.getChildAt(1) as Button).text.toString())
     }
 
     @Test
@@ -462,11 +462,11 @@ class V27Test {
     // -------------------------------------------------- 8) 하단 버전 표기
 
     @Test
-    fun footerShowsOnlyV28() {
+    fun footerShowsOnlyV29() {
         val main = mainActivity()
-        assertEquals("v2.8", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.8", BuildConfig.VERSION_SHORT)
-        assertTrue("빌드 이름은 2.8_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.8_"))
+        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.9", BuildConfig.VERSION_SHORT)
+        assertTrue("빌드 이름은 2.9_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.9_"))
         assertTrue(
             "versionCode 는 기존 11232258 보다 커야 덮어쓰기 설치된다",
             BuildConfig.VERSION_CODE > 11232258

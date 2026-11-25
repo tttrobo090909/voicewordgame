@@ -139,7 +139,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertEquals("v2.8", version.text.toString())
+        assertEquals("v2.9", version.text.toString())
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -422,11 +422,11 @@ class V22Test {
     }
 
     @Test
-    fun versionIsV28Only() {
+    fun versionIsV29Only() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertEquals("날짜·시간 없이 v2.8", "v2.8", version)
-        assertTrue("빌드 버전은 2.8_...", BuildConfig.VERSION_NAME.startsWith("2.8_"))
+        assertEquals("날짜·시간 없이 v2.9", "v2.9", version)
+        assertTrue("빌드 버전은 2.9_...", BuildConfig.VERSION_NAME.startsWith("2.9_"))
         assertTrue("versionCode 는 기존 11232258 보다 크다", BuildConfig.VERSION_CODE > 11232258)
     }
 }

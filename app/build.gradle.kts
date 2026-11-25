@@ -7,11 +7,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-// 버전 규칙: v2.8_MMDD_HHmm (빌드 시점 KST 기준)
+// 버전 규칙: v2.9_MMDD_HHmm (빌드 시점 KST 기준)
 // -PversionStamp=MMdd_HHmm 로 고정하면 APK·화면 캡처를 같은 버전명으로 맞출 수 있다.
 val kstStamp: String = providers.gradleProperty("versionStamp").orNull
     ?: ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("MMdd_HHmm"))
-val appVersionName: String = "2.8_$kstStamp"
+val appVersionName: String = "2.9_$kstStamp"
 val appVersionCode: Int = kstStamp.replace("_", "").toInt()
 
 android {
@@ -26,7 +26,7 @@ android {
         versionName = appVersionName
         buildConfigField("String", "VERSION_DISPLAY", "\"v$appVersionName\"")
         // v2.8: 첫 화면 하단에는 날짜·시간 없이 버전만 보여 준다.
-        buildConfigField("String", "VERSION_SHORT", "\"v2.8\"")
+        buildConfigField("String", "VERSION_SHORT", "\"v2.9\"")
         vectorDrawables.useSupportLibrary = true
     }
 

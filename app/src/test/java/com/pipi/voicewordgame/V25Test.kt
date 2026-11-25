@@ -56,8 +56,8 @@ class V25Test {
     )
 
     @Test
-    fun assetBookIsVersion25() {
-        assertEquals("2.6", assetBook().appVersion)
+    fun assetBookIsCurrentVersion() {
+        assertEquals("2.9", assetBook().appVersion)
     }
 
     @Test
@@ -80,12 +80,23 @@ class V25Test {
             assertNotNull("$path 를 읽을 수 있어야 함", bitmap)
             assertEquals("$path 크기 512", 512, bitmap.width)
             assertEquals("$path 크기 512", 512, bitmap.height)
-            // 순백 배경(RGB)이라 모든 픽셀이 불투명하고 네 귀퉁이가 정확히 흰색이다.
-            assertEquals("$path 왼쪽 위 흰색", -0x1, bitmap.getPixel(0, 0))
-            assertEquals("$path 오른쪽 아래 흰색", -0x1, bitmap.getPixel(511, 511))
-            assertEquals("$path 왼쪽 가운데 흰색", -0x1, bitmap.getPixel(0, 256))
+            // 순백 배경(RGB)이라 모든 픽셀이 불투명하고 네 귀퉁이가 흰색이다.
+            // v2.9: 230·235 그림이 새 3D 그림으로 바뀌어 귀퉁이가 253~255 사이일 수 있어 여유를 2 둔다.
+            assertNearWhite("$path 왼쪽 위", bitmap.getPixel(0, 0))
+            assertNearWhite("$path 오른쪽 아래", bitmap.getPixel(511, 511))
+            assertNearWhite("$path 왼쪽 가운데", bitmap.getPixel(0, 256))
             assertEquals("$path 불투명", 255, (bitmap.getPixel(256, 256) ushr 24) and 0xFF)
         }
+    }
+
+    /** RGB 세 채널이 모두 253 이상이고 완전 불투명인지(사실상 흰 배경). */
+    private fun assertNearWhite(label: String, color: Int) {
+        val r = (color ushr 16) and 0xFF
+        val g = (color ushr 8) and 0xFF
+        val b = color and 0xFF
+        val a = (color ushr 24) and 0xFF
+        assertEquals("$label 불투명", 255, a)
+        assertTrue("$label 흰색 근처(r=$r,g=$g,b=$b)", r >= 253 && g >= 253 && b >= 253)
     }
 
     @Test

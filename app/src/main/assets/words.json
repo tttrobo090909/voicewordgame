@@ -1,7 +1,7 @@
 {
  "schema": 2,
- "appVersion": "2.6",
- "wordCount": 425,
+ "appVersion": "2.9",
+ "wordCount": 420,
  "categories": [
   {
    "id": 1,
@@ -1369,12 +1369,11 @@
   },
   {
    "id": 110,
-   "ko": "보트",
-   "en": "Boat",
+   "ko": "배",
+   "en": "Ship",
    "category": 3,
    "image": "words/110.webp",
    "synKo": [
-    "배",
     "여객선"
    ],
    "synEn": [
@@ -1722,17 +1721,15 @@
   },
   {
    "id": 137,
-   "ko": "바다",
-   "en": "Sea",
+   "ko": "파도",
+   "en": "Wave",
    "category": 5,
    "image": "words/137.webp",
    "synKo": [
-    "파도",
     "바닷물"
    ],
    "synEn": [
-    "ocean",
-    "wave"
+    "ocean"
    ],
    "hint": ""
   },
@@ -1809,21 +1806,6 @@
    ],
    "synEn": [
     "blossom"
-   ],
-   "hint": ""
-  },
-  {
-   "id": 144,
-   "ko": "풀",
-   "en": "Grass",
-   "category": 5,
-   "image": "words/144.webp",
-   "synKo": [
-    "잔디",
-    "풀잎"
-   ],
-   "synEn": [
-    "lawn"
    ],
    "hint": ""
   },
@@ -3005,7 +2987,7 @@
    "id": 238,
    "ko": "도시락",
    "en": "Lunchbox",
-   "category": 4,
+   "category": 2,
    "image": "words/238.webp",
    "synKo": [
     "도시락통",
@@ -3021,7 +3003,7 @@
    "id": 239,
    "ko": "커피",
    "en": "Coffee",
-   "category": 4,
+   "category": 2,
    "image": "words/239.webp",
    "synKo": [
     "커피잔"
@@ -3033,7 +3015,7 @@
    "id": 240,
    "ko": "크루아상",
    "en": "Croissant",
-   "category": 4,
+   "category": 2,
    "image": "words/240.webp",
    "synKo": [],
    "synEn": [],
@@ -3439,16 +3421,6 @@
    "hint": ""
   },
   {
-   "id": 278,
-   "ko": "잉어",
-   "en": "Carp",
-   "category": 1,
-   "image": "words/278.webp",
-   "synKo": [],
-   "synEn": [],
-   "hint": ""
-  },
-  {
    "id": 279,
    "ko": "연어",
    "en": "Salmon",
@@ -3790,8 +3762,8 @@
   },
   {
    "id": 313,
-   "ko": "갈비",
-   "en": "Galbi",
+   "ko": "갈비찜",
+   "en": "Galbijjim",
    "category": 2,
    "image": "words/313.webp",
    "synKo": [],
@@ -4049,26 +4021,6 @@
    "hint": ""
   },
   {
-   "id": 339,
-   "ko": "모노레일",
-   "en": "Monorail",
-   "category": 3,
-   "image": "words/339.webp",
-   "synKo": [],
-   "synEn": [],
-   "hint": ""
-  },
-  {
-   "id": 340,
-   "ko": "글라이더",
-   "en": "Glider",
-   "category": 3,
-   "image": "words/340.webp",
-   "synKo": [],
-   "synEn": [],
-   "hint": ""
-  },
-  {
    "id": 341,
    "ko": "드론",
    "en": "Drone",
@@ -4114,16 +4066,6 @@
    "en": "Carriage",
    "category": 3,
    "image": "words/345.webp",
-   "synKo": [],
-   "synEn": [],
-   "hint": ""
-  },
-  {
-   "id": 346,
-   "ko": "전동휠체어",
-   "en": "Electric wheelchair",
-   "category": 3,
-   "image": "words/346.webp",
    "synKo": [],
    "synEn": [],
    "hint": ""

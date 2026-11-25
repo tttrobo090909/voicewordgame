@@ -64,7 +64,7 @@
     <string name="admin_add">＋ 새 문제</string>
     <string name="admin_restore">기본값 복원</string>
     <string name="admin_restore_confirm_title">기본값으로 되돌릴까요?</string>
-    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 425문제로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
+    <string name="admin_restore_confirm_body">직접 추가·수정한 문제는 모두 지워지고 기본 420문제로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
     <string name="admin_empty">조건에 맞는 문제가 없어요</string>
     <string name="admin_count">문제 %1$d개</string>
     <string name="admin_filter_all">전체</string>
@@ -141,5 +141,5 @@
     <string name="admin_reset_settings_confirm_body">한 판 문제 수 15문제, 문제 제한시간 10초로 돌아가요. 문제 목록·카테고리는 그대로 남아요.</string>
     <string name="admin_reset_problems">문제 리셋</string>
     <string name="admin_reset_problems_confirm_title">문제를 기본값으로 되돌릴까요?</string>
-    <string name="admin_reset_problems_confirm_body">직접 추가·수정한 문제와 추가한 카테고리는 모두 지워지고 기본 425문제·기본 카테고리 6개로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
+    <string name="admin_reset_problems_confirm_body">직접 추가·수정한 문제와 추가한 카테고리는 모두 지워지고 기본 420문제·기본 카테고리 6개로 돌아가요. 게임 설정(문제 수·제한시간)은 그대로 남아요.</string>
 </resources>

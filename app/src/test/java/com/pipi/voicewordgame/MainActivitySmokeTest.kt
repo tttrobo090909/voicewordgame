@@ -53,8 +53,8 @@ class MainActivitySmokeTest {
         }
         assertEquals(
             listOf(
-                "동물\n(91)", "음식·과일\n(91)", "탈것\n(40)",
-                "사물·집\n(119)", "자연\n(42)", "사람·몸\n(42)"
+                "동물\n(90)", "음식·과일\n(94)", "탈것\n(37)",
+                "사물·집\n(116)", "자연\n(41)", "사람·몸\n(42)"
             ),
             labels
         )
@@ -69,7 +69,7 @@ class MainActivitySmokeTest {
         assertEquals(parent.indexOfChild(grid) + 1, parent.indexOfChild(start))
 
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertEquals("v2.8", version.text.toString())
+        assertEquals("v2.9", version.text.toString())
 
         // v1.x 의 가족/목소리/소음 UI 는 없어야 한다.
         val texts = HashSet<String>()
