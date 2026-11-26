@@ -63,4 +63,9 @@ class GameSession(private val random: Random = Random()) {
     fun markCorrect() {
         correctCount += 1
     }
+
+    /** 테스트·화면 캡처용: 지금 문제를 지정한 단어로 바꾼다(문제 수·정답 수는 그대로). */
+    internal fun replaceCurrentForTest(word: Word) {
+        current = word
+    }
 }

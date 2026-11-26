@@ -1,6 +1,7 @@
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -13,6 +14,19 @@ val kstStamp: String = providers.gradleProperty("versionStamp").orNull
     ?: ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("MMdd_HHmm"))
 val appVersionName: String = "2.9_$kstStamp"
 val appVersionCode: Int = kstStamp.replace("_", "").toInt()
+
+// Google Play 업로드용 릴리즈 서명 설정.
+// keystore.properties 와 keystore/ 는 .gitignore 로 깃허브에 올라가지 않는다.
+// 다른 사람이 이 파일 없이 빌드해도 디버그 서명으로 빌드되도록 조용히 넘어간다.
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) {
+        keystorePropsFile.inputStream().use { load(it) }
+    }
+}
+val hasReleaseKeystore = keystorePropsFile.exists() &&
+    !keystoreProps.getProperty("storeFile").isNullOrBlank() &&
+    rootProject.file(keystoreProps.getProperty("storeFile")).exists()
 
 android {
     namespace = "com.pipi.voicewordgame"
@@ -34,13 +48,34 @@ android {
         buildConfig = true
     }
 
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+                enableV1Signing = true
+                enableV2Signing = true
+            }
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
         }
         release {
+            // ProGuard/R8 문제를 피하기 위해 v2.9 는 난독화를 켜지 않는다.
             isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                logger.warn("keystore.properties 가 없어 release 도 debug 키로 서명합니다(로컬 테스트용).")
+                signingConfigs.getByName("debug")
+            }
         }
     }
 

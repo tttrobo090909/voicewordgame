@@ -1215,6 +1215,21 @@ class MainActivity : AppCompatActivity() {
     internal val appliedSpeechRates: List<Float>
         get() = synchronized(speaker.appliedRates) { speaker.appliedRates.toList() }
 
+    /** 테스트·화면 캡처용: 지금 문제 그림을 지정한 단어로 바꾼다. */
+    internal fun showWordForTest(word: Word) {
+        session?.replaceCurrentForTest(word)
+        hintBadge.visibility = View.GONE
+        answerReveal.text = getString(R.string.what_is_it)
+        answerReveal.setTextColor(ContextCompat.getColor(this, R.color.ink_soft))
+        val bitmap = ImageStore.load(this, word.image)
+        if (bitmap != null) {
+            wordImage.setImageBitmap(bitmap)
+        } else {
+            wordImage.setImageResource(R.mipmap.ic_launcher)
+        }
+        wordImage.alpha = 1f
+    }
+
     /** 현재 문제 단어(테스트가 정답 문자열을 확인할 때). */
     internal val currentWord: Word?
         get() = session?.current

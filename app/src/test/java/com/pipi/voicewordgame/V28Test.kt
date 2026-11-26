@@ -141,8 +141,8 @@ class V28Test {
         assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
         assertEquals("v2.9", BuildConfig.VERSION_SHORT)
         assertTrue(
-            "versionName 은 2.9_1125_HHmm: ${BuildConfig.VERSION_NAME}",
-            Regex("""2\.9_1125_\d{4}""").matches(BuildConfig.VERSION_NAME)
+            "versionName 은 2.9_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
+            Regex("""2\.9_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME)
         )
         assertEquals(
             "versionCode = 1124HHMM: ${BuildConfig.VERSION_CODE}",

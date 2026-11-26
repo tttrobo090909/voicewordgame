@@ -28,7 +28,7 @@ import java.io.File
  * 1) 기본 단어 425 → 420 (잉어·모노레일·글라이더·전동휠체어·풀 삭제, 그림 파일도 삭제).
  * 2) 이름 변경 갈비찜 / 배(Ship) / 파도, 카테고리 이동 도시락·커피·크루아상 → 음식·과일.
  * 3) 카테고리별 90·94·37·116·41·42, `appVersion` 2.9 로 기존 설치 기기도 새 기본값으로 갱신.
- * 4) 화면 표기 `v2.9`, versionName `2.9_1125_HHmm`, versionCode 1125HHMM — v2.8 UI·기능은 그대로.
+ * 4) 화면 표기 `v2.9`, versionName `2.9_MMdd_HHmm`, versionCode MMddHHmm — v2.8 UI·기능은 그대로.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi")
@@ -146,8 +146,8 @@ class V29Test {
         val main = mainActivity()
         assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
         assertEquals("v2.9", BuildConfig.VERSION_SHORT)
-        assertTrue("versionName 은 2.9_1125_HHmm: ${BuildConfig.VERSION_NAME}",
-            Regex("""2\.9_1125_\d{4}""").matches(BuildConfig.VERSION_NAME))
+        assertTrue("versionName 은 2.9_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
+            Regex("""2\.9_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME))
         assertEquals(
             "versionCode = 1125HHMM",
             BuildConfig.VERSION_NAME.substringAfter('_').replace("_", "").toInt(),

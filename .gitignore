@@ -12,3 +12,9 @@ tools/cache/
 .kotlin/
 __pycache__/
 ?/
+
+# 릴리즈 서명 키 — 절대 커밋하지 않는다.
+keystore/
+keystore.properties
+*.jks
+*.keystore

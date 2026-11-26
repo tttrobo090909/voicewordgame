@@ -97,6 +97,47 @@ class ScreenshotTest {
         println("screens: ${outDir.absolutePath} , ${downloads.absolutePath}")
     }
 
+    /**
+     * 플레이스토어 등록용 원본 캡처(1080x1920 규격으로 다듬기 전).
+     * 첫 화면 · 게임 · 정답 · 관리자 네 장을 build/ui/store/ 에 남긴다.
+     */
+    @Test
+    @Config(sdk = [34], qualifiers = "w411dp-h731dp-xxhdpi")
+    fun captureStoreScreens() {
+        val outDir = File("build/ui/store").apply { mkdirs() }
+        val store = WordStore(ApplicationProvider.getApplicationContext())
+        store.restoreDefaults()
+
+        // 1) 첫 화면
+        val main = Robolectric.buildActivity(MainActivity::class.java).setup().get()
+        layout(main)
+        main.applySwayPoseForTest(0.3f)
+        capture(main, File(outDir, "store_1_first.png"))
+
+        // 2) 게임 화면 — 그림 카드·타이머·듣는 중 (그림은 캡처용으로 사과)
+        main.findViewById<View>(R.id.startButton).performClick()
+        val apple = store.book.words.first { it.ko == "사과" }
+        main.showWordForTest(apple)
+        main.findViewById<TextView>(R.id.micStatus).setText(R.string.mic_listening)
+        layout(main)
+        main.applyTimerPoseForTest(0.18f)
+        capture(main, File(outDir, "store_2_game.png"))
+
+        // 3) 정답 화면 — 축하 폭죽이 터진 직후
+        main.findViewById<View>(R.id.answerButton).performClick()
+        layout(main)
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper())
+            .idleFor(java.time.Duration.ofMillis(420))
+        capture(main, File(outDir, "store_3_correct.png"))
+
+        // 4) 관리자 화면 — 문제 420개·카테고리 필터·제한시간
+        val admin = Robolectric.buildActivity(AdminActivity::class.java).setup().get()
+        capture(admin, File(outDir, "store_4_admin.png"))
+
+        store.restoreDefaults()
+        println("store screens: ${outDir.absolutePath}")
+    }
+
     private fun layout(activity: AppCompatActivity) {
         val root = activity.window.decorView
         val w = if (root.width > 0) root.width else 1233
