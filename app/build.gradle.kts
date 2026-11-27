@@ -8,11 +8,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-// 버전 규칙: v2.9_MMDD_HHmm (빌드 시점 KST 기준)
+// 버전 규칙: v2.10_MMDD_HHmm (빌드 시점 KST 기준)
 // -PversionStamp=MMdd_HHmm 로 고정하면 APK·화면 캡처를 같은 버전명으로 맞출 수 있다.
 val kstStamp: String = providers.gradleProperty("versionStamp").orNull
     ?: ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("MMdd_HHmm"))
-val appVersionName: String = "2.9_$kstStamp"
+val appVersionName: String = "2.10_$kstStamp"
 val appVersionCode: Int = kstStamp.replace("_", "").toInt()
 
 // Google Play 업로드용 릴리즈 서명 설정.
@@ -30,17 +30,18 @@ val hasReleaseKeystore = keystorePropsFile.exists() &&
 
 android {
     namespace = "com.pipi.voicewordgame"
-    compileSdk = 35
+    // v2.10: Play Console 의 API 36 요구에 맞춰 compileSdk·targetSdk 를 36 으로 올린다.
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.pipi.voicewordgame"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
         buildConfigField("String", "VERSION_DISPLAY", "\"v$appVersionName\"")
         // v2.8: 첫 화면 하단에는 날짜·시간 없이 버전만 보여 준다.
-        buildConfigField("String", "VERSION_SHORT", "\"v2.9\"")
+        buildConfigField("String", "VERSION_SHORT", "\"v2.10\"")
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -66,7 +67,7 @@ android {
             isMinifyEnabled = false
         }
         release {
-            // ProGuard/R8 문제를 피하기 위해 v2.9 는 난독화를 켜지 않는다.
+            // ProGuard/R8 문제를 피하기 위해 v2.10 은 난독화를 켜지 않는다.
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -77,6 +78,16 @@ android {
                 signingConfigs.getByName("debug")
             }
         }
+    }
+
+    // 디버그 키 위치: 빌드 JVM 이 사용자 홈을 못 찾는 환경(데몬의 user.home = "?")에서도
+    // 기존 설치본과 **같은 debug.keystore**(/workspace/.android/debug.keystore)로 서명되도록 길을 직접 잡아 준다.
+    //  -PdebugKeystore=/path/debug.keystore 로 바꿀 수 있고, 없으면 홈 디렉터리의 .android/debug.keystore.
+    val debugKeystore: File? = providers.gradleProperty("debugKeystore").orNull
+        ?.let { File(it) }
+        ?: System.getenv("HOME")?.let { File(it, ".android/debug.keystore") }?.takeIf { it.exists() }
+    if (debugKeystore != null && debugKeystore.exists()) {
+        signingConfigs.getByName("debug").storeFile = debugKeystore
     }
 
     compileOptions {

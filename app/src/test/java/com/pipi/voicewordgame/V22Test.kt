@@ -46,6 +46,19 @@ class V22Test {
 
     private fun idle(ms: Long) = shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(ms))
 
+    /**
+     * 조건이 참이 될 때까지 250ms 씩 시킨다(최대 [maxMs]).
+     * v2.10 의 TTS 는 엔진이 초기화되지 않은 채로 남으면 4초 안전 타이머가 다음 문제로 넘기므로,
+     * “두 번 읽고 넘어간다”같은 흐름은 정해진 시간 대신 조건으로 기다린다.
+     */
+    private fun waitFor(maxMs: Long, condition: () -> Boolean) {
+        var waited = 0L
+        while (waited < maxMs && !condition()) {
+            idle(250)
+            waited += 250
+        }
+    }
+
     private fun texts(root: View): List<String> {
         val out = mutableListOf<String>()
         fun walk(view: View) {
@@ -139,7 +152,7 @@ class V22Test {
         // 하단 작은 글씨(버전·라이선스·음성 안내)는 그대로 남아 있다.
         assertEquals("게임 시작!", start.text.toString())
         val version = activity.findViewById<TextView>(R.id.versionText)
-        assertEquals("v2.9", version.text.toString())
+        assertEquals("v2.10", version.text.toString())
         assertTrue("버전 표기는 시작 버튼 아래", parent.indexOfChild(version) > parent.indexOfChild(start))
         val notes = texts(activity.window.decorView)
         assertTrue(
@@ -217,8 +230,8 @@ class V22Test {
         assertEquals("v2.4: 시간 초과에도 정답을 2번 읽는다", 2, activity.speechLogForTest.last().second)
         assertEquals("시간 초과는 점수에 들어가지 않는다", "문제 1/15 · 정답 0", score.text.toString())
 
-        // 두 번 다 읽고 나면 다음 문제로 넘어간다.
-        idle(600)
+        // 두 번 다 읽고 나면 다음 문제로 넘어간다(엔진이 없으면 4초 안전 타이머가 대신 넘긴다).
+        waitFor(8000) { reveal.text.toString() == "무엇일까요?" }
         assertEquals("무엇일까요?", reveal.text.toString())
         assertTrue("다음 문제는 타이머를 다시 건다", activity.isRoundTimerRunning)
         assertTrue(activity.isAwaiting)
@@ -269,7 +282,8 @@ class V22Test {
         val activity = launch()
         activity.findViewById<Button>(R.id.startButton).performClick()
         activity.findViewById<Button>(R.id.answerButton).performClick()
-        idle(600)
+        // 정답을 두 번 읽고 다음 문제가 뜨기를 기다린다(엔진이 없으면 4초 안전 타이머가 넘긴다).
+        waitFor(8000) { activity.servedQuestions >= 2 }
 
         activity.findViewById<Button>(R.id.stopButton).performClick()
         idle(0)
@@ -425,8 +439,8 @@ class V22Test {
     fun versionIsV29Only() {
         val activity = launch()
         val version = activity.findViewById<TextView>(R.id.versionText).text.toString()
-        assertEquals("날짜·시간 없이 v2.9", "v2.9", version)
-        assertTrue("빌드 버전은 2.9_...", BuildConfig.VERSION_NAME.startsWith("2.9_"))
+        assertEquals("날짜·시간 없이 v2.10", "v2.10", version)
+        assertTrue("빌드 버전은 2.10_...", BuildConfig.VERSION_NAME.startsWith("2.10_"))
         assertTrue("versionCode 는 기존 11232258 보다 크다", BuildConfig.VERSION_CODE > 11232258)
     }
 }

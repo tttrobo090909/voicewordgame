@@ -40,6 +40,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.pipi.voicewordgame.admin.AdminActivity
 import com.pipi.voicewordgame.admin.Gugu
 import com.pipi.voicewordgame.admin.TapCounter
+import com.pipi.voicewordgame.audio.SfxPlayer
 import com.pipi.voicewordgame.game.AnswerMatcher
 import com.pipi.voicewordgame.game.GameSession
 import com.pipi.voicewordgame.game.Hints
@@ -55,7 +56,15 @@ import java.util.Random
 import kotlin.math.max
 
 /**
- * 말해봐요! v2.8 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ * 말해봐요! v2.10 — 첫 화면(카테고리 고르기) + 게임 화면 + 숨은 관리자 잠금 + 개인정보처리방침 안내.
+ *
+ * v2.10 (사용자 지시: `들어봐요! v1.2` 의 1번·4번 반영):
+ * - TTS: 한국어는 구글 TTS, 영어는 삼성 TTS → 구글 TTS → 기본 엔진 순으로 열고
+ *   `ko-KR-language`·`en-AU-language` 목소리를 골라 **속도 0.90 · 음높이 1.00** 으로 두 번 읽는다(tts/Speaker.kt).
+ * - 효과음: 정답 판정에 `sfx_correct`, 음성인식 오답·시간 초과에 `sfx_wrong` 을 SoundPool(USAGE_GAME)로 낸다.
+ *   음성인식은 효과음을 내기 전에 멈춘다(정답·시간 초과는 즉시, 오답은 450ms 뒤 다시 듣기라 0.4초 소리와 겹치지 않는다).
+ *   `건너뛰기` 는 스스로 넘긴 것이라 효과음을 내지 않는다.
+ * - targetSdk·compileSdk 36 (Play Console 의 API 36 요구).
  *
  * v2.8 (사용자 확정):
  * - 첫 화면 배너 문구 `그림을 보고 단어를 맞혀요!` 를 18sp → 20.7sp(약 +15%)로 키워
@@ -140,6 +149,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: Prefs
     private lateinit var store: WordStore
     private lateinit var speaker: Speaker
+    private lateinit var sfx: SfxPlayer
     private lateinit var recognizer: AnswerRecognizer
 
     private lateinit var setupScreen: LinearLayout
@@ -239,6 +249,7 @@ class MainActivity : AppCompatActivity() {
         store = WordStore(this)
         store.load()
         speaker = Speaker(this)
+        sfx = SfxPlayer(this)
         recognizer = AnswerRecognizer(this)
 
         bindViews()
@@ -301,6 +312,7 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacksAndMessages(null)
         recognizer.destroy()
         speaker.shutdown()
+        sfx.release()
     }
 
     @Deprecated("Deprecated in Java")
@@ -938,6 +950,8 @@ class MainActivity : AppCompatActivity() {
         answerReveal.text = getString(R.string.time_up_line, word.text(lang))
         answerReveal.setTextColor(ContextCompat.getColor(this, R.color.bad))
         gameStatus(getString(R.string.time_up_banner), BannerKind.BAD)
+        // v2.10: 제한시간을 넘겨 못 맞혔으니 오답 효과음(음성인식은 이미 멈춤).
+        sfx.playWrong()
         speakThenNext(word)
     }
 
@@ -983,6 +997,8 @@ class MainActivity : AppCompatActivity() {
             if (matched != null) {
                 handleCorrect()
             } else {
+                // v2.10: 들렸지만 정답이 아니면 오답 효과음. 0.4초짜리라 450ms 뒤 다시 듣기와 겹치지 않는다.
+                sfx.playWrong()
                 val heard = texts.firstOrNull()?.take(14).orEmpty()
                 gameStatus(getString(R.string.heard_line, heard), BannerKind.BAD)
                 scheduleRestart(450)
@@ -1050,6 +1066,8 @@ class MainActivity : AppCompatActivity() {
         answerReveal.setTextColor(ContextCompat.getColor(this, R.color.ink))
         particles.celebrate()
         gameStatus(getString(R.string.correct_banner), BannerKind.GOOD)
+        // v2.10: 정답 효과음 — 음성인식을 멈춘 뒤라 마이크 입력과 섞이지 않는다.
+        sfx.playCorrect()
         speakThenNext(word)
     }
 
@@ -1064,6 +1082,7 @@ class MainActivity : AppCompatActivity() {
         answerReveal.text = getString(R.string.skipped_line, word.text(lang))
         answerReveal.setTextColor(ContextCompat.getColor(this, R.color.ink))
         gameStatus(getString(R.string.skipped_banner), BannerKind.INFO)
+        // v2.10: 건너뛰기는 스스로 넘긴 것이라 오답 효과음을 내지 않는다(정답 단어는 그대로 두 번 읽어 준다).
         speakThenNext(word)
     }
 
@@ -1214,6 +1233,32 @@ class MainActivity : AppCompatActivity() {
     /** 엔진에 실제로 요청한 발음 속도(1번째·2번째·시간 초과 1회). */
     internal val appliedSpeechRates: List<Float>
         get() = synchronized(speaker.appliedRates) { speaker.appliedRates.toList() }
+
+    /** 엔진에 실제로 요청한 음높이(1번째·2번째). */
+    internal val appliedSpeechPitches: List<Float>
+        get() = synchronized(speaker.appliedPitches) { speaker.appliedPitches.toList() }
+
+    /** v2.10: 지금까지 낸 효과음(정답·오답). 테스트가 읽는다. */
+    internal val sfxPlayedForTest: List<SfxPlayer.Sound>
+        get() = sfx.played.toList()
+
+    /** v2.10: 효과음을 내는 SoundPool(테스트가 실제 재생 리소스를 확인한다). */
+    internal val sfxPlayerForTest: SfxPlayer
+        get() = sfx
+
+    /** v2.10: 음성인식 결과를 테스트에서 직접 넣어 보기 위한 리스너. */
+    internal val recognitionListenerForTest: AnswerRecognizer.Listener
+        get() = recognitionListener
+
+    /** 이번 판에 맞힌 문제 수. */
+    internal val correctCountForTest: Int
+        get() = session?.correctCount ?: 0
+
+    /** v2.10: 그 언어로 실제 연 TTS 엔진 패키지(기기 기본 엔진이면 null). */
+    internal fun speakerEngineForTest(langTag: String): String? = speaker.enginePackageForTest(langTag)
+
+    /** v2.10: 그 언어의 TTS 가 지금 향한 목소리 이름(엔진이 알려 주면). */
+    internal fun speakerVoiceForTest(langTag: String): String? = speaker.voiceNameForTest(langTag)
 
     /** 테스트·화면 캡처용: 지금 문제 그림을 지정한 단어로 바꾼다. */
     internal fun showWordForTest(word: Word) {

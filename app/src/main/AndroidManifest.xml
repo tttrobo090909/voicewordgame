@@ -9,10 +9,14 @@
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <!-- Android 11+ 패키지 가시성: 구글 음성인식기(ComponentName 지정)와 TTS 엔진을 찾기 위해 필요 -->
+    <!-- Android 11+ 패키지 가시성: 구글 음성인식기(ComponentName 지정)와 TTS 엔진을 찾기 위해 필요.
+         v2.10 부터 한국어는 구글 TTS(com.google.android.tts), 영어는 삼성 TTS(com.samsung.SMT)를
+         먼저 열기 때문에 두 패키지를 모두 보이게 해 둔다. -->
     <queries>
-        <!-- 실기기에서 검증된 구글 인식기(com.google.android.tts)를 직접 지정하기 위해 필요 -->
+        <!-- 실기기에서 검증된 구글 인식기·한국어 TTS(com.google.android.tts)를 직접 지정하기 위해 필요 -->
         <package android:name="com.google.android.tts" />
+        <!-- 영어 TTS 의 첫 후보(삼성 TTS) -->
+        <package android:name="com.samsung.SMT" />
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>

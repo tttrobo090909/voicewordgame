@@ -348,7 +348,7 @@ class V26Test {
         // v2.7: 전체 무작위 버튼은 없다.
         val all = texts(main.window.decorView)
         assertTrue(all.none { it.contains("전체 무작위") })
-        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.10", main.findViewById<TextView>(R.id.versionText).text.toString())
     }
 
     @Test

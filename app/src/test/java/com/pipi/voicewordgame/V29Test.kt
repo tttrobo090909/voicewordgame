@@ -142,12 +142,12 @@ class V29Test {
     // -------------------------------------------------- 3) 화면 표기·기능 유지
 
     @Test
-    fun footerShowsV29Only() {
+    fun footerShowsV210Only() {
         val main = mainActivity()
-        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.9", BuildConfig.VERSION_SHORT)
-        assertTrue("versionName 은 2.9_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
-            Regex("""2\.9_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME))
+        assertEquals("v2.10", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.10", BuildConfig.VERSION_SHORT)
+        assertTrue("versionName 은 2.10_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
+            Regex("""2\.10_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME))
         assertEquals(
             "versionCode = 1125HHMM",
             BuildConfig.VERSION_NAME.substringAfter('_').replace("_", "").toInt(),

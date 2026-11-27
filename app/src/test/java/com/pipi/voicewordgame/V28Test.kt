@@ -136,13 +136,13 @@ class V28Test {
     // -------------------------------------------------- 5) 버전 표기·코드
 
     @Test
-    fun versionShowsV29WithTodayStamp() {
+    fun versionShowsV210WithTodayStamp() {
         val main = mainActivity()
-        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.9", BuildConfig.VERSION_SHORT)
+        assertEquals("v2.10", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.10", BuildConfig.VERSION_SHORT)
         assertTrue(
-            "versionName 은 2.9_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
-            Regex("""2\.9_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME)
+            "versionName 은 2.10_MMdd_HHmm: ${BuildConfig.VERSION_NAME}",
+            Regex("""2\.10_\d{4}_\d{4}""").matches(BuildConfig.VERSION_NAME)
         )
         assertEquals(
             "versionCode = 1124HHMM: ${BuildConfig.VERSION_CODE}",

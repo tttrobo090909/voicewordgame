@@ -256,10 +256,10 @@ class V24Test {
         assertEquals("정답·건너뛰기와 같은 단어를 읽는다", word.ko, spoken.first)
         assertEquals("시간 초과도 2번 읽는다", 2, spoken.second)
 
-        // 실제 엔진에 발음을 요청했다면 1번째 천천히(0.72) → 2번째 보통(0.95).
+        // 실제 엔진에 발음을 요청했다면 두 번 모두 0.90(v2.10: 천천히/보통 구분 없이 같은 속도).
         val rates = activity.appliedSpeechRates
         if (rates.isNotEmpty()) {
-            assertEquals("천천히 → 보통 두 번", listOf(0.72f, 0.95f), rates)
+            assertEquals("0.90 으로 두 번", listOf(0.90f, 0.90f), rates)
         }
 
         assertEquals("시간 초과는 정답으로 치지 않는다", "문제 1/15 · 정답 0", score.text.toString())

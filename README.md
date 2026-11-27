@@ -1,13 +1,30 @@
-# 말해봐요 by 피피 (VoiceWordGame) v2.9
+# 말해봐요 by 피피 (VoiceWordGame) v2.10
 
 그림을 보고 단어를 말하면 맞힌 문제가 쌓이는 가족 단어 놀이 앱입니다.
 v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 모두 걷어내고**,
 아이 혼자서도 바로 시작할 수 있는 단순한 게임으로 다시 만들었습니다.
 
 - 앱 이름: **말해봐요 by 피피** · 패키지 `com.pipi.voicewordgame`
-- 버전 규칙: `v2.9_MMDD_HHmm` (빌드 시점 KST). 예) `v2.9_1125_1840` (첫 화면에는 `v2.9` 만 표시)
-- minSdk 24 · targetSdk 35 · compileSdk 35
+- 버전 규칙: `v2.10_MMDD_HHmm` (빌드 시점 KST). 예) `v2.10_1127_1930` (첫 화면에는 `v2.10` 만 표시)
+- minSdk 24 · targetSdk 36 · compileSdk 36 (Play Console 의 API 36 요구)
 - 토스트 팝업 0건 — 모든 안내는 화면 안 배너/배지로 표시합니다.
+
+## v2.10에서 달라진 것 (`들어봐요! v1.2` 의 1번·4번 반영)
+
+| 영역 | v2.9 | v2.10 |
+| --- | --- | --- |
+| TTS 엔진 | 구글 TTS 우선 → 기기 기본 | **한국어 구글 TTS → 기기 기본 / 영어 삼성 TTS → 구글 TTS → 기기 기본** |
+| TTS 목소리 | 지역 기본 | **`ko-KR-language` · `en-AU-language` → `en-US-language`** (오프라인 목소리 우선) |
+| TTS 속도·음높이 | 0.72(천천히) → 0.95(보통), 음높이 1.05 | **두 번 모두 0.90 · 음높이 1.00** |
+| 효과음 | 없음 | **정답 `sfx_correct`, 음성인식 오답·시간 초과 `sfx_wrong`** (SoundPool, USAGE_GAME) |
+| 패키지 가시성 | `com.google.android.tts`·`TTS_SERVICE` | **`com.samsung.SMT` 추가** |
+| API | targetSdk·compileSdk 35 | **36** |
+| 하단 버전 | `v2.9` | **`v2.10`** (versionCode `MMddHHMM`) |
+
+- 정답 단어를 두 번 읽는 방식(1번째 완료 → 350ms → 2번째 → 500ms 뒤 다음 문제)과 4초 안전 타이머는 그대로입니다.
+- 효과음은 음성인식을 멈춘 뒤에 납니다(정답·시간 초과는 즉시, 오답은 450ms 뒤 다시 듣기라 0.4초 소리와 겹치지 않음).
+  `건너뛰기`·`못 들었어요`는 판정이 아니라서 소리를 내지 않습니다.
+- v2.9 의 420단어·그림과 화면 동작은 그대로입니다.
 
 ## v2.9에서 달라진 것 (들어봐요! v1.1과 단어·그림 100% 일치)
 
@@ -95,9 +112,13 @@ v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 �
   (`speech/ResultBundles.kt`, 회귀 테스트 `ResultBundlesTest`)
 - **침묵 감지 extra**(`EXTRA_SPEECH_INPUT_*`)는 보내지 않습니다 — 일부 인식기의 빈 결과·조기 종료 원인
 - `AndroidManifest.xml` `<queries>` 에 `com.google.android.tts` 패키지 추가
-- **TTS**: 구글 TTS 엔진 우선 연결, `pitch 1.05`,
-  1번째 발음 **0.72(천천히)** → 350ms 쉼 → 2번째 발음 **0.95(보통)** → 완료 후 500ms → 다음 문제.
+- **TTS**: 언어별로 엔진을 따로 열어 둡니다(ko·en).
+  한국어는 구글 TTS → 기기 기본, 영어는 삼성 TTS → 구글 TTS → 기기 기본 순이며
+  목소리는 `ko-KR-language` · `en-AU-language` → `en-US-language` 를 먼저 고릅니다.
+  두 번 모두 **속도 0.90 · 음높이 1.00** 으로 읽고(1번째 완료 → 350ms → 2번째 → 500ms 뒤 다음 문제),
   TTS 가 없거나 오류면 **4초 안전 타이머**가 대신 다음 문제로 넘깁니다 (`tts/Speaker.kt`)
+- **효과음**: `res/raw/sfx_correct.wav` · `sfx_wrong.wav` 를 `SoundPool`(USAGE_GAME)로 재생합니다
+  (`audio/SfxPlayer.kt`). 마이크 입력과 다른 출력 스트림이라 음성인식과 충돌하지 않습니다.
 
 ## 숨은 관리자 화면
 
@@ -131,7 +152,8 @@ v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 �
 - `ResultBundlesTest` 결과 키 우선순위(회귀)
 - `MainActivitySmokeTest` 첫 화면 구성·게임 시작·정답 카운트·힌트 배지·2번 읽고 넘어가기·구구단 잠금 3종
 - `V21DesignTest` 카테고리 2열×3행·무작위 맨 아래·78dp 타일·3dp 코랄 선택 테두리·제목 탭 무반응·116dp 배너·병아리 살랑살랑
-- `SpeakerTest` 1번째 0.72 → 350ms → 2번째 0.95 속도 차등과 4초 안전 타이머 값
+- `SpeakerTest` v2.10 TTS: 언어별 엔진 순서(한국어 구글·영어 삼성)·목소리(`ko-KR-language`·`en-AU-language`)·0.90/1.00·4초 안전 타이머
+- `V210Test` v2.10: 정답 `sfx_correct`·음성인식 오답과 시간 초과 `sfx_wrong`·건너뛰기/못 들었어요 무음·SoundPool 정리·targetSdk 36·`v2.10` 표기
 - `SystemBarInsetsTest` 상태바·내비바·키보드 인셋 + 상·하단 14dp 여유가 루트 여백으로 적용
 - `ScreenshotTest` 화면 3장 캡처(첫 화면·통합 타이머 게임 화면·관리자 설정)
 - `V22Test` ENG 2번 정책·`그만하기` 결과창 1회·게임 중 제목 3탭 관리자·INTERNET 권한 없음
@@ -141,8 +163,11 @@ v2.0에서 **가족 등록·목소리 등록·소음 측정·화자 판별을 �
 
 ```
 ./gradlew :app:assembleDebug          # 덮어쓰기 설치용 debug APK
+./gradlew :app:assembleRelease        # Play 업로드용 AAB 는 :app:bundleRelease
 ./gradlew :app:testDebugUnitTest      # 테스트 + 화면 캡처
 ```
+
+디버그 APK 는 기존 설치본과 같은 키(`~/.android/debug.keystore`, 없으면 `-PdebugKeystore=...`)로 서명합니다.
 
 ## 프로젝트 구조
 
@@ -160,7 +185,8 @@ app/src/main/java/com/pipi/voicewordgame/
   speech/AnswerRecognizer.kt 인식기 생성·DIRECT 마이크
   speech/RecognitionEngines.kt 구글 인식기 우선 선택(순수 로직)
   speech/ResultBundles.kt    결과 번들 읽기(1순위/폴백)
-  tts/Speaker.kt             천천히/보통 두 번 읽기·안전 타이머
+  tts/Speaker.kt             언어별 엔진·목소리 선택, 0.90 속도로 두 번 읽기·안전 타이머
+  audio/SfxPlayer.kt         정답·오답 효과음(SoundPool)
   ui/ParticleView.kt         정답 축하 파티클
   util/ImageStore.kt         assets·내부 파일 그림 로더
   util/Prefs.kt              언어·마지막 카테고리·문제 수·제한시간

@@ -462,11 +462,11 @@ class V27Test {
     // -------------------------------------------------- 8) 하단 버전 표기
 
     @Test
-    fun footerShowsOnlyV29() {
+    fun footerShowsOnlyV210() {
         val main = mainActivity()
-        assertEquals("v2.9", main.findViewById<TextView>(R.id.versionText).text.toString())
-        assertEquals("v2.9", BuildConfig.VERSION_SHORT)
-        assertTrue("빌드 이름은 2.9_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.9_"))
+        assertEquals("v2.10", main.findViewById<TextView>(R.id.versionText).text.toString())
+        assertEquals("v2.10", BuildConfig.VERSION_SHORT)
+        assertTrue("빌드 이름은 2.10_날짜_시각", BuildConfig.VERSION_NAME.startsWith("2.10_"))
         assertTrue(
             "versionCode 는 기존 11232258 보다 커야 덮어쓰기 설치된다",
             BuildConfig.VERSION_CODE > 11232258
